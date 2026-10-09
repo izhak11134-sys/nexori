@@ -2,6 +2,14 @@
 
 A new, responsive anime discovery website, built from scratch with vanilla JavaScript and Vite. The site keeps the dark violet, pink, and cyan direction of the supplied visual reference.
 
+## Visual preview
+
+These screenshots show the running application. The repository stores source code; it is not a publicly hosted website.
+
+![NEXORI desktop preview](docs/desktop-preview.png)
+
+[View the mobile screenshot](docs/mobile-preview.png)
+
 ## Develop
 
 Requires Node.js 20.19+ or 22.12+ (validated with Node.js 24).
