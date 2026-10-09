@@ -19,18 +19,25 @@ const icons = {
 };
 const icon = (name, cls = '') => `<svg class="icon ${cls}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.spark}</svg>`;
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+const standalone = Boolean(window.NEXORI_ART);
+const currentUrl = () => standalone
+  ? new URL(location.hash.startsWith('#/') ? location.hash.slice(1) : '/', 'https://nexori.example')
+  : new URL(location.href);
+const pageHref = href => standalone ? `#${href}` : href;
+const setPageUrl = (href, replace = false) => history[replace ? 'replaceState' : 'pushState']({}, '', pageHref(href));
+const assetUrl = name => window.NEXORI_ART?.[name] || `/assets/${name}.svg`;
 const storageKey = 'nexori.saved.v1';
 let saved = [];
 try { const value = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(value)) saved = value.filter(id => products.some(p => p.id === id)); } catch {}
 let filters = { category: 'all', query: '', sort: 'featured' };
 let searchTrigger;
-const link = (href, text, cls = '', label = '') => `<a href="${href}" class="${cls}" ${label ? `aria-label="${escape(label)}"` : ''} data-link>${text}</a>`;
+const link = (href, text, cls = '', label = '') => `<a href="${pageHref(href)}" class="${cls}" ${label ? `aria-label="${escape(label)}"` : ''} data-link>${text}</a>`;
 const categoryName = id => categories.find(c => c.id === id)?.label || 'Collection';
-const artwork = (product, cls = '', eager = false) => `<img class="${cls}" src="/assets/${product.art}.svg" alt="Original illustration of ${escape(product.name || product.title)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} width="600" height="640" />`;
-const brand = () => `<a class="brand" href="/" aria-label="NEXORI home" data-link><img src="/assets/mark.svg" alt="" width="30" height="30"/><span>NEXORI<span class="brand-dot">.</span></span></a>`;
+const artwork = (product, cls = '', eager = false) => `<img class="${cls}" src="${assetUrl(product.art)}" alt="Original illustration of ${escape(product.name || product.title)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} width="600" height="640" />`;
+const brand = () => `<a class="brand" href="${pageHref('/')}" aria-label="NEXORI home" data-link><img src="${assetUrl('mark')}" alt="" width="30" height="30"/><span>NEXORI<span class="brand-dot">.</span></span></a>`;
 
 function header() {
-  const active = location.pathname;
+  const active = currentUrl().pathname;
   return `<div class="announcement"><span>For the fans. For the collection.</span><span class="announcement-right">An independent anime discovery platform ${icon('spark')}</span></div>
   <header class="header"><div class="container header-inner">${brand()}
     <nav class="desktop-nav" aria-label="Main navigation">
@@ -84,7 +91,7 @@ function pageIntro(eyebrow, title, description) {
   return `<div class="page-intro"><span class="eyebrow">${eyebrow}</span><h1>${title}</h1><p>${description}</p></div>`;
 }
 function collection() {
-  const requested = new URLSearchParams(location.search).get('category');
+  const requested = currentUrl().searchParams.get('category');
   filters.category = categories.some(c => c.id === requested) ? requested : 'all';
   return `<div class="container page-container">${pageIntro('YOUR NEXT FIND STARTS HERE', 'The collection.', 'Explore original concepts for the future NEXORI collection. Save your favorites while we select real retailer listings.')}<div class="collection-toolbar"><div class="filter-tabs" aria-label="Product category"><button data-category="all" class="filter-tab ${filters.category === 'all' ? 'selected' : ''}" aria-pressed="${filters.category === 'all'}">All concepts</button>${categories.map(c => `<button data-category="${c.id}" class="filter-tab ${filters.category === c.id ? 'selected' : ''}" aria-pressed="${filters.category === c.id}">${c.short}</button>`).join('')}</div><div class="collection-controls"><label class="collection-search">${icon('search')}<input id="collection-search" type="search" placeholder="Search concepts" aria-label="Search concepts" value="${escape(filters.query)}" maxlength="100" /></label><label class="sort-control"><span class="sr-only">Sort concepts</span><select id="collection-sort"><option value="featured" ${filters.sort === 'featured' ? 'selected' : ''}>Editorial order</option><option value="az" ${filters.sort === 'az' ? 'selected' : ''}>Name: A–Z</option></select>${icon('chevron')}</label></div></div><div class="collection-result-bar"><p id="result-count" role="status"></p><span>${icon('spark')} Original illustrations · Inspiration only</span></div><div id="collection-grid" class="product-grid"></div></div>`;
 }
@@ -131,7 +138,7 @@ function about() {
 }
 function notFound() { return `<div class="container page-container"><div class="empty-state">${icon('spark')}<span class="eyebrow">404 / A DIFFERENT UNIVERSE</span><h1>This page wandered off.</h1><p>Let’s get you back to something worth discovering.</p>${link('/', `Back to NEXORI ${icon('arrow')}`, 'button button-primary')}</div></div>`; }
 function route() {
-  const parts = location.pathname.split('/').filter(Boolean);
+  const parts = currentUrl().pathname.split('/').filter(Boolean);
   let content, title;
   if (!parts.length) { content = home(); title = 'Find your next obsession'; }
   else if (parts[0] === 'collection' && parts.length === 1) { content = collection(); title = 'The collection'; }
@@ -145,13 +152,14 @@ function route() {
   document.title = `NEXORI — ${title}`;
   document.querySelector('#app').innerHTML = `${header()}<main id="main" tabindex="-1">${content}</main>${footer()}<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-header"><h2 id="search-title">Find your next obsession.</h2><button class="icon-button" data-close-search aria-label="Close search">${icon('close')}</button></div><label class="dialog-search-input">${icon('search')}<input id="global-search" type="search" placeholder="Try figures, hoodie, desk…" aria-label="Search concepts" maxlength="100" autocomplete="off" /></label><p class="search-hint">Search the original concept collection</p><div id="search-results" class="search-results" aria-live="polite"></div></dialog>`;
   updateCollection();
-  if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+  if (currentUrl().hash) requestAnimationFrame(() => document.getElementById(currentUrl().hash.slice(1))?.scrollIntoView());
 }
 function navigate(href, push = true) {
+  if (standalone && href.startsWith('#/')) href = href.slice(1);
   document.querySelector('#search-dialog')?.close();
-  if (push) history.pushState({}, '', href);
+  if (push) setPageUrl(href);
   route();
-  if (!location.hash) window.scrollTo({top:0, behavior:'instant'});
+  if (!currentUrl().hash) window.scrollTo({top:0, behavior:'instant'});
   document.querySelector('#main').focus({preventScroll:true});
 }
 let toastTimer;
@@ -162,7 +170,7 @@ function toggleSaved(id) {
   saved = adding ? [...saved,id] : saved.filter(x => x !== id);
   let persistent = true;
   try { localStorage.setItem(storageKey, JSON.stringify(saved)); } catch { persistent = false; }
-  if (location.pathname === '/saved') { const pos=scrollY; route(); window.scrollTo(0,pos); }
+  if (currentUrl().pathname === '/saved') { const pos=scrollY; route(); window.scrollTo(0,pos); }
   else {
     document.querySelectorAll(`[data-save="${id}"]`).forEach(btn => { btn.classList.toggle('is-saved', adding); btn.setAttribute('aria-pressed', String(adding)); if (btn.classList.contains('detail-save')) btn.innerHTML = `${icon('heart')} ${adding ? 'Saved to your finds' : 'Save this inspiration'}`; else btn.setAttribute('aria-label', `${adding ? 'Unsave' : 'Save'} ${products.find(p => p.id === id).name}`); });
     const count = document.querySelector('.saved-count'); count.textContent = saved.length; count.hidden = !saved.length;
@@ -183,7 +191,7 @@ document.addEventListener('click', e => {
   if (e.target.id === 'search-dialog') { const rect = e.target.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) e.target.close(); }
   const category = e.target.closest('[data-category]'); if (category) {
     filters.category = category.dataset.category;
-    history.replaceState({}, '', filters.category === 'all' ? '/collection' : `/collection?category=${filters.category}`);
+    setPageUrl(filters.category === 'all' ? '/collection' : `/collection?category=${filters.category}`, true);
     document.querySelectorAll('[data-category]').forEach(btn => { const selected = btn.dataset.category === filters.category; btn.classList.toggle('selected',selected); btn.setAttribute('aria-pressed',String(selected)); }); updateCollection();
   }
   if (e.target.closest('[data-reset]')) { filters = {category:'all', query:'', sort:'featured'}; navigate('/collection'); }
@@ -191,6 +199,6 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => { if (e.target.id === 'global-search') searchResults(e.target.value); if (e.target.id === 'collection-search') {filters.query = e.target.value; updateCollection();} });
 document.addEventListener('change', e => {if (e.target.id === 'collection-sort') {filters.sort = e.target.value; updateCollection();} });
 document.addEventListener('keydown', e => {if (e.key === 'Escape') {const nav = document.querySelector('#mobile-nav'); if (!nav.hidden) document.querySelector('[data-menu]').click();} });
-window.addEventListener('popstate', () => navigate(location.pathname+location.search+location.hash,false));
+window.addEventListener('popstate', () => {const url = currentUrl(); navigate(url.pathname+url.search+url.hash,false);});
 window.addEventListener('storage', e => {if (e.key !== storageKey) return; try {const value=JSON.parse(e.newValue || '[]'); saved=Array.isArray(value)?value.filter(id=>products.some(p=>p.id===id)):[];} catch {saved=[];} const pos=scrollY; route(); window.scrollTo(0,pos);});
 route();
