@@ -13,7 +13,7 @@ for (const name of await readdir(path.join(root, 'public/assets'))) {
     assets[path.basename(name, extension)] = `data:${mime};base64,${bytes.toString('base64')}`;
   }
 }
-const css = await read('src/style.css');
+const css = [await read('src/style.css'), await read('src/enhancements.css')].join('\n');
 const data = (await read('src/data.js')).replace(/^export /gm, '');
 const main = (await read('src/main.js')).replace(/^import .*;\r?\n/gm, '');
 const script = `window.NEXORI_ART = ${JSON.stringify(assets)};\n${data}\n${main}`.replace(/<\/script/gi, '<\\/script');

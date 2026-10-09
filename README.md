@@ -12,6 +12,8 @@ These screenshots show the running application. The repository stores source cod
 
 The latest design adds an original cinematic anime banner in the dark violet/pink palette, glass accents, refined typography, interactive inspiration tabs, a **Surprise me** discovery button, and a dedicated desk-and-room inspiration feature. The banner is embedded in the standalone HTML, too.
 
+The main headline is **Your Portal to Authentic Anime Culture & Collectibles**, with a slow, restrained neon color effect. Text throughout the site is larger; navigation and anime-world links use visible neon outlines. The banner moves slightly with scrolling, and a floating toolbar provides saved finds, surprise discovery, and back-to-top actions after scrolling. Decorative sparks and scroll motion respect the browser's reduced-motion preference. [View the floating toolbar](docs/floating-tools-preview.png).
+
 ## Open as a single HTML file
 
 Download [NEXORI.html](NEXORI.html), then open the downloaded file in a modern browser. This self-contained version includes the CSS, JavaScript, and all original illustrations; no Node.js installation or server is required. Its navigation uses URL hashes so the collection, articles, filters, and saved finds work locally. Browser restrictions may make favorites temporary when opening local files.

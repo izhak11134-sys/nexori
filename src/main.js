@@ -1,8 +1,10 @@
 import './style.css';
+import './enhancements.css';
 import { categories, products, franchises, guides } from './data.js';
 
 const icons = {
   arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
+  up: '<path d="M12 20V5m-6 6 6-6 6 6"/>',
   external: '<path d="M14 4h6v6m0-6L10 14m-3-9H4v15h15v-3"/>',
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/>',
   heart: '<path d="M20.5 5.5a5 5 0 0 0-7 0L12 7l-1.5-1.5a5 5 0 0 0-7 7L12 21l8.5-8.5a5 5 0 0 0 0-7Z"/>',
@@ -31,7 +33,7 @@ let saved = [];
 try { const value = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(value)) saved = value.filter(id => products.some(p => p.id === id)); } catch {}
 let filters = { category: 'all', query: '', sort: 'featured' };
 let searchTrigger;
-const link = (href, text, cls = '', label = '') => `<a href="${pageHref(href)}" class="${cls}" ${label ? `aria-label="${escape(label)}"` : ''} data-link>${text}</a>`;
+const link = (href, text, cls = '', label = '') => `<a href="${pageHref(href)}" class="${cls}" ${cls.split(' ').includes('active') ? 'aria-current="page"' : ''} ${label ? `aria-label="${escape(label)}"` : ''} data-link>${text}</a>`;
 const categoryName = id => categories.find(c => c.id === id)?.label || 'Collection';
 const artwork = (product, cls = '', eager = false) => `<img class="${cls}" src="${assetUrl(product.art)}" alt="Original illustration of ${escape(product.name || product.title)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} width="600" height="640" />`;
 const brand = () => `<a class="brand" href="${pageHref('/')}" aria-label="NEXORI home" data-link><img src="${assetUrl('mark')}" alt="" width="30" height="30"/><span>NEXORI<span class="brand-dot">.</span></span></a>`;
@@ -48,7 +50,7 @@ function header() {
     </nav>
     <div class="header-actions"><button class="icon-button" data-search aria-label="Search collection">${icon('search')}</button>${link('/saved', `${icon('heart')}<span class="saved-count" ${saved.length ? '' : 'hidden'}>${saved.length}</span>`, 'icon-button saved-link', 'Your saved finds')}
     <button class="icon-button menu-button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav" data-menu>${icon('menu')}</button></div>
-  </div><nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>${link('/collection', 'Explore collection')}${link('/worlds', 'Anime worlds')}${link('/guides', 'The journal')}${link('/about', 'Our story')}${link('/saved', 'Your saved finds')}</nav></header>`;
+  </div><nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>${link('/collection', 'Explore collection', active.startsWith('/collection') || active.startsWith('/product') ? 'active' : '')}${link('/worlds', 'Anime worlds', active.startsWith('/worlds') ? 'active' : '')}${link('/guides', 'The journal', active.startsWith('/guides') ? 'active' : '')}${link('/about', 'Our story', active === '/about' ? 'active' : '')}${link('/saved', 'Your saved finds', active === '/saved' ? 'active' : '')}</nav></header>`;
 }
 
 function footer() {
@@ -57,6 +59,14 @@ function footer() {
   <div><h3>Get to know us</h3>${link('/about', 'Our story')}${link('/about#selection', 'How we select')}${link('/disclosure', 'Affiliate disclosure')}${link('/contact', 'Contact')}</div>
   <div class="footer-transparency"><span class="tiny-label">A NOTE ON TRANSPARENCY</span><p>When retailer links are added, we may earn a commission from qualifying purchases, at no extra cost to you.</p>${link('/disclosure', `Learn more ${icon('arrow')}`, 'text-link')}</div></div>
   <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}</div></div></footer>`;
+}
+
+function floatingTools() {
+  return `<nav id="floating-tools" class="floating-tools" aria-label="Quick actions" hidden>
+    ${link('/saved', `${icon('heart')}<span class="floating-count saved-count" ${saved.length ? '' : 'hidden'}>${saved.length}</span><span class="floating-tooltip">Saved finds</span>`, 'floating-button floating-saved', 'Open your saved finds')}
+    <button class="floating-button floating-surprise" data-surprise aria-label="Discover a surprise concept">${icon('spark')}<span class="floating-tooltip">Surprise me</span></button>
+    <button class="floating-button floating-top" data-top aria-label="Back to top">${icon('up')}<span class="floating-tooltip">Back to top</span></button>
+  </nav>`;
 }
 
 function productCard(p) {
@@ -75,7 +85,7 @@ function worldsGrid() {
 }
 
 function home() {
-  return `<section class="hero cinematic-hero"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" /><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1>Find your next<br><em>obsession.</em></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
+  return `<section class="hero cinematic-hero"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" /><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="ambient-sparks" aria-hidden="true"><span>✧</span><span>✦</span><span>✧</span></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1 class="neon-title">Your Portal to <br><em>Authentic Anime</em> <br><span>Culture &amp; Collectibles</span></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
   <div class="hero-series"><div class="container"><span class="tiny-label">FIND YOUR UNIVERSE</span><div>${franchises.slice(0, 5).map(f => link(`/worlds/${f.id}`, f.name)).join('<span class="series-star" aria-hidden="true">✦</span>')}</div></div></div></section>
   <section class="trust-strip container" aria-label="Our approach"><div>${icon('spark')}<span>Independent editorial picks</span></div><div>${icon('shield')}<span>Transparency comes first</span></div><div>${icon('heart')}<span>Made with fans in mind</span></div></section>
   <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Explore all concepts')}<div class="edit-controls"><div class="edit-tabs" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">The full picture</button><button class="edit-tab" data-edit="figures" aria-pressed="false">Shelf statements</button><button class="edit-tab" data-edit="style" aria-pressed="false">Off-duty style</button><button class="edit-tab" data-edit="desk" aria-pressed="false">After-hours setup</button></div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
@@ -140,7 +150,7 @@ function notFound() { return `<div class="container page-container"><div class="
 function route() {
   const parts = currentUrl().pathname.split('/').filter(Boolean);
   let content, title;
-  if (!parts.length) { content = home(); title = 'Find your next obsession'; }
+  if (!parts.length) { content = home(); title = 'Your Portal to Authentic Anime Culture & Collectibles'; }
   else if (parts[0] === 'collection' && parts.length === 1) { content = collection(); title = 'The collection'; }
   else if (parts[0] === 'saved' && parts.length === 1) { content = savedPage(); title = 'Your saved finds'; }
   else if (parts[0] === 'product' && parts.length === 2) { content = productPage(parts[1]); title = products.find(p => p.id === parts[1])?.name || 'Page not found'; }
@@ -150,8 +160,9 @@ function route() {
   else if (info[parts[0]] && parts.length === 1) { content = infoPage(parts[0]); title = info[parts[0]].title.replace(/\.$/, ''); }
   else { content = notFound(); title = 'Page not found'; }
   document.title = `NEXORI — ${title}`;
-  document.querySelector('#app').innerHTML = `${header()}<main id="main" tabindex="-1">${content}</main>${footer()}<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-header"><h2 id="search-title">Find your next obsession.</h2><button class="icon-button" data-close-search aria-label="Close search">${icon('close')}</button></div><label class="dialog-search-input">${icon('search')}<input id="global-search" type="search" placeholder="Try figures, hoodie, desk…" aria-label="Search concepts" maxlength="100" autocomplete="off" /></label><p class="search-hint">Search the original concept collection</p><div id="search-results" class="search-results" aria-live="polite"></div></dialog>`;
+  document.querySelector('#app').innerHTML = `${header()}<main id="main" tabindex="-1">${content}</main>${footer()}${floatingTools()}<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-header"><h2 id="search-title">Find your next obsession.</h2><button class="icon-button" data-close-search aria-label="Close search">${icon('close')}</button></div><label class="dialog-search-input">${icon('search')}<input id="global-search" type="search" placeholder="Try figures, hoodie, desk…" aria-label="Search concepts" maxlength="100" autocomplete="off" /></label><p class="search-hint">Search the original concept collection</p><div id="search-results" class="search-results" aria-live="polite"></div></dialog>`;
   updateCollection();
+  scheduleScrollEffects();
   if (currentUrl().hash) requestAnimationFrame(() => document.getElementById(currentUrl().hash.slice(1))?.scrollIntoView());
 }
 function navigate(href, push = true) {
@@ -173,7 +184,7 @@ function toggleSaved(id) {
   if (currentUrl().pathname === '/saved') { const pos=scrollY; route(); window.scrollTo(0,pos); }
   else {
     document.querySelectorAll(`[data-save="${id}"]`).forEach(btn => { btn.classList.toggle('is-saved', adding); btn.setAttribute('aria-pressed', String(adding)); if (btn.classList.contains('detail-save')) btn.innerHTML = `${icon('heart')} ${adding ? 'Saved to your finds' : 'Save this inspiration'}`; else btn.setAttribute('aria-label', `${adding ? 'Unsave' : 'Save'} ${products.find(p => p.id === id).name}`); });
-    const count = document.querySelector('.saved-count'); count.textContent = saved.length; count.hidden = !saved.length;
+    document.querySelectorAll('.saved-count').forEach(count => { count.textContent = saved.length; count.hidden = !saved.length; });
   }
   toast(adding ? persistent ? 'Saved to your finds.' : 'Saved for this visit. Browser storage is unavailable.' : 'Removed from your saved finds.');
 }
@@ -185,6 +196,7 @@ document.addEventListener('click', e => {
   const anchor = e.target.closest('a[data-link]');
   if (anchor && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); navigate(anchor.getAttribute('href')); return; }
   const save = e.target.closest('[data-save]'); if (save) { toggleSaved(save.dataset.save); return; }
+  if (e.target.closest('[data-top]')) { window.scrollTo({top:0, behavior:reducedMotion.matches ? 'instant' : 'smooth'}); document.querySelector('#main').focus({preventScroll:true}); return; }
   if (e.target.closest('[data-surprise]')) { navigate(`/product/${products[Math.floor(Math.random() * products.length)].id}`); return; }
   const edit = e.target.closest('[data-edit]');
   if (edit) {
@@ -208,6 +220,23 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => { if (e.target.id === 'global-search') searchResults(e.target.value); if (e.target.id === 'collection-search') {filters.query = e.target.value; updateCollection();} });
 document.addEventListener('change', e => {if (e.target.id === 'collection-sort') {filters.sort = e.target.value; updateCollection();} });
 document.addEventListener('keydown', e => {if (e.key === 'Escape') {const nav = document.querySelector('#mobile-nav'); if (!nav.hidden) document.querySelector('[data-menu]').click();} });
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let scrollFrame;
+function scheduleScrollEffects() {
+  if (scrollFrame) return;
+  scrollFrame = requestAnimationFrame(() => {
+    scrollFrame = 0;
+    const tools = document.querySelector('#floating-tools');
+    if (tools) tools.hidden = window.scrollY < 420;
+    const hero = document.querySelector('.cinematic-hero');
+    if (!hero) return;
+    const rect = hero.getBoundingClientRect();
+    const travel = reducedMotion.matches ? 0 : Math.min(72, Math.max(0, -rect.top) * .12);
+    hero.style.setProperty('--banner-drift', `${travel}px`);
+  });
+}
+window.addEventListener('scroll', scheduleScrollEffects, {passive:true});
+reducedMotion.addEventListener('change', scheduleScrollEffects);
 window.addEventListener('popstate', () => {const url = currentUrl(); navigate(url.pathname+url.search+url.hash,false);});
 window.addEventListener('storage', e => {if (e.key !== storageKey) return; try {const value=JSON.parse(e.newValue || '[]'); saved=Array.isArray(value)?value.filter(id=>products.some(p=>p.id===id)):[];} catch {saved=[];} const pos=scrollY; route(); window.scrollTo(0,pos);});
 route();
