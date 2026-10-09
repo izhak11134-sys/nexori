@@ -221,6 +221,25 @@
 @media(max-width:370px){.cinematic-hero h1.neon-title{font-size:31px}.cinematic-hero .hero-inner{padding-top:315px;min-height:870px}.worlds-grid{grid-template-columns:1fr}.product-card-info{padding-inline:10px}.product-card h3{font-size:14px}.product-card-bottom{font-size:10px}.hero-series a{font-size:12px}.mobile-nav{padding-inline:16px;gap:9px}.mobile-nav a{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.neon-title,.cinematic-hero h1.neon-title em,.ambient-sparks span{animation:none!important}.cinematic-background{transform:none;will-change:auto}.floating-button:hover,.hero-series a:hover,.desktop-nav a:hover{transform:none}}
 
+/* The original banner stays intact; effects form a separately moving layer. */
+.cinematic-hero { overflow-x:clip;overflow-y:visible;z-index:0; }
+.cinematic-hero:not(.is-carrying) { overflow:hidden; }
+.banner-scene { position:absolute;inset:0;z-index:-3;overflow:hidden;pointer-events:none;transform:translate3d(0,var(--banner-drift,0px),0) scale(1.04);transform-origin:center 50%;will-change:transform; }
+.banner-scene .cinematic-background { width:100%;height:100%;transform:none;will-change:auto;z-index:0; }
+.banner-effects { position:absolute;max-width:none;height:auto;z-index:1;pointer-events:none; }
+.blade-glow { opacity:.4;mix-blend-mode:screen;animation:blade-breathe 6s ease-in-out infinite; }
+@keyframes blade-breathe { 0%,100%{opacity:.3}50%{opacity:.55} }
+.floating-shard { filter:drop-shadow(0 0 9px #b370d83d);transform-box:fill-box;transform-origin:center; }
+.shard-one { animation:shard-drift-one 8s ease-in-out infinite; }
+.shard-two { animation:shard-drift-two 10s ease-in-out infinite;animation-delay:-3s; }
+.shard-three { animation:shard-drift-one 7s ease-in-out infinite;animation-delay:-4s; }
+@keyframes shard-drift-one { 0%,100%{transform:translate(0,0) rotate(-3deg)}50%{transform:translate(9px,-28px) rotate(4deg)} }
+@keyframes shard-drift-two { 0%,100%{transform:translate(0,0) rotate(4deg)}50%{transform:translate(-9px,24px) rotate(-4deg)} }
+.is-carrying .banner-scene { mask-image:linear-gradient(180deg,#000 0%,#000 70%,transparent 100%); }
+.trust-strip,.collection-edit { position:relative;z-index:2; }
+@media(max-width:700px){.banner-scene{height:530px;bottom:auto}.is-carrying .banner-scene{mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%)}}
+@media(prefers-reduced-motion:reduce){.banner-scene{transform:none;will-change:auto}.blade-glow,.floating-shard{animation:none!important}.blade-glow{opacity:.35}}
+
 </style>
 </head>
   <body>
@@ -361,8 +380,22 @@ function worldsGrid() {
   return `<div class="worlds-grid">${franchises.map(f => link(`/worlds/${f.id}`, `<span class="world-symbol" style="--world-color:${f.color}" aria-hidden="true">${f.symbol}</span><div><h3>${f.name}</h3><p>${f.subtitle}</p></div>${icon('arrow')}`, 'world-card')).join('')}</div>`;
 }
 
+function bannerEffects() {
+  return `<svg class="banner-effects" viewBox="0 0 1672 941" fill="none" aria-hidden="true">
+    <defs>
+      <filter id="blade-soft-light" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="12" /></filter>
+      <linearGradient id="shard-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#443248"/><stop offset=".48" stop-color="#18121e"/><stop offset="1" stop-color="#070711"/></linearGradient>
+      <linearGradient id="shard-edge"><stop stop-color="#dec0ff"/><stop offset=".5" stop-color="#8d4cb0"/><stop offset="1" stop-color="#35233d"/></linearGradient>
+    </defs>
+    <g class="blade-glow"><path d="M1320 476 1494 803" stroke="#cb82ff" stroke-width="19" stroke-linecap="round" filter="url(#blade-soft-light)"/><path d="M1320 476 1494 803" stroke="#eac5ff" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/></g>
+    <g transform="translate(890 245)"><g class="floating-shard shard-one"><path d="m0-68 32 27-6 71-22 55-23-38-11-82Z" fill="url(#shard-face)" stroke="#775084" stroke-width="1.5"/><path d="m0-68 9 50-5 103 22-55 6-71Z" fill="#30213b"/><path d="m-30-35 30-33 9 50-23 32m23-32 23-23m-46 55 18 71" stroke="url(#shard-edge)" stroke-width="2"/><path d="m-12-31 15 16-7 23m18 7-8 22" stroke="#aa69c3" stroke-opacity=".5"/></g></g>
+    <g transform="translate(1530 528)"><g class="floating-shard shard-two"><path d="m-31-42 43-14 22 43-11 59-40 14-22-55Z" fill="url(#shard-face)" stroke="#805884"/><path d="m12-56-9 58 20 44 11-59Z" fill="#39283e"/><path d="m-31-42 43-14-9 58-20 58m20-58 31-15" stroke="url(#shard-edge)" stroke-width="2"/></g></g>
+    <g transform="translate(963 689)"><g class="floating-shard shard-three"><path d="m-18-27 31-13 25 19-15 43-35 20-17-41Z" fill="url(#shard-face)" stroke="#886995"/><path d="m13-40-6 39 16 23 15-43Z" fill="#382b43"/><path d="m-18-27 31-13-6 39-19 43m19-43 31-20" stroke="url(#shard-edge)" stroke-width="1.5"/></g></g>
+  </svg>`;
+}
+
 function home() {
-  return `<section class="hero cinematic-hero"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" /><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="ambient-sparks" aria-hidden="true"><span>✧</span><span>✦</span><span>✧</span></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1 class="neon-title">Your Portal to <br><em>Authentic Anime</em> <br><span>Culture &amp; Collectibles</span></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
+  return `<section class="hero cinematic-hero"><div class="banner-scene"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" />${bannerEffects()}</div><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="ambient-sparks" aria-hidden="true"><span>✧</span><span>✦</span><span>✧</span></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1 class="neon-title">Your Portal to <br><em>Authentic Anime</em> <br><span>Culture &amp; Collectibles</span></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
   <div class="hero-series"><div class="container"><span class="tiny-label">FIND YOUR UNIVERSE</span><div>${franchises.slice(0, 5).map(f => link(`/worlds/${f.id}`, f.name)).join('<span class="series-star" aria-hidden="true">✦</span>')}</div></div></div></section>
   <section class="trust-strip container" aria-label="Our approach"><div>${icon('spark')}<span>Independent editorial picks</span></div><div>${icon('shield')}<span>Transparency comes first</span></div><div>${icon('heart')}<span>Made with fans in mind</span></div></section>
   <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Explore all concepts')}<div class="edit-controls"><div class="edit-tabs" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">The full picture</button><button class="edit-tab" data-edit="figures" aria-pressed="false">Shelf statements</button><button class="edit-tab" data-edit="style" aria-pressed="false">Off-duty style</button><button class="edit-tab" data-edit="desk" aria-pressed="false">After-hours setup</button></div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
@@ -439,6 +472,7 @@ function route() {
   document.title = `NEXORI — ${title}`;
   document.querySelector('#app').innerHTML = `${header()}<main id="main" tabindex="-1">${content}</main>${footer()}${floatingTools()}<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-header"><h2 id="search-title">Find your next obsession.</h2><button class="icon-button" data-close-search aria-label="Close search">${icon('close')}</button></div><label class="dialog-search-input">${icon('search')}<input id="global-search" type="search" placeholder="Try figures, hoodie, desk…" aria-label="Search concepts" maxlength="100" autocomplete="off" /></label><p class="search-hint">Search the original concept collection</p><div id="search-results" class="search-results" aria-live="polite"></div></dialog>`;
   updateCollection();
+  alignBannerEffects();
   scheduleScrollEffects();
   if (currentUrl().hash) requestAnimationFrame(() => document.getElementById(currentUrl().hash.slice(1))?.scrollIntoView());
 }
@@ -508,11 +542,24 @@ function scheduleScrollEffects() {
     const hero = document.querySelector('.cinematic-hero');
     if (!hero) return;
     const rect = hero.getBoundingClientRect();
-    const travel = reducedMotion.matches ? 0 : Math.min(72, Math.max(0, -rect.top) * .12);
+    const mobile = window.innerWidth <= 700;
+    const travel = reducedMotion.matches ? 0 : Math.min(mobile ? 620 : 280, Math.max(0, -rect.top) * (mobile ? .66 : .38));
     hero.style.setProperty('--banner-drift', `${travel}px`);
+    hero.classList.toggle('is-carrying', travel > 0);
   });
 }
+function alignBannerEffects() {
+  const scene = document.querySelector('.banner-scene');
+  const image = scene?.querySelector('.cinematic-background');
+  const effects = scene?.querySelector('.banner-effects');
+  if (!scene || !image || !effects) return;
+  const width = scene.clientWidth, height = scene.clientHeight;
+  const scale = Math.max(width / 1672, height / 941);
+  const [px, py] = getComputedStyle(image).objectPosition.split(' ').map(value => value === 'top' ? 0 : value === 'center' ? .5 : parseFloat(value) / 100);
+  Object.assign(effects.style, {width:`${1672 * scale}px`,height:`${941 * scale}px`,left:`${(width - 1672 * scale) * px}px`,top:`${(height - 941 * scale) * py}px`});
+}
 window.addEventListener('scroll', scheduleScrollEffects, {passive:true});
+window.addEventListener('resize', () => { alignBannerEffects(); scheduleScrollEffects(); }, {passive:true});
 reducedMotion.addEventListener('change', scheduleScrollEffects);
 window.addEventListener('popstate', () => {const url = currentUrl(); navigate(url.pathname+url.search+url.hash,false);});
 window.addEventListener('storage', e => {if (e.key !== storageKey) return; try {const value=JSON.parse(e.newValue || '[]'); saved=Array.isArray(value)?value.filter(id=>products.some(p=>p.id===id)):[];} catch {saved=[];} const pos=scrollY; route(); window.scrollTo(0,pos);});
