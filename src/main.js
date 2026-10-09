@@ -1,6 +1,7 @@
 import './style.css';
 import './enhancements.css';
 import { categories, products, franchises, guides } from './data.js';
+import { catalogTypes, catalogWorlds, catalogDefaults, readCatalogFilters, catalogHref, selectCatalogProducts } from './catalog.js';
 import { policies as info, contactLink, policyDate, previewNotice, franchiseNotice } from './policies.js';
 
 const icons = {
@@ -36,7 +37,7 @@ try { motionPaused = localStorage.getItem(motionStorageKey) === 'reduce'; } catc
 document.body.classList.toggle('motion-paused', motionPaused);
 let saved = [];
 try { const value = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(value)) saved = value.filter(id => products.some(p => p.id === id)); } catch {}
-let filters = { category: 'all', query: '', sort: 'featured' };
+let filters = {...catalogDefaults};
 let searchTrigger;
 const link = (href, text, cls = '', label = '') => `<a href="${pageHref(href)}" class="${cls}" ${cls.split(' ').includes('active') ? 'aria-current="page"' : ''} ${label ? `aria-label="${escape(label)}"` : ''} data-link>${text}</a>`;
 const categoryName = id => categories.find(c => c.id === id)?.label || 'Collection';
@@ -81,7 +82,7 @@ function floatingTools() {
 function productCard(p) {
   const isSaved = saved.includes(p.id);
   return `<article class="product-card"><div class="product-art" style="--art-color:${p.color}">${link(`/product/${p.id}`, artwork(p), 'art-link')}<span class="concept-badge">CONCEPT</span><button class="save-button ${isSaved ? 'is-saved' : ''}" data-save="${p.id}" aria-label="${isSaved ? 'Unsave' : 'Save'} ${escape(p.name)}" aria-pressed="${isSaved}">${icon('heart')}</button></div>
-  <div class="product-card-info"><span class="tiny-label">${p.type}</span><h3>${link(`/product/${p.id}`, p.name)}</h3><div class="product-card-bottom"><span>Collection preview</span>${link(`/product/${p.id}`, icon('arrow'), 'card-arrow', `View ${p.name}`)}</div></div></article>`;
+  <div class="product-card-info"><span class="tiny-label">${p.type}</span><h3>${link(`/product/${p.id}`, p.name)}</h3><div class="product-card-bottom"><span>${categoryName(p.category)}</span>${link(`/product/${p.id}`, icon('arrow'), 'card-arrow', `View ${p.name}`)}</div></div></article>`;
 }
 function guideCard(g) {
   return `<article class="guide-card">${link(`/guides/${g.id}`, `${artwork(g)}<span class="guide-art-label">NEXORI / JOURNAL</span>`, 'guide-art')}<div class="guide-card-content"><div class="guide-meta"><span>${g.eyebrow}</span><span>${g.time}</span></div><h3>${link(`/guides/${g.id}`, g.title)}</h3><p>${g.description}</p>${link(`/guides/${g.id}`, `Read the story ${icon('arrow')}`, 'text-link')}</div></article>`;
@@ -111,7 +112,7 @@ function home() {
   return `<section class="hero cinematic-hero"><div class="banner-scene"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" />${bannerEffects()}</div><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="ambient-sparks" aria-hidden="true"><span>✧</span><span>✦</span><span>✧</span></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1 class="neon-title">Your Portal to <br><em>Authentic Anime</em> <br><span>Culture &amp; Collectibles</span></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
   <div class="hero-series"><div class="container"><span class="tiny-label">FIND YOUR UNIVERSE</span><div>${franchises.slice(0, 5).map(f => link(`/worlds/${f.id}`, f.name)).join('<span class="series-star" aria-hidden="true">✦</span>')}</div></div></div></section>
   <section class="trust-strip container" aria-label="Our approach"><div>${icon('spark')}<span>Independent editorial picks</span></div><div>${icon('shield')}<span>Transparency comes first</span></div><div>${icon('heart')}<span>Made with fans in mind</span></div></section>
-  <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Explore all concepts')}${collectionNotice()}<div class="edit-controls"><div class="edit-tabs" role="group" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">The full picture</button><button class="edit-tab" data-edit="figures" aria-pressed="false">Shelf statements</button><button class="edit-tab" data-edit="style" aria-pressed="false">Off-duty style</button><button class="edit-tab" data-edit="desk" aria-pressed="false">After-hours setup</button></div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
+  <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Browse all categories')}${collectionNotice()}<div class="edit-controls"><div class="edit-tabs" role="group" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">Featured concepts</button>${categories.map(c => `<button class="edit-tab" data-edit="${c.id}" aria-pressed="false">${c.short}</button>`).join('')}</div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
   <section class="section container categories-section">${sectionHeading('PICK YOUR KIND OF FANDOM', 'More than a shelf.', '', '', '')}<div class="category-grid">${categories.map((c,i) => link(`/collection?category=${c.id}`, `<span class="category-number">0${i+1}</span><span class="category-icon ${c.color}">${icon(c.icon)}</span><h3>${c.label}</h3><p>${c.description}</p><span class="category-link">Explore ${icon('arrow')}</span>`, 'category-card')).join('')}</div></section>
   <section class="editorial-banner container"><div class="editorial-art">${artwork(products[0])}<span class="editorial-art-word" aria-hidden="true">COLLECT.</span></div><div class="editorial-copy"><span class="eyebrow">LESS GUESSWORK. MORE GOOD FINDS.</span><h2>Your first figure.<br>Your next chapter.</h2><p>From choosing a figure format to checking a seller, our beginner’s guide helps you start a collection with a little more confidence.</p>${link('/guides/first-figure', `Read the collector’s guide ${icon('arrow')}`, 'button button-primary')}<span class="editorial-bottom">THE NEXORI JOURNAL <span> / </span> 4 MIN READ</span></div></section>
   <section class="section container worlds-section">${sectionHeading('STORIES THAT STAY WITH YOU', 'Which world is yours?', 'Find inspiration in the series you keep coming back to.', '/worlds', 'Explore the worlds')}${worldsGrid()}</section>
@@ -123,17 +124,53 @@ function home() {
 function pageIntro(eyebrow, title, description) {
   return `<div class="page-intro"><span class="eyebrow">${eyebrow}</span><h1>${title}</h1><p>${description}</p></div>`;
 }
+function catalogCategoryCards(world = 'all') {
+  return `<div class="catalog-category-grid">${categories.map(c => link(catalogHref({category:c.id,world}), `<span class="category-icon ${c.color}">${icon(c.icon)}</span><h3>${c.label}</h3><p>${c.description}</p><span class="category-link">Browse this category ${icon('arrow')}</span>`, 'category-card catalog-category-card')).join('')}</div>`;
+}
+function catalogContext() {
+  const category = categories.find(c => c.id === filters.category);
+  const world = catalogWorlds.find(w => w.id === filters.world);
+  const type = catalogTypes.find(t => t.id === filters.type);
+  const title = [world?.name,type?.name || category?.label].filter(Boolean).join(' · ') || 'The collection.';
+  const description = category ? `${category.description}${world ? ` Browse this category for ${world.name}.` : ' Choose an anime world to narrow your selection.'}` : 'Browse by product category, then choose an anime world and a product type. The current items are original design concepts.';
+  return pageIntro('A CLEAR PLACE FOR EVERY FIND', title, description);
+}
+function catalogPlan() {
+  const category = categories.find(c => c.id === filters.category);
+  const world = catalogWorlds.find(w => w.id === filters.world);
+  if (!category) return `<section class="catalog-plan" aria-labelledby="catalog-plan-title"><h2 id="catalog-plan-title">Browse by product category</h2><p>Each category has its own product types. Anime worlds are a separate filter.</p>${catalogCategoryCards(filters.world)}</section>`;
+  return `<section class="catalog-plan" aria-labelledby="catalog-plan-title"><h2 id="catalog-plan-title">What belongs in ${category.label.toLowerCase()}?</h2><p>${world && world.id !== 'original' ? `These are the planned product types for ${world.name}; verified listings have not been added yet.` : 'Explore the product types planned for this category. Types without concepts will show an empty collection.'}</p><div class="catalog-type-grid">${category.types.map(t => link(catalogHref({category:category.id,world:filters.world,type:t.id}), `<h3>${t.name}</h3><p>${t.examples}</p><span class="category-link">Browse this type ${icon('arrow')}</span>`, `catalog-type-card${filters.type === t.id ? ' active' : ''}`)).join('')}</div></section>`;
+}
+function typeOptions() {
+  return `<option value="all">All product types</option>${catalogTypes.filter(t => filters.category === 'all' || t.category === filters.category).map(t => `<option value="${t.id}" ${filters.type === t.id ? 'selected' : ''}>${t.name}</option>`).join('')}`;
+}
 function collection() {
-  const requested = currentUrl().searchParams.get('category');
-  filters.category = categories.some(c => c.id === requested) ? requested : 'all';
-  return `<div class="container page-container">${pageIntro('YOUR NEXT FIND STARTS HERE', 'The collection.', 'Explore original concepts for the future NEXORI collection. Save your favorites while we select real retailer listings.')}${collectionNotice()}<div class="collection-toolbar"><div class="filter-tabs" role="group" aria-label="Product category"><button data-category="all" class="filter-tab ${filters.category === 'all' ? 'selected' : ''}" aria-pressed="${filters.category === 'all'}">All concepts</button>${categories.map(c => `<button data-category="${c.id}" class="filter-tab ${filters.category === c.id ? 'selected' : ''}" aria-pressed="${filters.category === c.id}">${c.short}</button>`).join('')}</div><div class="collection-controls"><label class="collection-search">${icon('search')}<input id="collection-search" type="search" placeholder="Search concepts" aria-label="Search concepts" value="${escape(filters.query)}" maxlength="100" /></label><label class="sort-control"><span class="sr-only">Sort concepts</span><select id="collection-sort"><option value="featured" ${filters.sort === 'featured' ? 'selected' : ''}>Editorial order</option><option value="az" ${filters.sort === 'az' ? 'selected' : ''}>Name: A–Z</option></select>${icon('chevron')}</label></div></div><div class="collection-result-bar"><p id="result-count" role="status"></p><span>${icon('spark')} Original illustrations · Inspiration only</span></div><div id="collection-grid" class="product-grid"></div></div>`;
+  filters = readCatalogFilters(currentUrl().searchParams);
+  return `<div class="container page-container"><div id="catalog-context">${catalogContext()}</div>${collectionNotice()}<div id="catalog-plan">${catalogPlan()}</div><section class="catalog-browser" aria-labelledby="catalog-browser-title"><div class="catalog-browser-heading"><h2 id="catalog-browser-title">Browse the collection</h2><p>Combine a category, an anime world and a product type.</p></div><div class="collection-toolbar"><div class="filter-tabs" role="group" aria-label="Product category"><button data-category="all" class="filter-tab ${filters.category === 'all' ? 'selected' : ''}" aria-pressed="${filters.category === 'all'}">All concepts</button>${categories.map(c => `<button data-category="${c.id}" class="filter-tab ${filters.category === c.id ? 'selected' : ''}" aria-pressed="${filters.category === c.id}">${c.short}</button>`).join('')}</div><div class="collection-controls"><label class="collection-search">${icon('search')}<input id="collection-search" type="search" placeholder="Search concepts" aria-label="Search concepts" value="${escape(filters.query)}" maxlength="100" /></label><label class="catalog-select"><span>Anime world</span><select id="collection-world"><option value="all">All worlds</option>${catalogWorlds.map(w => `<option value="${w.id}" ${filters.world === w.id ? 'selected' : ''}>${w.name}</option>`).join('')}</select></label><label class="catalog-select"><span>Product type</span><select id="collection-type">${typeOptions()}</select></label><label class="catalog-select"><span>Sort concepts</span><select id="collection-sort"><option value="featured" ${filters.sort === 'featured' ? 'selected' : ''}>Editorial order</option><option value="az" ${filters.sort === 'az' ? 'selected' : ''}>Name: A–Z</option></select></label></div></div><div class="collection-result-bar"><p id="result-count" role="status"></p><button class="catalog-reset" data-reset>Clear filters</button></div><div id="collection-grid" class="product-grid"></div></section></div>`;
 }
 function updateCollection() {
   const grid = document.querySelector('#collection-grid'); if (!grid) return;
-  let matches = products.filter(p => (filters.category === 'all' || p.category === filters.category) && `${p.name} ${p.type} ${categoryName(p.category)}`.toLowerCase().includes(filters.query.toLowerCase().trim()));
-  if (filters.sort === 'az') matches.sort((a,b) => a.name.localeCompare(b.name));
-  grid.innerHTML = matches.length ? matches.map(productCard).join('') : `<div class="empty-state">${icon('search')}<h2>No concepts match just yet.</h2><p>Try another search or explore all categories.</p><button class="button button-secondary" data-reset>Clear filters</button></div>`;
-  document.querySelector('#result-count').textContent = `${matches.length} ${matches.length === 1 ? 'concept' : 'concepts'}`;
+  const matches = selectCatalogProducts(products,filters);
+  const category = categories.find(c => c.id === filters.category);
+  const world = catalogWorlds.find(w => w.id === filters.world);
+  const type = catalogTypes.find(t => t.id === filters.type);
+  const selection = [world?.name,type?.name || category?.label].filter(Boolean).join(' · ');
+  const searching = Boolean(filters.query.trim());
+  const emptyTitle = searching ? 'No concepts match just yet.' : 'This part of the collection is being prepared.';
+  const emptyDescription = searching ? 'Try another search or clear your filters.' : `No ${selection ? `${escape(selection)} ` : ''}listings have been added. ${world && world.id !== 'original' ? 'Original concepts are kept separate from anime merchandise.' : 'The category structure is ready for future product selections.'}`;
+  grid.innerHTML = matches.length ? matches.map(productCard).join('') : `<div class="empty-state">${icon('search')}<h2>${emptyTitle}</h2><p>${emptyDescription}</p>${link(catalogHref({category:filters.category}), 'Browse this category across all worlds', 'text-link')}${link('/guides/buying-safely', 'Read the buying checklist', 'text-link')}</div>`;
+  document.querySelector('#result-count').textContent = `${matches.length} ${matches.length === 1 ? 'concept' : 'concepts'}${selection ? ` · ${selection}` : ''}`;
+}
+function refreshCatalogStructure() {
+  document.querySelector('#catalog-context').innerHTML = catalogContext();
+  document.title = `NEXORI — ${document.querySelector('#catalog-context h1').textContent}`;
+  document.querySelector('#catalog-plan').innerHTML = catalogPlan();
+  document.querySelector('#collection-type').innerHTML = typeOptions();
+  document.querySelectorAll('[data-category]').forEach(btn => { const selected = btn.dataset.category === filters.category; btn.classList.toggle('selected',selected); btn.setAttribute('aria-pressed',String(selected)); });
+}
+function syncCatalogUrl(replace = false) {
+  const href = catalogHref(filters);
+  if (currentUrl().pathname + currentUrl().search !== href) setPageUrl(href,replace);
 }
 function savedPage() {
   const matches = products.filter(p => saved.includes(p.id));
@@ -144,12 +181,12 @@ function breadcrumb(label, href = '/collection', parent = 'Collection') {
 }
 function productPage(id) {
   const p = products.find(p => p.id === id); if (!p) return notFound();
-  return `<div class="container page-container">${breadcrumb(p.name)}<div class="product-detail"><div class="detail-art">${artwork(p, '', true)}<span class="concept-badge">ORIGINAL CONCEPT ILLUSTRATION</span></div><div class="detail-info"><span class="eyebrow">${p.type.toUpperCase()}</span><h1>${p.name}</h1><p class="detail-description">${p.description}</p><div class="concept-notice">${icon('spark')}<div><strong>A direction, not a product listing.</strong><p>${previewNotice}</p></div></div><button class="button button-primary detail-save" data-save="${p.id}" aria-pressed="${saved.includes(p.id)}">${icon('heart')} ${saved.includes(p.id) ? 'Saved to your finds' : 'Save this inspiration'}</button><p class="detail-storage">Your saved finds stay on this browser.</p><div class="detail-checklist"><h2>When choosing a similar piece</h2><ul>${p.tips.map(t => `<li>${icon('check')} ${t}</li>`).join('')}</ul></div>${link('/about#selection', `How NEXORI selects products ${icon('arrow')}`, 'text-link')}</div></div><section class="related-section">${sectionHeading('FOLLOW YOUR CURIOSITY', 'A few more ideas.', '', '/collection', 'See the collection')}<div class="product-grid">${products.filter(x => x.id !== id).slice(0,4).map(productCard).join('')}</div></section></div>`;
+  return `<div class="container page-container">${breadcrumb(p.name, catalogHref({category:p.category}), categoryName(p.category))}<div class="product-detail"><div class="detail-art">${artwork(p, '', true)}<span class="concept-badge">ORIGINAL CONCEPT ILLUSTRATION</span></div><div class="detail-info"><span class="eyebrow">${p.type.toUpperCase()}</span><h1>${p.name}</h1><p class="detail-description">${p.description}</p><div class="concept-notice">${icon('spark')}<div><strong>A direction, not a product listing.</strong><p>${previewNotice}</p></div></div><nav class="product-placement" aria-label="Product classification">${link(catalogHref({category:p.category}), categoryName(p.category))}${link(catalogHref({category:p.category,type:p.typeId}), catalogTypes.find(t => t.id === p.typeId)?.name || p.type)}${link(catalogHref({world:p.worldId}), catalogWorlds.find(w => w.id === p.worldId)?.name || p.series)}</nav><button class="button button-primary detail-save" data-save="${p.id}" aria-pressed="${saved.includes(p.id)}">${icon('heart')} ${saved.includes(p.id) ? 'Saved to your finds' : 'Save this inspiration'}</button><p class="detail-storage">Your saved finds stay on this browser.</p><div class="detail-checklist"><h2>When choosing a similar piece</h2><ul>${p.tips.map(t => `<li>${icon('check')} ${t}</li>`).join('')}</ul></div>${link('/about#selection', `How NEXORI selects products ${icon('arrow')}`, 'text-link')}</div></div><section class="related-section">${sectionHeading('FOLLOW YOUR CURIOSITY', 'A few more ideas.', '', '/collection', 'See the collection')}<div class="product-grid">${products.filter(x => x.id !== id).slice(0,4).map(productCard).join('')}</div></section></div>`;
 }
 function worldsPage(id) {
-  if (!id) return `<div class="container page-container">${pageIntro('FOR THE STORIES YOU LOVE', 'Find your universe.', 'From the first episode to the final arc. Explore the worlds that inspire your collection.')}${worldsGrid()}<p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
+  if (!id) return `<div class="container page-container">${pageIntro('FOR THE STORIES YOU LOVE', 'Find your universe.', 'Choose an anime world, then browse its figures, apparel, desk & room pieces, replicas or accessories.')}${worldsGrid()}<p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
   const f = franchises.find(x => x.id === id); if (!f) return notFound();
-  return `<div class="container page-container">${breadcrumb(f.name, '/worlds', 'Anime worlds')}<div class="franchise-banner" style="--world-color:${f.color}"><span class="world-symbol" aria-hidden="true">${f.symbol}</span>${pageIntro('YOUR ANIME WORLD', f.name, f.subtitle + '. A home for future merchandise picks and collector inspiration.')}</div><div class="empty-state world-upcoming">${icon('spark')}<h2>A collection worth waiting for.</h2><p>We haven’t selected verified ${f.name} products yet. Explore our buying guides while the collection takes shape.</p>${link('/guides', `Explore the journal ${icon('arrow')}`, 'button button-primary')}</div><p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
+  return `<div class="container page-container">${breadcrumb(f.name, '/worlds', 'Anime worlds')}<div class="franchise-banner" style="--world-color:${f.color}"><span class="world-symbol" aria-hidden="true">${f.symbol}</span>${pageIntro('YOUR ANIME WORLD', f.name, f.subtitle + '. Browse by the kind of product you are looking for.')}</div><section class="world-category-plan"><h2>Explore ${f.name} by product category</h2><p>The planned categories are below. Verified retailer listings have not been added yet; original concepts stay in their own collection.</p>${catalogCategoryCards(f.id)}</section><div class="world-browse-actions">${link(catalogHref({world:f.id}), `Browse all ${f.name} categories ${icon('arrow')}`, 'button button-secondary')}${link('/guides/buying-safely', 'Read the buying checklist', 'text-link')}</div><p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
 }
 function guidesPage(id) {
   if (!id) return `<div class="container page-container">${pageIntro('A LITTLE KNOW-HOW. A LOT OF FANDOM.', 'The NEXORI journal.', 'Practical guides for thoughtful collecting, better spaces, and finding your own kind of fandom.')}<div class="guides-grid">${guides.map(guideCard).join('')}</div></div>`;
@@ -179,6 +216,7 @@ function route() {
   document.title = `NEXORI — ${title}`;
   document.querySelector('#app').innerHTML = `${header()}<main id="main" tabindex="-1">${content}</main>${footer()}${floatingTools()}<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-header"><h2 id="search-title">Find your next obsession.</h2><button class="icon-button" data-close-search aria-label="Close search">${icon('close')}</button></div><label class="dialog-search-input">${icon('search')}<input id="global-search" type="search" placeholder="Try figures, hoodie, desk…" aria-label="Search concepts" maxlength="100" autocomplete="off" /></label><p class="search-hint">Search the original concept collection</p><div id="search-results" class="search-results" aria-live="polite"></div></dialog>`;
   updateCollection();
+  if (parts[0] === 'collection' && parts.length === 1) document.title = `NEXORI — ${document.querySelector('#catalog-context h1').textContent}`;
   alignBannerEffects();
   scheduleScrollEffects();
   if (currentUrl().hash) requestAnimationFrame(() => document.getElementById(currentUrl().hash.slice(1))?.scrollIntoView());
@@ -207,7 +245,7 @@ function toggleSaved(id) {
   toast(adding ? persistent ? 'Saved to your finds.' : 'Saved for this visit. Browser storage is unavailable.' : 'Removed from your saved finds.');
 }
 function searchResults(query) {
-  const matches = products.filter(p => `${p.name} ${p.type} ${categoryName(p.category)}`.toLowerCase().includes(query.toLowerCase().trim()));
+  const matches = products.filter(p => `${p.name} ${p.type} ${categoryName(p.category)} ${catalogWorlds.find(w => w.id === p.worldId)?.name || ''}`.toLowerCase().includes(query.toLowerCase().trim()));
   document.querySelector('#search-results').innerHTML = matches.length ? matches.map(p => link(`/product/${p.id}`, `${artwork(p)}<div><strong>${p.name}</strong><span>${p.type} · Concept</span></div>${icon('arrow')}`, 'search-result')).join('') : '<p class="search-no-results">No matching concepts. Try “figure” or “desk”.</p>';
 }
 document.addEventListener('click', e => {
@@ -245,7 +283,7 @@ document.addEventListener('click', e => {
   if (edit) {
     const selection = edit.dataset.edit;
     const matches = selection === 'all' ? products.slice(0,4) : products.filter(p => p.category === selection);
-    document.querySelector('#home-edit-grid').innerHTML = matches.map(productCard).join('');
+    document.querySelector('#home-edit-grid').innerHTML = matches.length ? matches.map(productCard).join('') : `<div class="empty-state"><h3>This category is being prepared.</h3><p>${categories.find(c => c.id === selection)?.description || ''}</p>${link(catalogHref({category:selection}), 'Explore the planned product types', 'text-link')}</div>`;
     document.querySelectorAll('[data-edit]').forEach(btn => {const active = btn.dataset.edit === selection; btn.classList.toggle('selected',active); btn.setAttribute('aria-pressed',String(active));});
     document.querySelector('#edit-status').textContent = `Showing ${matches.length} inspiration ${matches.length === 1 ? 'concept' : 'concepts'}.`;
   }
@@ -255,13 +293,23 @@ document.addEventListener('click', e => {
   if (e.target.id === 'search-dialog') { const rect = e.target.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) e.target.close(); }
   const category = e.target.closest('[data-category]'); if (category) {
     filters.category = category.dataset.category;
-    setPageUrl(filters.category === 'all' ? '/collection' : `/collection?category=${filters.category}`, true);
-    document.querySelectorAll('[data-category]').forEach(btn => { const selected = btn.dataset.category === filters.category; btn.classList.toggle('selected',selected); btn.setAttribute('aria-pressed',String(selected)); }); updateCollection();
+    if (!catalogTypes.some(t => t.id === filters.type && (filters.category === 'all' || t.category === filters.category))) filters.type = 'all';
+    syncCatalogUrl();
+    refreshCatalogStructure();
+    updateCollection();
   }
-  if (e.target.closest('[data-reset]')) { filters = {category:'all', query:'', sort:'featured'}; navigate('/collection'); }
+  if (e.target.closest('[data-reset]')) { filters = {...catalogDefaults}; navigate('/collection'); }
 });
-document.addEventListener('input', e => { if (e.target.id === 'global-search') searchResults(e.target.value); if (e.target.id === 'collection-search') {filters.query = e.target.value; updateCollection();} });
-document.addEventListener('change', e => {if (e.target.id === 'collection-sort') {filters.sort = e.target.value; updateCollection();} });
+document.addEventListener('input', e => { if (e.target.id === 'global-search') searchResults(e.target.value); if (e.target.id === 'collection-search') {filters.query = e.target.value; syncCatalogUrl(true); updateCollection();} });
+document.addEventListener('change', e => {
+  if (e.target.id === 'collection-sort') { filters.sort = e.target.value; syncCatalogUrl(); updateCollection(); }
+  if (e.target.id === 'collection-world' || e.target.id === 'collection-type') {
+    filters[e.target.id === 'collection-world' ? 'world' : 'type'] = e.target.value;
+    syncCatalogUrl();
+    refreshCatalogStructure();
+    updateCollection();
+  }
+});
 document.addEventListener('keydown', e => {
   const dialog = document.querySelector('#search-dialog[open]');
   if (e.key === 'Tab' && dialog) {

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:catalog": "node --test tests/catalog.test.js",
     "dev": "vite --host 0.0.0.0",
     "build": "vite build && npm run build:html",
     "build:html": "node scripts/build-standalone.mjs",

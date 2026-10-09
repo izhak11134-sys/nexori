@@ -50,6 +50,16 @@ Deploy `dist/` to a static host configured to serve `index.html` for application
 - Local artwork, including an original generated cinematic PNG banner and SVG concept illustrations, with no external image or font dependencies.
 - Homepage inspiration tabs and random concept discovery through **Surprise me**.
 
+## Catalog structure and adding products later
+
+The catalog now has five primary categories: **Figures & collectibles**, **Apparel & style**, **Desk & room**, **Replicas & props**, and **Accessories & small finds**. Each has explicit product types. Anime worlds are a separate classification; category, world, type, search and sort can be combined in shareable URLs and restored on refresh/history navigation. World pages link to their categories rather than a dead-end placeholder. Original concepts remain separate from franchise merchandise.
+
+Use the [Hebrew product-placement guide](docs/product-placement-guide-he.md) for the full click map and classification rules, and the [product intake CSV](docs/product-intake-template.csv) to record future choices. The CSV contains planning slots, not actual products; it is not an automatic import or administration interface. Each item should have one record with a primary category, product type and world. Real listings still need merchant verification, permitted artwork and affiliate integration before publication.
+
+Taxonomy lives in `src/data.js`; reusable URL/filter/validation helpers live in `src/catalog.js`. Standalone generation rejects duplicate product IDs, incompatible category/type combinations, unknown worlds and concepts incorrectly assigned to franchises. Run `npm run test:catalog` for the catalog contract checks.
+
+[Collection structure preview](docs/collection-structure-preview.png) · [World categories preview](docs/world-categories-preview.png) · [Category on mobile](docs/category-mobile-preview.png)
+
 ## Content and launch status
 
 The collection in `src/data.js` contains clearly marked original design concepts, **not real product listings**. No verified prices, retailer URLs, stock claims, fabricated reviews, or affiliate purchase links are presented. Real products and approved affiliate URLs must be researched and added separately. Anime franchise names are references, not a claim of licensing or affiliation.

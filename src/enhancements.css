@@ -162,3 +162,40 @@
 .motion-paused .banner-scene { transform:none;will-change:auto; }
 .motion-paused .blade-glow { opacity:.35; }
 @media(max-width:700px){.collection-notice{padding:15px}.collection-notice p{font-size:13px}.privacy-actions{padding:20px}.policy-contact{font-size:14px}.policy-nav-link{font-size:13px;padding:9px 11px}}
+
+/* Catalog structure: category → product type, with a separate anime-world filter. */
+.categories-section .category-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.catalog-plan,.world-category-plan { margin:0 0 36px; }
+.catalog-plan>h2,.world-category-plan>h2,.catalog-browser-heading>h2 { font-size:23px;font-weight:550;line-height:1.5; }
+.catalog-plan>p,.world-category-plan>p,.catalog-browser-heading>p { color:#bdabc9;line-height:1.8;font-size:15px;margin:9px 0 20px;max-width:760px; }
+.catalog-category-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+.catalog-category-card { min-width:0;padding:24px; }
+.catalog-category-card .category-icon { margin-bottom:18px; }
+.catalog-category-card h3 { line-height:1.5; }
+.catalog-category-card p { min-height:0;font-size:14px;line-height:1.8; }
+.catalog-type-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+.catalog-type-card { display:block;min-width:0;padding:21px;border:1px solid #b58aff33;border-radius:12px;background:#b58aff05; }
+.catalog-type-card:hover,.catalog-type-card.active { border-color:#cba3ed99;background:#b58aff0a; }
+.catalog-type-card h3 { font-size:17px;line-height:1.5;font-weight:550; }
+.catalog-type-card p { color:#c1afd0;font-size:14px;line-height:1.8;margin-top:9px; }
+.catalog-type-card .category-link { font-size:13px;margin-top:18px; }
+.catalog-browser { padding-top:24px;border-top:1px solid #b58aff22; }
+.collection-toolbar { display:flex;flex-direction:column;align-items:stretch;gap:18px; }
+.collection-controls { display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px; }
+.collection-search { flex:1 1 220px;min-width:0; }
+.catalog-select { display:flex;flex:1 1 160px;min-width:0;flex-direction:column;gap:8px;font-size:13px;color:#cdbbdc; }
+.catalog-select select { min-height:48px;max-width:100%;width:100%;padding:10px;border:1px solid #b58aff40;border-radius:8px;background:#15101d;color:#e8dbf2;font-size:14px; }
+.catalog-reset { padding:8px 11px;border:1px solid #b58aff40;border-radius:7px;background:transparent;color:#d5bfe7;font-size:13px; }
+.collection-result-bar { gap:15px; }
+.collection-result-bar #result-count { line-height:1.7; }
+.collection-result-bar .catalog-reset { flex:none; }
+.empty-state .text-link { display:block;margin-top:15px;font-size:14px; }
+.world-category-plan { margin-top:30px; }
+.world-browse-actions { display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-top:26px; }
+.product-placement { display:flex;flex-wrap:wrap;gap:8px;margin:20px 0; }
+.product-placement a { border:1px solid #b58aff45;border-radius:7px;color:#d6bce9;padding:8px 10px;font-size:12px;line-height:1.6; }
+.product-placement a:hover { border-color:#d1a3f7; }
+.product-card-bottom>span { min-width:0;line-height:1.7; }
+@media(max-width:1100px){.categories-section .category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.catalog-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.categories-section .category-grid,.catalog-category-grid,.catalog-type-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.categories-section .category-card:last-child,.catalog-category-card:last-child:nth-child(odd){grid-column:1/-1}.catalog-category-card{padding:18px}.catalog-category-card h3{font-size:16px}.catalog-category-card p{font-size:13px}.catalog-type-card{padding:17px}.catalog-type-card h3{font-size:15px}.catalog-type-card p{font-size:13px}.catalog-select{flex-basis:calc(50% - 14px)}.collection-search{flex-basis:100%}.collection-result-bar{align-items:center}.catalog-plan>h2,.world-category-plan>h2,.catalog-browser-heading>h2{font-size:21px}.catalog-plan>p,.world-category-plan>p{font-size:14px}.filter-tabs{flex-wrap:wrap}.product-card-bottom>span{font-size:10px}}
+@media(max-width:370px){.catalog-type-grid{grid-template-columns:1fr}.catalog-select{flex-basis:100%}.catalog-reset{font-size:12px;padding-inline:8px}}

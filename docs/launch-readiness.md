@@ -4,6 +4,8 @@ Updated 10 October 2026. The owner has confirmed that the site is not publicly l
 
 This document tracks every topic raised in the legal readiness review. Completion of copy or code does not establish legal compliance or clear intellectual property rights.
 
+The catalog is now organised by five primary categories, explicit product types and a separate anime-world filter. See [product placement](product-placement-guide-he.md) for the complete click map and [the intake template](product-intake-template.csv) for future selections. No real products were added by this organisation step. Search text and filter selections now appear in the URL/history, and the privacy notice describes this behavior and possible hosted URL logging.
+
 | Topic | Implemented in this update | Remaining work / trigger |
 | --- | --- | --- |
 | Contact | Owner-supplied email `nexoriofficialon@gmail.com` linked on contact and information pages; privacy/accessibility/rights inquiries described | Mailbox operation is owner-confirmed, not tested by sending a message. Add actual legal operator identification and any additional required public details before launch. |

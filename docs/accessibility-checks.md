@@ -11,3 +11,7 @@ Functional keyboard checks verified the skip link, focus inside the search dialo
 The six information pages were checked for horizontal overflow at 320, 390, 768 and 1440 pixels. The existing smoke checks also exercised the catalog, favorites, search, route history, images and mobile menu. These are scoped browser checks; they are not a substitute for testing zoom, a full screen-reader session, every component state or all applicable accessibility requirements.
 
 Remaining assessment: screen-reader order and announcements; manual contrast against image/gradient backgrounds and in all states; high zoom and reflow; broader keyboard/control coverage; applicable Israeli obligations and exemptions; and a final assessment before public launch. The public accessibility page describes these limits and offers the owner's email for feedback.
+
+## Catalog structure update
+
+The updated catalog, desk category, empty accessories category, One Piece figure selection, One Piece world page and hoodie detail page were checked at both 390 and 1440 pixels (12 additional axe scans using the same rules). No confirmed automated violations were reported; indeterminate contrast checks still require manual review. Catalog-specific functional checks covered 45 layouts across five widths, filter persistence and history, incompatible-type reset, product classification links and the standalone version.

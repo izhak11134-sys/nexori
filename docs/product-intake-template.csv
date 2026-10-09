@@ -1,0 +1,13 @@
+﻿planning_slot,category,typeId,worldId,product_name,manufacturer,sku,official_product_url,licensing_evidence_url,retailer,actual_seller,product_url,approved_affiliate_url,permitted_image_source,image_permission_evidence,shipping_destinations,returns_url,observed_price,currency,checked_on,review_status
+starter-one-piece,figures,display-figures,one-piece,,,,,,,,,,,,,,,,,not_selected
+starter-naruto,figures,display-figures,naruto,,,,,,,,,,,,,,,,,not_selected
+starter-demon-slayer,figures,display-figures,demon-slayer,,,,,,,,,,,,,,,,,not_selected
+starter-jujutsu-kaisen,figures,display-figures,jujutsu-kaisen,,,,,,,,,,,,,,,,,not_selected
+starter-dragon-ball,figures,display-figures,dragon-ball,,,,,,,,,,,,,,,,,not_selected
+starter-attack-on-titan,figures,display-figures,attack-on-titan,,,,,,,,,,,,,,,,,not_selected
+collector-figure-01,figures,display-figures,,,,,,,,,,,,,,,,,,not_selected
+collector-figure-02,figures,display-figures,,,,,,,,,,,,,,,,,,not_selected
+desk-mat-01,desk,desk-mats,,,,,,,,,,,,,,,,,,not_selected
+art-print-01,desk,art-prints,,,,,,,,,,,,,,,,,,not_selected
+t-shirt-01,style,t-shirts,,,,,,,,,,,,,,,,,,not_selected
+small-gift-01,accessories,keychains,,,,,,,,,,,,,,,,,,not_selected

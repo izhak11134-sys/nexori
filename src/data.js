@@ -1,19 +1,41 @@
 export const categories = [
-  { id: 'figures', label: 'Figures & collectibles', short: 'Figures', description: 'Small details. Big main-character energy.', icon: 'cube', color: 'violet' },
-  { id: 'style', label: 'Apparel & style', short: 'Apparel', description: 'Wear your fandom, your way.', icon: 'shirt', color: 'pink' },
-  { id: 'desk', label: 'Desk & room', short: 'Desk & room', description: 'Make your space a little more you.', icon: 'monitor', color: 'cyan' },
-  { id: 'props', label: 'Replicas & props', short: 'Replicas', description: 'Bring a piece of the story home.', icon: 'sword', color: 'orange' },
+  { id: 'figures', label: 'Figures & collectibles', short: 'Figures', description: 'Display figures, poseable figures and model kits.', icon: 'cube', color: 'violet', types: [
+    { id: 'display-figures', name: 'Display figures', examples: 'Prize figures, scale figures, statues and display busts' },
+    { id: 'articulated-figures', name: 'Poseable figures', examples: 'Articulated figures and character accessories included with them' },
+    { id: 'model-kits', name: 'Model kits', examples: 'Kits to assemble, with difficulty and tools clearly described' },
+  ] },
+  { id: 'style', label: 'Apparel & style', short: 'Apparel', description: 'T-shirts, hoodies, jackets and hats.', icon: 'shirt', color: 'pink', types: [
+    { id: 't-shirts', name: 'T-shirts', examples: 'Everyday shirts with a clear size chart' },
+    { id: 'hoodies', name: 'Hoodies', examples: 'Hoodies and sweatshirts with fabric and fit details' },
+    { id: 'jackets', name: 'Jackets', examples: 'Outerwear with garment measurements' },
+    { id: 'hats', name: 'Hats', examples: 'Caps and beanies' },
+  ] },
+  { id: 'desk', label: 'Desk & room', short: 'Desk & room', description: 'Desk mats, art prints and room decor.', icon: 'monitor', color: 'cyan', types: [
+    { id: 'desk-mats', name: 'Desk mats', examples: 'Mouse pads and extended desk mats' },
+    { id: 'art-prints', name: 'Art prints & posters', examples: 'Prints and posters, with dimensions and frame details' },
+    { id: 'room-decor', name: 'Room decor', examples: 'Decorative lights, cushions and other room accents' },
+  ] },
+  { id: 'props', label: 'Replicas & props', short: 'Replicas', description: 'Decorative replicas and costume props.', icon: 'sword', color: 'orange', types: [
+    { id: 'decorative-replicas', name: 'Decorative replicas', examples: 'Clearly described display props, with materials and restrictions checked' },
+    { id: 'costume-props', name: 'Costume props', examples: 'Costume accessories, masks and non-functional props' },
+  ] },
+  { id: 'accessories', label: 'Accessories & small finds', short: 'Accessories', description: 'Keychains, bags, pins and jewellery.', icon: 'spark', color: 'violet', types: [
+    { id: 'keychains', name: 'Keychains', examples: 'Keychains and bag charms' },
+    { id: 'bags', name: 'Bags', examples: 'Tote bags, backpacks and pouches' },
+    { id: 'pins', name: 'Pins & badges', examples: 'Small collectible pins and badges' },
+    { id: 'jewellery', name: 'Jewellery', examples: 'Necklaces, bracelets and other wearable accessories' },
+  ] },
 ];
 
 // Editorial concepts, not retailer listings. Replace with verified products and
 // approved affiliate URLs before presenting prices, stock, or purchase buttons.
 export const products = [
-  { id: 'midnight-ronin', name: 'Midnight Ronin display figure', category: 'figures', series: 'Original design', type: 'Display figure', art: 'ronin', color: '#a582e6', tag: 'Collector inspiration', description: 'A dramatic centerpiece concept with a flowing coat, sculpted details, and a compact display base. A direction to explore when we select the real collection.', tips: ['Check the manufacturer and official licensing.', 'Confirm the figure dimensions and display footprint.', 'Look for retailer photos of the actual item.'] },
-  { id: 'off-duty-hoodie', name: 'Off-duty anime graphic hoodie', category: 'style', series: 'Original design', type: 'Everyday style', art: 'hoodie', color: '#dc89b1', tag: 'Style inspiration', description: 'An understated oversized hoodie concept with a small front graphic and a statement back print. Easy to pair with everyday outfits.', tips: ['Use garment measurements rather than size labels.', 'Check the fabric composition and print method.', 'Read the retailer’s return policy before ordering.'] },
-  { id: 'after-hours-desk', name: 'After-hours extended desk mat', category: 'desk', series: 'Original design', type: 'Desk setup', art: 'desk', color: '#73c9d2', tag: 'Space inspiration', description: 'A moody cityscape desk mat concept for a more personal work or gaming setup, with room for both a keyboard and mouse.', tips: ['Measure your desk before choosing the mat.', 'Look for stitched edges and a non-slip backing.', 'Confirm the artwork and print quality.'] },
-  { id: 'moonlight-blade', name: 'Moonlight decorative blade', category: 'props', series: 'Original design', type: 'Decorative replica', art: 'sword', color: '#e6b079', tag: 'Display inspiration', description: 'A display-only blade concept with a dark handle and a clean silhouette. A collectible direction for fans who enjoy costume props and shelf displays.', tips: ['Choose a clearly described decorative, unsharpened prop.', 'Check local import and shipping restrictions.', 'Check whether a stand is included.'] },
-  { id: 'mecha-unit', name: 'Mecha Unit collectible concept', category: 'figures', series: 'Original design', type: 'Mecha collectible', art: 'mecha', color: '#92a3e8', tag: 'Collector inspiration', description: 'A futuristic mecha bust concept that brings bold shapes and mechanical detail to a smaller shelf or desk.', tips: ['Confirm whether the item is assembled or a model kit.', 'Check the recommended skill level for kits.', 'Review the materials and finish.'] },
-  { id: 'city-after-dark', name: 'City After Dark art print', category: 'desk', series: 'Original design', type: 'Wall art', art: 'poster', color: '#ca8feb', tag: 'Space inspiration', description: 'An atmospheric original cityscape print concept in violet and pink, designed to complement a dark, cozy anime-inspired room.', tips: ['Check the print dimensions and paper weight.', 'Confirm if a frame is included.', 'Buy from the artist or an authorized seller.'] },
+  { id: 'midnight-ronin', typeId: 'display-figures', worldId: 'original', status: 'concept', name: 'Midnight Ronin display figure', category: 'figures', series: 'Original design', type: 'Display figure', art: 'ronin', color: '#a582e6', tag: 'Collector inspiration', description: 'A dramatic centerpiece concept with a flowing coat, sculpted details, and a compact display base. A direction to explore when we select the real collection.', tips: ['Check the manufacturer and official licensing.', 'Confirm the figure dimensions and display footprint.', 'Look for retailer photos of the actual item.'] },
+  { id: 'off-duty-hoodie', typeId: 'hoodies', worldId: 'original', status: 'concept', name: 'Off-duty anime graphic hoodie', category: 'style', series: 'Original design', type: 'Everyday style', art: 'hoodie', color: '#dc89b1', tag: 'Style inspiration', description: 'An understated oversized hoodie concept with a small front graphic and a statement back print. Easy to pair with everyday outfits.', tips: ['Use garment measurements rather than size labels.', 'Check the fabric composition and print method.', 'Read the retailer’s return policy before ordering.'] },
+  { id: 'after-hours-desk', typeId: 'desk-mats', worldId: 'original', status: 'concept', name: 'After-hours extended desk mat', category: 'desk', series: 'Original design', type: 'Desk setup', art: 'desk', color: '#73c9d2', tag: 'Space inspiration', description: 'A moody cityscape desk mat concept for a more personal work or gaming setup, with room for both a keyboard and mouse.', tips: ['Measure your desk before choosing the mat.', 'Look for stitched edges and a non-slip backing.', 'Confirm the artwork and print quality.'] },
+  { id: 'moonlight-blade', typeId: 'decorative-replicas', worldId: 'original', status: 'concept', name: 'Moonlight decorative blade', category: 'props', series: 'Original design', type: 'Decorative replica', art: 'sword', color: '#e6b079', tag: 'Display inspiration', description: 'A display-only blade concept with a dark handle and a clean silhouette. A collectible direction for fans who enjoy costume props and shelf displays.', tips: ['Choose a clearly described decorative, unsharpened prop.', 'Check local import and shipping restrictions.', 'Check whether a stand is included.'] },
+  { id: 'mecha-unit', typeId: 'display-figures', worldId: 'original', status: 'concept', name: 'Mecha Unit collectible concept', category: 'figures', series: 'Original design', type: 'Mecha collectible', art: 'mecha', color: '#92a3e8', tag: 'Collector inspiration', description: 'A futuristic mecha bust concept that brings bold shapes and mechanical detail to a smaller shelf or desk.', tips: ['Confirm whether the item is assembled or a model kit.', 'Check the recommended skill level for kits.', 'Review the materials and finish.'] },
+  { id: 'city-after-dark', typeId: 'art-prints', worldId: 'original', status: 'concept', name: 'City After Dark art print', category: 'desk', series: 'Original design', type: 'Wall art', art: 'poster', color: '#ca8feb', tag: 'Space inspiration', description: 'An atmospheric original cityscape print concept in violet and pink, designed to complement a dark, cozy anime-inspired room.', tips: ['Check the print dimensions and paper weight.', 'Confirm if a frame is included.', 'Buy from the artist or an authorized seller.'] },
 ];
 
 export const franchises = [
