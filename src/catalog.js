@@ -1,6 +1,6 @@
 import { categories, franchises } from './data.js';
 
-export const catalogTypes = categories.flatMap(category => category.types.map(type => ({...type, category:category.id})));
+export const catalogTypes = categories.flatMap(category => category.types.map(type => Object.assign(type,{category:category.id})));
 export const catalogWorlds = [...franchises.map(world => ({id:world.id, name:world.name})), {id:'original', name:'Original concepts'}];
 export const catalogDefaults = {category:'all', world:'all', type:'all', query:'', sort:'featured'};
 
