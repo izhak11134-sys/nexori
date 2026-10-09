@@ -10,6 +10,8 @@ These screenshots show the running application. The repository stores source cod
 
 [View the mobile screenshot](docs/mobile-preview.png)
 
+The latest design adds an original cinematic anime banner in the dark violet/pink palette, glass accents, refined typography, interactive inspiration tabs, a **Surprise me** discovery button, and a dedicated desk-and-room inspiration feature. The banner is embedded in the standalone HTML, too.
+
 ## Open as a single HTML file
 
 Download [NEXORI.html](NEXORI.html), then open the downloaded file in a modern browser. This self-contained version includes the CSS, JavaScript, and all original illustrations; no Node.js installation or server is required. Its navigation uses URL hashes so the collection, articles, filters, and saved finds work locally. Browser restrictions may make favorites temporary when opening local files.
@@ -41,7 +43,8 @@ Deploy `dist/` to a static host configured to serve `index.html` for application
 - Local collection search, category filtering, alphabetical sorting, and browser history.
 - Accessible search dialog and mobile navigation.
 - Favorites stored locally in the browser; no account or server required.
-- Original local SVG concept artwork, with no external image or font dependencies.
+- Local artwork, including an original generated cinematic PNG banner and SVG concept illustrations, with no external image or font dependencies.
+- Homepage inspiration tabs and random concept discovery through **Surprise me**.
 
 ## Content and launch status
 
