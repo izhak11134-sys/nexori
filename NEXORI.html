@@ -240,6 +240,38 @@
 @media(max-width:700px){.banner-scene{height:530px;bottom:auto}.is-carrying .banner-scene{mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%)}}
 @media(prefers-reduced-motion:reduce){.banner-scene{transform:none;will-change:auto}.blade-glow,.floating-shard{animation:none!important}.blade-glow{opacity:.35}}
 
+/* Information pages share the existing palette and readable typography. */
+.policy-date { color:#b9a5c8;font-size:14px;margin:-12px 0 22px; }
+.policy-nav { display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px; }
+.policy-nav-link { border:1px solid #a47ac747;border-radius:9px;padding:10px 13px;font-size:14px;line-height:1.5;color:#d8c7e5; }
+.policy-nav-link:hover,.policy-nav-link.active { border-color:#c59ce6;background:#b58aff12;color:#f0e5fa; }
+.policy-link { color:#dbc0f4;text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere; }
+.info-content p { overflow-wrap:anywhere; }
+.policy-contact { margin-top:30px;line-height:1.8;color:#c9b7d7; }
+.privacy-actions { margin-top:28px;padding:25px;border:1px solid #b58aff30;border-radius:12px;background:#b58aff07; }
+.privacy-actions h2 { font-size:21px;margin-bottom:14px; }
+.privacy-actions p { font-size:16px;line-height:1.8;color:#c9b7d7; }
+.privacy-actions .button { margin-top:20px; }
+.privacy-action-status { margin-top:14px; }
+.collection-notice { margin:0 0 24px;padding:17px 20px;border:1px solid #ad86cf30;border-radius:11px;background:#b58aff06;color:#c9b7d7; }
+.collection-notice>div { display:flex;gap:12px;align-items:flex-start; }
+.collection-notice .icon { margin-top:3px;color:#ba98d9; }
+.collection-notice p { font-size:14px;line-height:1.8; }
+.collection-notice strong { color:#e5d5f1;font-weight:550; }
+.collection-notice>a { display:inline-block;margin:9px 0 0 32px;font-size:13px;line-height:1.6; }
+.footer-bottom { flex-wrap:wrap;row-gap:18px; }
+.footer-bottom>div { flex-wrap:wrap;row-gap:14px; }
+.footer-note,.footer-bottom { color:#a795b7; }
+.guide-meta>span:last-child,.detail-storage { color:#a08bb4; }
+.article-number { color:#b58ad9; }
+.motion-toggle { display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid #b58aff50;border-radius:8px;padding:9px 11px;font-size:12px;line-height:1.5;color:#d4bedf; }
+.motion-toggle span { padding:1px 6px;border-radius:5px;background:#b58aff16; }
+.motion-toggle[aria-pressed="true"] { border-color:#c49de9;color:#ede0f7; }
+.motion-paused *,.motion-paused *::before,.motion-paused *::after { animation:none!important;scroll-behavior:auto!important; }
+.motion-paused .banner-scene { transform:none;will-change:auto; }
+.motion-paused .blade-glow { opacity:.35; }
+@media(max-width:700px){.collection-notice{padding:15px}.collection-notice p{font-size:13px}.privacy-actions{padding:20px}.policy-contact{font-size:14px}.policy-nav-link{font-size:13px;padding:9px 11px}}
+
 </style>
 </head>
   <body>
@@ -297,6 +329,88 @@ const guides = [
   ] },
 ];
 
+const contactEmail = 'nexoriofficialon@gmail.com';
+const contactLink = `<a class="policy-link" href="mailto:${contactEmail}">${contactEmail}</a>`;
+const policyDate = '2026-10-10';
+const previewNotice = 'This collection is a design preview. The illustrations are concepts, not products offered for sale. Product authenticity and licensing have not been verified for these concepts.';
+const franchiseNotice = 'NEXORI is an independent editorial website and is not endorsed by or affiliated with the anime franchises referenced here. Franchise names and trademarks belong to their respective owners.';
+
+const policies = {
+  disclosure: {
+    eyebrow: 'CLEAR FROM THE START', title: 'Affiliate disclosure.',
+    intro: 'How recommendations are funded, and what you can expect from us.',
+    sections: [
+      ['The current preview', 'This collection contains illustrated concepts, not purchasable product listings. There are no active affiliate purchase links, verified product prices or paid placements in this version.'],
+      ['How affiliate links will work', 'When affiliate links are introduced, we may earn a commission if you make a qualifying purchase through them. We will identify the commercial relationship clearly near the relevant recommendations and links, and include any wording required by the applicable affiliate program.'],
+      ['Editorial choices and sponsorships', 'We aim to explain why each item was selected, who it may suit and which details need checking. Any paid placement, gifted product or other material commercial relationship will be identified with the relevant content. An affiliate relationship is not evidence of a product’s authenticity or quality.'],
+      ['Testing, prices and availability', 'We will distinguish research and opinion from first-hand testing. We will not describe a product as personally tested unless it was. Retailer prices, availability and delivery terms can change; check the actual listing before buying.'],
+      ['Purchases at external retailers', 'Future purchases will take place on the retailer’s website. Check the seller identity, product version, delivery costs, import charges and returns policy before ordering. The retailer handles payment, fulfilment and order support. This does not remove our responsibility for information we publish.'],
+      ['Questions and corrections', `For questions about a recommendation or a commercial relationship, contact ${contactLink}. Do not include payment details or sensitive order information.`],
+    ],
+  },
+  privacy: {
+    eyebrow: 'YOUR SPACE. YOUR CHOICE.', title: 'Privacy, in plain language.',
+    intro: 'This notice describes the current NEXORI preview and the information used by its features.',
+    sections: [
+      ['Who to contact', `NEXORI is an independent editorial website being developed from Israel. For privacy questions or requests, contact ${contactLink}. The operator’s legal identification and production service details will be completed before public launch.`],
+      ['Saved finds', 'When you save a concept, its identifier is stored in this browser’s local storage under nexori.saved.v1. The saved list is not sent to a server by this feature and is not shared between devices. It remains until you remove it or clear this site’s data. If browser storage is unavailable, saved finds may last only for the current visit.'],
+      ['Your motion preference', 'If you use “Reduce visual motion”, this browser stores that choice under nexori.motion.v1 so it can be applied on your next visit. It is not sent to a server by this feature. Clearing this site’s browser data removes the choice. Your browser’s own reduced-motion preference is also respected.'],
+      ['Search and technical delivery', 'Search and filtering run locally over this collection. The current application has no account registration, checkout, contact form, analytics, advertising pixels or newsletter subscription. Images are included with the site rather than loaded from external image services. If the site is served online, the delivery provider may receive technical information such as IP addresses, requested URLs and browser details. A production hosting provider has not yet been selected for this preview; its actual processing and retention will be described before public launch.'],
+      ['When you email us', 'Contacting us by email shares your email address and the information you choose to include so we can respond and address the issue. Messages are handled using Gmail; your email provider and ours may also process them under their own terms and privacy policies. Correspondence should be kept only as needed for the inquiry, any follow-up and applicable legal obligations. Do not send passwords, payment information or identification documents by default. Contacting us does not subscribe you to marketing.'],
+      ['Your choices and requests', `You can remove individual saved finds, use “Clear saved finds” below, or clear this site’s data in your browser. For information held through correspondence, contact ${contactLink}. Access, correction, deletion and other requests will be assessed under the law that applies; some information may need to be retained where required. We may ask for proportionate verification where necessary, without requesting sensitive documents by default.`],
+      ['External websites and future features', 'Future retailer links will take you to separate websites with their own privacy practices; affiliate networks may process clicks and purchases under the applicable program. Before adding those links, tracking, embedded services, forms or mailing lists, we will update this notice and implement any applicable consent, disclosure and security requirements.'],
+      ['Changes to this notice', 'The date on this page identifies the latest content update. This notice must continue to reflect the services actually used; it does not claim that every future feature or every jurisdiction has already been assessed.'],
+    ],
+    action: 'clear-saved',
+  },
+  terms: {
+    eyebrow: 'A FEW THINGS TO KNOW', title: 'Terms of use.',
+    intro: 'NEXORI is an independent discovery and editorial website, currently presented as a design preview.',
+    sections: [
+      ['The collection and editorial information', `${previewNotice} Guides provide general shopping information. Recommendations and illustrations do not guarantee suitability, price, stock, delivery, licensing or authenticity. Specific claims must be supported by information about the actual product and seller.`],
+      ['Independent franchise references', franchiseNotice],
+      ['Illustrations and content rights', 'Preview artwork is illustrative and is not a photograph of a retail product. Some artwork was generated with AI. AI generation alone does not establish exclusive ownership or clearance of third-party rights. Franchise references do not grant a licence to reproduce their characters or logos. If you wish to reuse material or believe content affects your rights, contact us; please identify the relevant page and explain your request.'],
+      ['External purchases', 'NEXORI does not sell or take payment for products in this preview. When retailer links are added, purchases will be made with the identified retailer under its terms. Check the current listing, seller, total cost, restrictions, shipping and returns before ordering. We do not promise refunds or delivery on a retailer’s behalf.'],
+      ['Commercial relationships', 'Affiliate links and other material commercial relationships will be identified with the relevant content. Our affiliate disclosure explains the current status and approach.'],
+      ['Responsible use', 'Do not use this website to attempt unauthorised access, disrupt its operation or infringe another person’s rights. Do not send sensitive personal information that is not needed for an inquiry.'],
+      ['Corrections and your rights', `If content appears inaccurate, misleading or infringing, please contact ${contactLink} with the page address and relevant details. Nothing in these terms excludes obligations or rights that cannot lawfully be excluded. Your applicable consumer and privacy rights remain unaffected.`],
+      ['Changes', 'These terms describe the present version. We will review them when the website’s services or commercial relationships change and update the date shown on this page.'],
+    ],
+  },
+  contact: {
+    eyebrow: 'LET’S KEEP IT REAL', title: 'Get in touch.',
+    intro: 'Questions, corrections and thoughtful feedback are welcome.',
+    sections: [
+      ['Contact NEXORI', `Email ${contactLink} for website inquiries, editorial corrections, privacy requests, accessibility feedback, rights concerns or partnership inquiries. The website is being developed from Israel. Public legal operator details will be completed before launch.`],
+      ['What to include', 'Tell us which page or feature you are asking about and describe the issue. For accessibility feedback, you may include your browser or device and the type of assistance needed. Please share only the information necessary to help; do not send passwords, card details or sensitive documents.'],
+      ['How email works', 'The email link opens your email application. This page does not submit a form or send a message automatically. Contacting us does not add you to a marketing list; our privacy notice explains how correspondence is handled.'],
+      ['Retailer orders', 'There are no purchasable listings in this preview. For future orders placed at an external retailer, contact that retailer for payment, shipping, cancellations and returns. You can also tell us if a recommendation contains inaccurate information.'],
+    ],
+  },
+  accessibility: {
+    eyebrow: 'A PLACE FOR EVERY FAN', title: 'Accessibility.',
+    intro: 'Our approach, the features available now and how to ask for help.',
+    sections: [
+      ['Current status', 'NEXORI is a pre-launch design preview. This page is not a certification of WCAG or legal compliance. A complete accessibility assessment, including assistive-technology testing and the requirements applicable to the operator, has not yet been completed.'],
+      ['Navigation and controls', 'The site includes a skip-to-content link, labelled navigation and buttons, visible keyboard focus and a search dialog that can be closed with Escape. Main content receives focus after internal navigation. Illustrative images have text alternatives; decorative effects are hidden from assistive technology.'],
+      ['Motion and readability', 'The site respects your browser’s reduced-motion preference. You can also use “Reduce visual motion” in the footer to stop continuous decorative animations and banner scroll movement. The layout adapts to smaller screens, and browser zoom remains available.'],
+      ['Assessment still needed', 'Screen-reader reading order and announcements, colour contrast across all states, magnification and reflow, and a complete assessment against the applicable accessibility requirements still need review. We will address identified barriers and keep this page accurate rather than claim unverified conformance or exemptions.'],
+      ['Request assistance or report a barrier', `Contact ${contactLink} with the page, task and difficulty you experienced. Browser, device or assistive-technology details can help, but please do not include sensitive information. We will review feedback and discuss a suitable way to help; no response time is guaranteed by this preview.`],
+    ],
+  },
+  rights: {
+    eyebrow: 'RESPECT FOR THE STORIES', title: 'Content & franchise references.',
+    intro: 'How to understand the artwork, references and product information in this preview.',
+    sections: [
+      ['An independent website', franchiseNotice],
+      ['Preview artwork', 'The banner and collection artwork are illustrations created for the design preview; some artwork was generated with AI. They are not evidence that a retail product exists or is officially licensed. Creation of an illustration does not, by itself, establish exclusive rights or clearance of third-party material.'],
+      ['Future product information', 'Actual product photographs and descriptions will be used only through an appropriate permission or permitted affiliate content source. Product-specific licensing or authenticity claims will require supporting evidence. Fan art, replicas and official merchandise must not be described as interchangeable.'],
+      ['Report a concern', `For a rights or trademark concern, email ${contactLink} with the relevant URL, the material concerned and an explanation of your interest. We will review the concern and any supporting information. This notice does not authorise copying protected material or remove any applicable rights.`],
+    ],
+  },
+};
+
+const info = policies;
 
 const icons = {
   arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
@@ -325,6 +439,10 @@ const pageHref = href => standalone ? `#${href}` : href;
 const setPageUrl = (href, replace = false) => history[replace ? 'replaceState' : 'pushState']({}, '', pageHref(href));
 const assetUrl = name => window.NEXORI_ART?.[name] || `/assets/${name}.${name === 'hero-banner' ? 'png' : 'svg'}`;
 const storageKey = 'nexori.saved.v1';
+const motionStorageKey = 'nexori.motion.v1';
+let motionPaused = false;
+try { motionPaused = localStorage.getItem(motionStorageKey) === 'reduce'; } catch {}
+document.body.classList.toggle('motion-paused', motionPaused);
 let saved = [];
 try { const value = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(value)) saved = value.filter(id => products.some(p => p.id === id)); } catch {}
 let filters = { category: 'all', query: '', sort: 'featured' };
@@ -352,9 +470,13 @@ function header() {
 function footer() {
   return `<footer class="footer"><div class="container footer-top"><div class="footer-brand">${brand()}<p>A little fandom. A lot of possibility.<br>Your next obsession starts here.</p><span class="footer-note">Made for the love of anime.</span></div>
   <div><h3>Discover</h3>${link('/collection', 'The collection')}${link('/worlds', 'Anime worlds')}${link('/guides', 'Buying guides')}${link('/saved', 'Saved finds')}</div>
-  <div><h3>Get to know us</h3>${link('/about', 'Our story')}${link('/about#selection', 'How we select')}${link('/disclosure', 'Affiliate disclosure')}${link('/contact', 'Contact')}</div>
-  <div class="footer-transparency"><span class="tiny-label">A NOTE ON TRANSPARENCY</span><p>When retailer links are added, we may earn a commission from qualifying purchases, at no extra cost to you.</p>${link('/disclosure', `Learn more ${icon('arrow')}`, 'text-link')}</div></div>
-  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}</div></div></footer>`;
+  <div><h3>Get to know us</h3>${link('/about', 'Our story')}${link('/about#selection', 'How we select')}${link('/disclosure', 'Affiliate disclosure')}${link('/contact', 'Contact')}${link('/rights', 'Content & franchise references')}</div>
+  <div class="footer-transparency"><span class="tiny-label">A NOTE ON TRANSPARENCY</span><p>This is a design preview with no active affiliate purchase links. When affiliate links are added, we may earn a commission from qualifying purchases.</p>${link('/disclosure', `Learn more ${icon('arrow')}`, 'text-link')}</div></div>
+  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}${link('/accessibility', 'Accessibility')}</div><button class="motion-toggle" data-motion aria-pressed="${motionPaused}">Reduce visual motion <span aria-hidden="true">${motionPaused ? 'On' : 'Off'}</span></button></div></footer>`;
+}
+
+function collectionNotice() {
+  return `<aside class="collection-notice"><div>${icon('shield')}<p><strong>Design preview.</strong> ${previewNotice.replace('This collection is a design preview. ', '')}</p></div>${link('/rights', 'About artwork & references', 'policy-link')}</aside>`;
 }
 
 function floatingTools() {
@@ -398,7 +520,7 @@ function home() {
   return `<section class="hero cinematic-hero"><div class="banner-scene"><img class="cinematic-background" src="${assetUrl('hero-banner')}" alt="Original anime artwork: a swordsman surrounded by a violet halo, floating temples, and cherry blossoms" width="1672" height="941" fetchpriority="high" />${bannerEffects()}</div><div class="cinematic-shade" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div><div class="ambient-sparks" aria-hidden="true"><span>✧</span><span>✦</span><span>✧</span></div><div class="container hero-inner"><div class="hero-copy"><span class="hero-eyebrow"><span></span> A WORLD WORTH COLLECTING</span><h1 class="neon-title">Your Portal to <br><em>Authentic Anime</em> <br><span>Culture &amp; Collectibles</span></h1><p>For the stories you live in.<br>The characters you carry with you.<br>And the pieces that make it all real.</p><div class="hero-buttons">${link('/collection', `Explore the collection ${icon('arrow')}`, 'button button-primary')}${link('/guides', `${icon('book')} Find your inspiration`, 'button button-secondary')}</div><div class="hero-footnote"><span class="small-stars">✧</span> Your fandom. Thoughtfully found.</div></div><div class="cinematic-art-label"><span class="art-label-cross" aria-hidden="true">✦</span><div><span class="tiny-label">THE NEXORI UNIVERSE</span><strong>Beyond the ordinary.</strong><span>Original artwork / Chapter 01</span></div></div><div class="hero-coordinate" aria-hidden="true">N / 001 <span>DISCOVER YOUR WORLD</span></div></div>
   <div class="hero-series"><div class="container"><span class="tiny-label">FIND YOUR UNIVERSE</span><div>${franchises.slice(0, 5).map(f => link(`/worlds/${f.id}`, f.name)).join('<span class="series-star" aria-hidden="true">✦</span>')}</div></div></div></section>
   <section class="trust-strip container" aria-label="Our approach"><div>${icon('spark')}<span>Independent editorial picks</span></div><div>${icon('shield')}<span>Transparency comes first</span></div><div>${icon('heart')}<span>Made with fans in mind</span></div></section>
-  <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Explore all concepts')}<div class="edit-controls"><div class="edit-tabs" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">The full picture</button><button class="edit-tab" data-edit="figures" aria-pressed="false">Shelf statements</button><button class="edit-tab" data-edit="style" aria-pressed="false">Off-duty style</button><button class="edit-tab" data-edit="desk" aria-pressed="false">After-hours setup</button></div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
+  <section class="section container collection-edit">${sectionHeading('THE COLLECTION EDIT', 'Good taste. Great fandom.', 'Original concepts for your next chapter. Real product picks are coming next.', '/collection', 'Explore all concepts')}${collectionNotice()}<div class="edit-controls"><div class="edit-tabs" role="group" aria-label="Choose your collection inspiration"><button class="edit-tab selected" data-edit="all" aria-pressed="true">The full picture</button><button class="edit-tab" data-edit="figures" aria-pressed="false">Shelf statements</button><button class="edit-tab" data-edit="style" aria-pressed="false">Off-duty style</button><button class="edit-tab" data-edit="desk" aria-pressed="false">After-hours setup</button></div><button class="surprise-button" data-surprise>${icon('spark')} Surprise me</button></div><p id="edit-status" class="sr-only" role="status"></p><div class="product-grid" id="home-edit-grid">${products.slice(0,4).map(productCard).join('')}</div></section>
   <section class="section container categories-section">${sectionHeading('PICK YOUR KIND OF FANDOM', 'More than a shelf.', '', '', '')}<div class="category-grid">${categories.map((c,i) => link(`/collection?category=${c.id}`, `<span class="category-number">0${i+1}</span><span class="category-icon ${c.color}">${icon(c.icon)}</span><h3>${c.label}</h3><p>${c.description}</p><span class="category-link">Explore ${icon('arrow')}</span>`, 'category-card')).join('')}</div></section>
   <section class="editorial-banner container"><div class="editorial-art">${artwork(products[0])}<span class="editorial-art-word" aria-hidden="true">COLLECT.</span></div><div class="editorial-copy"><span class="eyebrow">LESS GUESSWORK. MORE GOOD FINDS.</span><h2>Your first figure.<br>Your next chapter.</h2><p>From choosing a figure format to checking a seller, our beginner’s guide helps you start a collection with a little more confidence.</p>${link('/guides/first-figure', `Read the collector’s guide ${icon('arrow')}`, 'button button-primary')}<span class="editorial-bottom">THE NEXORI JOURNAL <span> / </span> 4 MIN READ</span></div></section>
   <section class="section container worlds-section">${sectionHeading('STORIES THAT STAY WITH YOU', 'Which world is yours?', 'Find inspiration in the series you keep coming back to.', '/worlds', 'Explore the worlds')}${worldsGrid()}</section>
@@ -413,7 +535,7 @@ function pageIntro(eyebrow, title, description) {
 function collection() {
   const requested = currentUrl().searchParams.get('category');
   filters.category = categories.some(c => c.id === requested) ? requested : 'all';
-  return `<div class="container page-container">${pageIntro('YOUR NEXT FIND STARTS HERE', 'The collection.', 'Explore original concepts for the future NEXORI collection. Save your favorites while we select real retailer listings.')}<div class="collection-toolbar"><div class="filter-tabs" aria-label="Product category"><button data-category="all" class="filter-tab ${filters.category === 'all' ? 'selected' : ''}" aria-pressed="${filters.category === 'all'}">All concepts</button>${categories.map(c => `<button data-category="${c.id}" class="filter-tab ${filters.category === c.id ? 'selected' : ''}" aria-pressed="${filters.category === c.id}">${c.short}</button>`).join('')}</div><div class="collection-controls"><label class="collection-search">${icon('search')}<input id="collection-search" type="search" placeholder="Search concepts" aria-label="Search concepts" value="${escape(filters.query)}" maxlength="100" /></label><label class="sort-control"><span class="sr-only">Sort concepts</span><select id="collection-sort"><option value="featured" ${filters.sort === 'featured' ? 'selected' : ''}>Editorial order</option><option value="az" ${filters.sort === 'az' ? 'selected' : ''}>Name: A–Z</option></select>${icon('chevron')}</label></div></div><div class="collection-result-bar"><p id="result-count" role="status"></p><span>${icon('spark')} Original illustrations · Inspiration only</span></div><div id="collection-grid" class="product-grid"></div></div>`;
+  return `<div class="container page-container">${pageIntro('YOUR NEXT FIND STARTS HERE', 'The collection.', 'Explore original concepts for the future NEXORI collection. Save your favorites while we select real retailer listings.')}${collectionNotice()}<div class="collection-toolbar"><div class="filter-tabs" role="group" aria-label="Product category"><button data-category="all" class="filter-tab ${filters.category === 'all' ? 'selected' : ''}" aria-pressed="${filters.category === 'all'}">All concepts</button>${categories.map(c => `<button data-category="${c.id}" class="filter-tab ${filters.category === c.id ? 'selected' : ''}" aria-pressed="${filters.category === c.id}">${c.short}</button>`).join('')}</div><div class="collection-controls"><label class="collection-search">${icon('search')}<input id="collection-search" type="search" placeholder="Search concepts" aria-label="Search concepts" value="${escape(filters.query)}" maxlength="100" /></label><label class="sort-control"><span class="sr-only">Sort concepts</span><select id="collection-sort"><option value="featured" ${filters.sort === 'featured' ? 'selected' : ''}>Editorial order</option><option value="az" ${filters.sort === 'az' ? 'selected' : ''}>Name: A–Z</option></select>${icon('chevron')}</label></div></div><div class="collection-result-bar"><p id="result-count" role="status"></p><span>${icon('spark')} Original illustrations · Inspiration only</span></div><div id="collection-grid" class="product-grid"></div></div>`;
 }
 function updateCollection() {
   const grid = document.querySelector('#collection-grid'); if (!grid) return;
@@ -431,27 +553,21 @@ function breadcrumb(label, href = '/collection', parent = 'Collection') {
 }
 function productPage(id) {
   const p = products.find(p => p.id === id); if (!p) return notFound();
-  return `<div class="container page-container">${breadcrumb(p.name)}<div class="product-detail"><div class="detail-art">${artwork(p, '', true)}<span class="concept-badge">ORIGINAL CONCEPT ILLUSTRATION</span></div><div class="detail-info"><span class="eyebrow">${p.type.toUpperCase()}</span><h1>${p.name}</h1><p class="detail-description">${p.description}</p><div class="concept-notice">${icon('spark')}<div><strong>A direction, not a product listing.</strong><p>This illustration is an original design concept. Actual products, prices, and retailer links will be added after selection.</p></div></div><button class="button button-primary detail-save" data-save="${p.id}" aria-pressed="${saved.includes(p.id)}">${icon('heart')} ${saved.includes(p.id) ? 'Saved to your finds' : 'Save this inspiration'}</button><p class="detail-storage">Your saved finds stay on this browser.</p><div class="detail-checklist"><h2>When choosing a similar piece</h2><ul>${p.tips.map(t => `<li>${icon('check')} ${t}</li>`).join('')}</ul></div>${link('/about#selection', `How NEXORI selects products ${icon('arrow')}`, 'text-link')}</div></div><section class="related-section">${sectionHeading('FOLLOW YOUR CURIOSITY', 'A few more ideas.', '', '/collection', 'See the collection')}<div class="product-grid">${products.filter(x => x.id !== id).slice(0,4).map(productCard).join('')}</div></section></div>`;
+  return `<div class="container page-container">${breadcrumb(p.name)}<div class="product-detail"><div class="detail-art">${artwork(p, '', true)}<span class="concept-badge">ORIGINAL CONCEPT ILLUSTRATION</span></div><div class="detail-info"><span class="eyebrow">${p.type.toUpperCase()}</span><h1>${p.name}</h1><p class="detail-description">${p.description}</p><div class="concept-notice">${icon('spark')}<div><strong>A direction, not a product listing.</strong><p>${previewNotice}</p></div></div><button class="button button-primary detail-save" data-save="${p.id}" aria-pressed="${saved.includes(p.id)}">${icon('heart')} ${saved.includes(p.id) ? 'Saved to your finds' : 'Save this inspiration'}</button><p class="detail-storage">Your saved finds stay on this browser.</p><div class="detail-checklist"><h2>When choosing a similar piece</h2><ul>${p.tips.map(t => `<li>${icon('check')} ${t}</li>`).join('')}</ul></div>${link('/about#selection', `How NEXORI selects products ${icon('arrow')}`, 'text-link')}</div></div><section class="related-section">${sectionHeading('FOLLOW YOUR CURIOSITY', 'A few more ideas.', '', '/collection', 'See the collection')}<div class="product-grid">${products.filter(x => x.id !== id).slice(0,4).map(productCard).join('')}</div></section></div>`;
 }
 function worldsPage(id) {
-  if (!id) return `<div class="container page-container">${pageIntro('FOR THE STORIES YOU LOVE', 'Find your universe.', 'From the first episode to the final arc. Explore the worlds that inspire your collection.')}${worldsGrid()}<p class="muted world-disclaimer">Series names belong to their respective owners. NEXORI is an independent site and is not affiliated with these franchises.</p></div>`;
+  if (!id) return `<div class="container page-container">${pageIntro('FOR THE STORIES YOU LOVE', 'Find your universe.', 'From the first episode to the final arc. Explore the worlds that inspire your collection.')}${worldsGrid()}<p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
   const f = franchises.find(x => x.id === id); if (!f) return notFound();
-  return `<div class="container page-container">${breadcrumb(f.name, '/worlds', 'Anime worlds')}<div class="franchise-banner" style="--world-color:${f.color}"><span class="world-symbol" aria-hidden="true">${f.symbol}</span>${pageIntro('YOUR ANIME WORLD', f.name, f.subtitle + '. A home for future merchandise picks and collector inspiration.')}</div><div class="empty-state world-upcoming">${icon('spark')}<h2>A collection worth waiting for.</h2><p>We haven’t selected verified ${f.name} products yet. Explore our buying guides while the collection takes shape.</p>${link('/guides', `Explore the journal ${icon('arrow')}`, 'button button-primary')}</div></div>`;
+  return `<div class="container page-container">${breadcrumb(f.name, '/worlds', 'Anime worlds')}<div class="franchise-banner" style="--world-color:${f.color}"><span class="world-symbol" aria-hidden="true">${f.symbol}</span>${pageIntro('YOUR ANIME WORLD', f.name, f.subtitle + '. A home for future merchandise picks and collector inspiration.')}</div><div class="empty-state world-upcoming">${icon('spark')}<h2>A collection worth waiting for.</h2><p>We haven’t selected verified ${f.name} products yet. Explore our buying guides while the collection takes shape.</p>${link('/guides', `Explore the journal ${icon('arrow')}`, 'button button-primary')}</div><p class="muted world-disclaimer">${franchiseNotice}</p></div>`;
 }
 function guidesPage(id) {
   if (!id) return `<div class="container page-container">${pageIntro('A LITTLE KNOW-HOW. A LOT OF FANDOM.', 'The NEXORI journal.', 'Practical guides for thoughtful collecting, better spaces, and finding your own kind of fandom.')}<div class="guides-grid">${guides.map(guideCard).join('')}</div></div>`;
   const g = guides.find(x => x.id === id); if (!g) return notFound();
   return `<div class="container page-container">${breadcrumb(g.title, '/guides', 'The journal')}<article class="article"><header><span class="eyebrow">${g.eyebrow}</span><h1>${g.title}</h1><p class="article-intro">${g.description}</p><div class="article-byline"><span class="author-mark">N</span><span>NEXORI Editorial</span><span>·</span><span>${g.time}</span></div></header><div class="article-art">${artwork(g, '', true)}<span>THE NEXORI JOURNAL</span></div><div class="article-body">${g.sections.map(([h,p],i) => `<section><span class="article-number">0${i+1}</span><h2>${h}</h2><p>${p}</p></section>`).join('')}<aside class="article-note">${icon('shield')}<p>These guides offer general shopping advice. Check the current product details, seller terms, and local requirements before making a purchase.</p></aside>${link('/guides', `${icon('back')} Back to the journal`, 'text-link')}</div></article></div>`;
 }
-const info = {
-  disclosure: { eyebrow: 'CLEAR FROM THE START', title: 'Affiliate disclosure.', intro: 'You should always know how recommendations are funded.', sections: [['How affiliate links work', 'When affiliate retailer links are added to NEXORI, we may earn a commission if you click a link and make a qualifying purchase. This comes at no additional cost to you. Commercial links will be identified near the recommendation.'], ['The current collection', 'The collection currently contains original illustrated concepts, not purchasable products. There are no live affiliate purchase links or verified prices in this version.'], ['Our editorial approach', 'Recommendations should explain why an item was selected and distinguish verified information from opinions. We will not claim that we tested a product unless we actually did. Purchases, shipping, returns, and customer support are handled by the retailer.']] },
-  privacy: { eyebrow: 'YOUR SPACE. YOUR CHOICE.', title: 'Privacy, in plain language.', intro: 'This version keeps things simple.', sections: [['Saved finds', 'When you save a concept, its identifier is stored in this browser’s local storage. The saved list is not sent to a server. You can remove items using the heart buttons or clear your browser’s site data.'], ['Search and analytics', 'Search runs locally over the collection. This version does not include analytics, advertising trackers, newsletter subscriptions, or account registration. The site’s hosting provider may process technical request information under its own policies.'], ['Illustrations and future services', 'The artwork is hosted with the site. If retailer links, analytics, accounts, or contact forms are introduced, this policy must be updated to reflect their actual behavior before launch.']] },
-  terms: { eyebrow: 'A FEW THINGS TO KNOW', title: 'Terms of use.', intro: 'NEXORI is an independent discovery and editorial site.', sections: [['Concepts and information', 'Illustrations in the current collection represent original concepts rather than products available for purchase. Editorial content provides general information and should not be treated as a guarantee of authenticity, suitability, price, or stock.'], ['Franchise references', 'Anime series names and related trademarks belong to their respective owners. Their mention does not imply endorsement, partnership, or official affiliation.'], ['Retailer purchases', 'When retailer links are introduced, purchases will take place on the retailer’s website under its terms. Confirm the listing, shipping, returns, and any local restrictions before ordering.']] },
-  contact: { eyebrow: 'LET’S KEEP IT REAL', title: 'Get in touch.', intro: 'A good discovery platform makes room for feedback.', sections: [['Contact details are coming', 'NEXORI’s public contact channel has not been configured yet. A verified contact address or working form will be added before public launch. This page does not collect or send messages.'], ['Future inquiries', 'The contact channel will support editorial feedback, listing corrections, and partnership inquiries. For purchases made at external retailers, the retailer handles order support and returns.']] },
-};
 function infoPage(name) {
   const p = info[name];
-  return `<div class="container page-container info-page">${pageIntro(p.eyebrow, p.title, p.intro)}<div class="info-content">${p.sections.map(([h,t]) => `<section><h2>${h}</h2><p>${t}</p></section>`).join('')}</div></div>`;
+  return `<div class="container page-container info-page">${pageIntro(p.eyebrow, p.title, p.intro)}<p class="policy-date">Last updated: <time datetime="${policyDate}">10 October 2026</time></p><nav class="policy-nav" aria-label="Website information">${Object.entries(info).map(([id,page]) => link(`/${id}`, page.title.replace(/\.$/, ''), `policy-nav-link${id === name ? ' active' : ''}`)).join('')}</nav><div class="info-content">${p.sections.map(([h,t]) => `<section><h2>${h}</h2><p>${t}</p></section>`).join('')}</div>${p.action === 'clear-saved' ? `<section class="privacy-actions"><h2>Your saved finds</h2><p>This removes the saved list from this browser. It does not change correspondence or information held by other services.</p><button class="button button-secondary" data-clear-saved>Clear saved finds</button><p class="privacy-action-status" role="status"></p></section>` : ''}${name !== 'contact' ? `<p class="policy-contact">Questions about this page? ${contactLink}</p>` : ''}</div>`;
 }
 function about() {
   return `<div class="container page-container about-page">${pageIntro('FOR THE LOVE OF THE STORY', 'Fandom, thoughtfully found.', 'NEXORI is a place to discover the things that make your favorite stories part of everyday life.')}<div class="about-feature"><span class="about-spark" aria-hidden="true">✦</span><div><span class="eyebrow">OUR STARTING POINT</span><h2>Not just more stuff.<br>More of what you love.</h2><p>From a figure on your shelf to an art print above your desk, the right piece can make a space feel like yours. We’re building a collection around that feeling — with useful information, a clear editorial point of view, and room for different budgets.</p></div></div><div id="selection" class="about-principles"><h2>How we’ll select the collection.</h2><div class="category-grid"><article>${icon('search')}<h3>Research the listing</h3><p>Check manufacturer information, seller details, specifications, and available licensing evidence.</p></article><article>${icon('book')}<h3>Explain the choice</h3><p>Tell you what makes a piece interesting, who it might suit, and which details to check.</p></article><article>${icon('shield')}<h3>Be clear about links</h3><p>Identify affiliate links and keep purchasing, shipping, and returns with the retailer.</p></article><article>${icon('heart')}<h3>Keep it honest</h3><p>No invented reviews, inflated statistics, or claims of hands-on testing we haven’t done.</p></article></div></div><aside class="article-note">${icon('spark')}<p>NEXORI is currently taking shape. The illustrated collection is a design preview; real product selection is the next step.</p></aside></div>`;
@@ -504,9 +620,34 @@ function searchResults(query) {
   document.querySelector('#search-results').innerHTML = matches.length ? matches.map(p => link(`/product/${p.id}`, `${artwork(p)}<div><strong>${p.name}</strong><span>${p.type} · Concept</span></div>${icon('arrow')}`, 'search-result')).join('') : '<p class="search-no-results">No matching concepts. Try “figure” or “desk”.</p>';
 }
 document.addEventListener('click', e => {
+  if (e.target.closest('.skip-link') && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const main = document.querySelector('#main');
+    main.focus({preventScroll:true});
+    main.scrollIntoView({block:'start',behavior:'instant'});
+    return;
+  }
   const anchor = e.target.closest('a[data-link]');
   if (anchor && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); navigate(anchor.getAttribute('href')); return; }
   const save = e.target.closest('[data-save]'); if (save) { toggleSaved(save.dataset.save); return; }
+  if (e.target.closest('[data-clear-saved]')) {
+    saved = [];
+    let cleared = true;
+    try { localStorage.removeItem(storageKey); } catch { cleared = false; }
+    document.querySelectorAll('.saved-count').forEach(count => { count.textContent = '0'; count.hidden = true; });
+    document.querySelector('.privacy-action-status').textContent = cleared ? 'Your saved finds have been cleared from this browser.' : 'Cleared for this visit. Browser storage could not be updated; clear this site’s data in your browser settings.';
+    return;
+  }
+  if (e.target.closest('[data-motion]')) {
+    motionPaused = !motionPaused;
+    document.body.classList.toggle('motion-paused', motionPaused);
+    document.querySelectorAll('[data-motion]').forEach(button => { button.setAttribute('aria-pressed',String(motionPaused)); button.querySelector('span').textContent = motionPaused ? 'On' : 'Off'; });
+    let persistent = true;
+    try { localStorage.setItem(motionStorageKey, motionPaused ? 'reduce' : 'allow'); } catch { persistent = false; }
+    scheduleScrollEffects();
+    toast(`Visual motion ${motionPaused ? 'reduced' : 'restored'}.${persistent ? '' : ' This preference could not be saved.'}`);
+    return;
+  }
   if (e.target.closest('[data-top]')) { window.scrollTo({top:0, behavior:reducedMotion.matches ? 'instant' : 'smooth'}); document.querySelector('#main').focus({preventScroll:true}); return; }
   if (e.target.closest('[data-surprise]')) { navigate(`/product/${products[Math.floor(Math.random() * products.length)].id}`); return; }
   const edit = e.target.closest('[data-edit]');
@@ -530,7 +671,17 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('input', e => { if (e.target.id === 'global-search') searchResults(e.target.value); if (e.target.id === 'collection-search') {filters.query = e.target.value; updateCollection();} });
 document.addEventListener('change', e => {if (e.target.id === 'collection-sort') {filters.sort = e.target.value; updateCollection();} });
-document.addEventListener('keydown', e => {if (e.key === 'Escape') {const nav = document.querySelector('#mobile-nav'); if (!nav.hidden) document.querySelector('[data-menu]').click();} });
+document.addEventListener('keydown', e => {
+  const dialog = document.querySelector('#search-dialog[open]');
+  if (e.key === 'Tab' && dialog) {
+    const focusable = [...dialog.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),[tabindex="0"]')].filter(element => element.getClientRects().length);
+    const first = focusable[0], last = focusable.at(-1);
+    if (e.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { e.preventDefault(); last?.focus(); }
+    else if (!e.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { e.preventDefault(); first?.focus(); }
+  }
+  if (e.key === 'Escape') {const nav = document.querySelector('#mobile-nav'); if (!nav.hidden) document.querySelector('[data-menu]').click();}
+});
+document.addEventListener('close', e => { if (e.target.id === 'search-dialog' && searchTrigger?.isConnected) searchTrigger.focus(); }, true);
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let scrollFrame;
 function scheduleScrollEffects() {
@@ -543,7 +694,7 @@ function scheduleScrollEffects() {
     if (!hero) return;
     const rect = hero.getBoundingClientRect();
     const mobile = window.innerWidth <= 700;
-    const travel = reducedMotion.matches ? 0 : Math.min(mobile ? 620 : 280, Math.max(0, -rect.top) * (mobile ? .66 : .38));
+    const travel = reducedMotion.matches || motionPaused ? 0 : Math.min(mobile ? 620 : 280, Math.max(0, -rect.top) * (mobile ? .66 : .38));
     hero.style.setProperty('--banner-drift', `${travel}px`);
     hero.classList.toggle('is-carrying', travel > 0);
   });

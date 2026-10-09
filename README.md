@@ -54,8 +54,10 @@ Deploy `dist/` to a static host configured to serve `index.html` for application
 
 The collection in `src/data.js` contains clearly marked original design concepts, **not real product listings**. No verified prices, retailer URLs, stock claims, fabricated reviews, or affiliate purchase links are presented. Real products and approved affiliate URLs must be researched and added separately. Anime franchise names are references, not a claim of licensing or affiliation.
 
-The contact page explains that a verified public contact channel has not yet been configured. There is no form that pretends to send a message. This version has no analytics, newsletter service, database, or administrator authentication; it does not reuse Firebase configuration from the old files.
+The contact page links to the owner-supplied email **nexoriofficialon@gmail.com**. It opens an email application rather than pretending to submit a form. Privacy, terms, affiliate disclosure, accessibility and content/franchise pages describe the actual preview, with update dates and links between them. The privacy page can clear saved finds, and the footer includes a persistent **Reduce visual motion** control. This version has no analytics, newsletter service, database, or administrator authentication; it does not reuse Firebase configuration from the old files.
 
-Before a public launch, provide real listings, verified contact information, appropriate legal policies, real domain/SEO metadata, and host route handling. Do not introduce claims of authenticity or product testing without evidence. `public/assets/` contains original concept illustrations.
+Before a public launch, complete the tasks in [launch readiness](docs/launch-readiness.md): real listings, operator identification, actual hosting/privacy details, rights clearance, accessibility assessment and applicable legal review, real domain/SEO metadata, and host route handling. The site is still a pre-launch preview; these pages do not certify legal compliance. Do not introduce claims of authenticity or product testing without evidence. `public/assets/` contains concept illustrations; AI generation does not itself clear third-party rights.
+
+[Contact page preview](docs/contact-preview.png) · [Privacy page on mobile](docs/privacy-mobile-preview.png)
 
 Keep the existing checkout: cloud tasks already use isolated environments and do not need additional Git worktrees unless requested.

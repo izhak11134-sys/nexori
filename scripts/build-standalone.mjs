@@ -15,8 +15,9 @@ for (const name of await readdir(path.join(root, 'public/assets'))) {
 }
 const css = [await read('src/style.css'), await read('src/enhancements.css')].join('\n');
 const data = (await read('src/data.js')).replace(/^export /gm, '');
+const policy = (await read('src/policies.js')).replace(/^export /gm, '');
 const main = (await read('src/main.js')).replace(/^import .*;\r?\n/gm, '');
-const script = `window.NEXORI_ART = ${JSON.stringify(assets)};\n${data}\n${main}`.replace(/<\/script/gi, '<\\/script');
+const script = `window.NEXORI_ART = ${JSON.stringify(assets)};\n${data}\n${policy}\nconst info = policies;\n${main}`.replace(/<\/script/gi, '<\\/script');
 let html = await read('index.html');
 html = html.replace('href="/assets/mark.svg"', `href="${assets.mark}"`)
   .replace('</head>', `<style>\n${css}\n</style>\n</head>`)
