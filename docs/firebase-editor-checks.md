@@ -66,3 +66,7 @@ The bundled real-SDK browser check passed again. New assertions verify the top b
 ## Operator antivirus warning — 2026-10-10
 
 The operator reports the computer deletes the repair download as a virus. The threat name, scanner and affected file are pending; there is no evidence to classify this as a false positive. Source review found the supplied repair launcher runs PowerShell to locate/extract a downloaded ZIP and execute the local Node app. The launcher and repair archive were withdrawn. The replacement removes CMD/BAT launchers, automatic extraction and child-process/browser spawning; users explicitly run the local Node server after extraction. Frontend assets and Firebase permissions are unchanged. Protection must remain enabled; blocked files must not be restored or excluded. Local package/server tests do not constitute an antivirus scan or real Windows verification.
+
+## Operator save checkpoint — 2026-10-11
+
+After being asked to use the current `NEXORI.html`, sign in, append TEST to the Dragon Ball inner-page title, save the draft, close/reopen the file and sign in again, the operator replied that the change persisted. This completes the basic real-project text-save/reload checkpoint by operator report. The agent has not independently inspected Firebase or the Windows browser; real image upload, visitor isolation, publication and recovery remain separate launch checks. No public launch or billing change was performed.
