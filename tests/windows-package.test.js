@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { tmpdir, networkInterfaces } from 'node:os';
 import { join, resolve } from 'node:path';
 import { once } from 'node:events';
 import http from 'node:http';
@@ -35,6 +35,59 @@ test('Windows download contains the configured main app and serves only built fi
     const head=await fetch(`${base}/admin`,{method:'HEAD'});assert.equal(head.status,200);assert.equal(await head.text(),'');
     assert.equal((await fetch(`${base}/admin`,{method:'POST'})).status,405);
     const foreignHost=await new Promise((accept,reject)=>{http.get(`${base}/admin`,{headers:{host:'external.example'}},response=>{response.resume();accept(response.statusCode);}).on('error',reject);});assert.equal(foreignHost,403);
+    assert.equal(errors,'');
+  }finally{
+    if(server&&server.exitCode===null){const stopped=once(server,'exit');server.kill('SIGTERM');await stopped;}
+    await rm(directory,{recursive:true,force:true});
+  }
+});
+
+test('phone preview explicitly serves the packaged app on a private interface and rejects foreign hosts',async()=>{
+  const address=Object.values(networkInterfaces()).flat().find(item=>{
+    const [a,b]=item.address.split('.').map(Number);
+    return !item.internal&&item.family==='IPv4'&&(a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168));
+  })?.address;
+  assert.ok(address,'A private IPv4 interface is required to exercise the actual phone-preview listener.');
+  const directory=await mkdtemp(join(tmpdir(),'nexori phone בדיקה '));
+  let server;
+  try {
+    execFileSync('python3',['-c','import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])',resolve('downloads/NEXORI-Windows.zip'),directory]);
+    const script=join(directory,'NEXORI-Windows/start-local.mjs');
+    for(const argument of ['--lan=203.0.113.1','--lan=127.0.0.1','--unknown']) {
+      assert.throws(()=>execFileSync(process.execPath,[script,argument],{timeout:5000,stdio:'pipe'}),error=>error.status===1&&!error.stdout.toString().includes('http://'));
+    }
+    server=spawn(process.execPath,[script,`--lan=${address}`],{env:{...process.env,NEXORI_LOCAL_PORT:'0'},stdio:['ignore','pipe','pipe']});
+    let output='',errors='';server.stderr.on('data',data=>{errors+=data;});
+    const base=await new Promise((accept,reject)=>{
+      const timeout=setTimeout(()=>reject(new Error(`Phone preview did not start: ${errors}`)),5000);
+      server.stdout.on('data',data=>{output+=data;const match=output.match(/On your iPhone, open: (http:\/\/[\d.]+:\d+)/);if(match){clearTimeout(timeout);accept(match[1]);}});
+      server.once('exit',()=>{clearTimeout(timeout);reject(new Error(`Phone preview stopped: ${errors}`));});
+    });
+    assert.equal(new URL(base).hostname,address);
+    const health=await(await fetch(`${base}/__nexori_local_health`)).json();assert.deepEqual(health,{app:'NEXORI',local:true,mode:'home-network-preview'});
+    const response=await fetch(`${base}/`);assert.equal(response.status,200);
+    const html=await response.text();assert.match(html,/<meta name="viewport"/);
+    const entry=html.match(/src="(\/assets\/[^\"]+\.js)"/)[1];
+    const js=await fetch(`${base}${entry}`);assert.equal(js.status,200);assert.match(js.headers.get('content-type'),/javascript/);
+    const world=await fetch(`${base}/worlds/dragon-ball`);assert.equal(world.status,200);assert.equal(await world.text(),html);
+    assert.equal((await fetch(`${base}/assets/hero-banner.png`)).status,200);
+    for(const path of ['/.env.local','/assets/missing.js','/%5c..%5cREADME-Windows-he.txt'])assert.equal((await fetch(`${base}${path}`)).status,404);
+    assert.equal((await fetch(`${base}/`,{method:'POST'})).status,405);
+    for(const host of ['external.example',`localhost:${new URL(base).port}`,`203.0.113.1:${new URL(base).port}`]) {
+      const status=await new Promise((accept,reject)=>{http.get(`${base}/`,{headers:{host}},r=>{r.resume();accept(r.statusCode);}).on('error',reject);});
+      assert.equal(status,403);
+    }
+    assert.equal(errors,'');
+    const stopped=once(server,'exit');server.kill('SIGTERM');await stopped;
+    server=spawn(process.execPath,[script,'--lan'],{env:{...process.env,NEXORI_LOCAL_PORT:'0'},stdio:['ignore','pipe','pipe']});
+    output='';errors='';server.stderr.on('data',data=>{errors+=data;});
+    const automaticBase=await new Promise((accept,reject)=>{
+      const timeout=setTimeout(()=>reject(new Error(`Automatic preview did not start: ${errors}`)),5000);
+      server.stdout.on('data',data=>{output+=data;const match=output.match(/On your iPhone, open: (http:\/\/[\d.]+:\d+)/);if(match){clearTimeout(timeout);accept(match[1]);}});
+      server.once('exit',()=>{clearTimeout(timeout);reject(new Error(`Automatic preview stopped: ${errors}`));});
+    });
+    assert.equal((await fetch(`${automaticBase}/`)).status,200);
+    assert.deepEqual(await(await fetch(`${automaticBase}/__nexori_local_health`)).json(),health);
     assert.equal(errors,'');
   }finally{
     if(server&&server.exitCode===null){const stopped=once(server,'exit');server.kill('SIGTERM');await stopped;}

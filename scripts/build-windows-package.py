@@ -33,6 +33,7 @@ with ZipFile(destination, 'w', compression=ZIP_DEFLATED, compresslevel=9) as arc
     archive.writestr(prefix + 'package-info.json', json.dumps({
         'app': 'NEXORI', 'projectId': 'nexori-development',
         'mode': 'local-only', 'services': ['Authentication', 'Firestore'],
+        'optionalPreview': 'home-network preview with explicit --lan; default remains loopback-only',
         'requires': 'Node.js 22 or newer', 'builtFrom': 'current dist assets',
     }, indent=2))
 print(f'Created downloads/NEXORI-Windows.zip ({destination.stat().st_size:,} bytes).')
@@ -54,7 +55,10 @@ with ZipFile(html_destination, 'w', compression=ZIP_DEFLATED, compresslevel=9) a
         'הכניסה והשמירה דורשות אינטרנט. אין צורך להגדיר מחדש Firebase.\n'
         'תוכן שנשמר ב־Firebase ייטען שוב; עדכון קוד האתר דורש הורדת קובץ מעודכן.\n'
         'קובץ זה אינו מפרסם אתר באינטרנט.\n'
-        'אם מופיעה הודעת שגיאה בכניסה, העתק אותה לצ׳אט. פתיחה ישירה ב־Windows עדיין דורשת בדיקה אצלך.\n'
+        'באייפון, פתיחה באפליקציית קבצים עשויה להציג תצוגה מקדימה שאינה מריצה את האתר במלואו.\n'
+        'לבדיקה באייפון השתמש בחבילת NEXORI-Windows ובמצב Wi-Fi: node start-local.mjs --lan.\n'
+        'הוראות מפורטות מצורפות לחבילת Windows; המחשב והאייפון צריכים להיות באותה רשת ביתית.\n'
+        'אם מופיעה הודעת שגיאה בכניסה, העתק אותה לצ׳אט.\n'
     ).encode('utf-8-sig'))
 print(f'Created downloads/NEXORI-HTML.zip ({html_destination.stat().st_size:,} bytes).')
 
