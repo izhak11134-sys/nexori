@@ -27,10 +27,8 @@ with ZipFile(destination, 'w', compression=ZIP_DEFLATED, compresslevel=9) as arc
             if any(part.startswith('.') for part in path.relative_to(site).parts):
                 raise SystemExit('Unexpected hidden file in the built site.')
             archive.write(path, prefix + 'site/' + path.relative_to(site).as_posix())
-    for name in ['start-local.mjs', 'START-NEXORI.cmd', 'README-Windows-he.txt']:
+    for name in ['start-local.mjs', 'README-Windows-he.txt']:
         contents = (root / 'scripts' / 'windows' / name).read_text()
-        if name.endswith('.cmd'):
-            contents = contents.replace('\n', '\r\n')
         archive.writestr(prefix + name, contents.encode('utf-8-sig' if name.endswith('.txt') else 'utf-8'))
     archive.writestr(prefix + 'package-info.json', json.dumps({
         'app': 'NEXORI', 'projectId': 'nexori-development',
@@ -39,10 +37,7 @@ with ZipFile(destination, 'w', compression=ZIP_DEFLATED, compresslevel=9) as arc
     }, indent=2))
 print(f'Created downloads/NEXORI-Windows.zip ({destination.stat().st_size:,} bytes).')
 
-# A tiny repair download can be opened directly from Explorer's ZIP view.
-# Its self-contained launcher finds and extracts the full ZIP already downloaded.
+# The automatic shell launcher was withdrawn after an antivirus warning.
+# Do not leave a stale generated repair download when refreshing the package.
 repair = destination.with_name('NEXORI-Start-Fix.zip')
-launcher = (root / 'scripts' / 'windows' / 'START-NEXORI.cmd').read_text().replace('\n', '\r\n')
-with ZipFile(repair, 'w', compression=ZIP_DEFLATED, compresslevel=9) as archive:
-    archive.writestr('START-NEXORI-FIX.cmd', launcher.encode('utf-8'))
-print(f'Created downloads/NEXORI-Start-Fix.zip ({repair.stat().st_size:,} bytes).')
+repair.unlink(missing_ok=True)

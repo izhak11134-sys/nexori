@@ -2,7 +2,6 @@ import http from 'node:http';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFile } from 'node:child_process';
 
 const folder = dirname(fileURLToPath(import.meta.url));
 const site = resolve(folder, 'site');
@@ -11,7 +10,7 @@ const fail = message => { console.error(`\n${message}\n`); process.exitCode = 1;
 const inside = path => { const part=relative(site,path); return part!== '..'&&!part.startsWith(`..${sep}`)&&!isAbsolute(part); };
 
 async function start() {
-  if(Number(process.versions.node.split('.')[0])<22)throw new Error('Install Node.js LTS (22 or newer) from https://nodejs.org and reopen START-NEXORI.cmd.');
+  if(Number(process.versions.node.split('.')[0])<22)throw new Error('Install Node.js LTS (22 or newer) from https://nodejs.org, then run node start-local.mjs.');
   await readFile(resolve(site,'index.html'));
   const requested=Number(process.env.NEXORI_LOCAL_PORT??5173);
   if(!Number.isInteger(requested)||requested<0||requested>65535)throw new Error('Invalid local port.');
@@ -52,11 +51,6 @@ async function start() {
   server.listen(requested,'127.0.0.1',()=>{
     const url=`http://localhost:${server.address().port}/admin`;
     console.log(`\nNEXORI is running on your computer.\nOpen: ${url}\nKeep this window open while editing. Press Ctrl+C to stop.\n`);
-    if(process.platform==='win32'&&process.env.NEXORI_NO_OPEN!=='true'){
-      execFile('cmd.exe',['/d','/s','/c',`start "" "${url}"`],{windowsHide:true},error=>{
-        if(error)console.log('Open the address above in your browser.');
-      });
-    }
   });
   for(const signal of ['SIGINT','SIGTERM'])process.once(signal,()=>server.close(()=>process.exit(0)));
 }

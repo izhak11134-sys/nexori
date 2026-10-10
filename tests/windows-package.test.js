@@ -11,11 +11,8 @@ test('Windows download contains the configured main app and serves only built fi
   const directory=await mkdtemp(join(tmpdir(),'nexori Windows בדיקה '));
   let server;
   try {
-    execFileSync('python3',['-c','import zipfile,sys; a=zipfile.ZipFile(sys.argv[1]); assert a.testzip() is None; assert not any(".env" in n or "node_modules" in n or n.endswith(".map") for n in a.namelist()); a.extractall(sys.argv[2])',resolve('downloads/NEXORI-Windows.zip'),directory]);
+    execFileSync('python3',['-c','import zipfile,sys; a=zipfile.ZipFile(sys.argv[1]); assert a.testzip() is None; assert not any(".env" in n or "node_modules" in n or n.endswith((".map",".cmd",".bat",".ps1",".exe")) for n in a.namelist()); a.extractall(sys.argv[2])',resolve('downloads/NEXORI-Windows.zip'),directory]);
     const folder=join(directory,'NEXORI-Windows');
-    const cmd=await readFile(join(folder,'START-NEXORI.cmd'),'utf8');
-    execFileSync('python3',['-c','import zipfile,sys; fix=zipfile.ZipFile(sys.argv[1]); assert fix.testzip() is None; assert fix.namelist()==["START-NEXORI-FIX.cmd"]; assert fix.read("START-NEXORI-FIX.cmd")==open(sys.argv[2],"rb").read()',resolve('downloads/NEXORI-Start-Fix.zip'),join(folder,'START-NEXORI.cmd')]);
-    assert.match(cmd,/cd \/d "%~dp0"/);assert.match(cmd,/node start-local\.mjs/);assert.ok(cmd.includes('\r\n'));
     const info=JSON.parse(await readFile(join(folder,'package-info.json'),'utf8'));assert.equal(info.mode,'local-only');assert.equal(info.projectId,'nexori-development');
     server=spawn(process.execPath,[join(folder,'start-local.mjs')],{env:{...process.env,NEXORI_LOCAL_PORT:'0',NEXORI_NO_OPEN:'true'},stdio:['ignore','pipe','pipe']});
     let output='',errors='';server.stderr.on('data',data=>{errors+=data;});
