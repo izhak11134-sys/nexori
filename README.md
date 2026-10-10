@@ -24,6 +24,10 @@ GitHub's file page displays source code rather than running HTML. Use the file's
 
 ## Manage content inside the website with Firebase
 
+For **Windows**, download [NEXORI-Windows.zip](https://github.com/izhak11134-sys/nexori/raw/refs/heads/main/downloads/NEXORI-Windows.zip), extract the complete archive and double-click `START-NEXORI.cmd`. It needs a one-time installation of [Node.js LTS](https://nodejs.org/en/download) (22 or newer). This package includes the built main app and the operator-supplied public Firebase Web configuration; it does not include passwords or privileged keys. It serves the app only on loopback, opens `/admin`, and requires no npm installation or Firebase CLI. Follow [the Hebrew Windows instructions](scripts/windows/README-Windows-he.txt), including adding `localhost` to Auth's authorized domains. Login and saves use the real development project; starting the package does not deploy Hosting. The original `NEXORI.html` remains an offline preview.
+
+Maintainers refresh this download with `VITE_FIREBASE_USE_EMULATORS=false npm run build:windows` using the actual public Web configuration, Node and Python 3; verify it with `npm run test:windows`. Rebuild the package when application code changes. Published content changes are fetched from Firestore and do not require repackaging.
+
 **Free services only: Firebase Spark, with no payment method or Cloud Billing.** The active editor now uses **Authentication and Firestore only**. Do not deploy Functions or activate Storage. See the [Spark plan](docs/firebase-spark-plan-he.md) and [Console guide in Hebrew](docs/firebase-console-setup-he.md).
 
 The main Vite application includes an **Owner sign-in** footer link and Hebrew `/admin` page. A verified account with `admins/{uid}.active == true` can edit all existing cards inline, save private drafts across devices, upload images, apply changes and recover revisions. Card and inner-page titles/backgrounds are independent for all six worlds. The visitor design remains unchanged. Session-based authentication does not store manager drafts in localStorage.

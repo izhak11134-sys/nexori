@@ -37,6 +37,8 @@ The real browser test intercepts only public configuration to select local demo 
 
 ## Scope and remaining work
 
+The Windows ZIP includes production assets and a Node-only loopback server. `npm run test:windows` extracts the real archive into a path containing spaces and Hebrew, checks its integrity and absence of environment/source-map/dependency files, and verifies SPA routes, JS/image MIME types, missing-file responses, private/path traversal denial, HEAD, method restrictions and local Host validation. A Chromium check of the extracted production package passed configured login-form rendering, 390/1440px layouts, world navigation and deep-link reload without page exceptions; Firestore network traffic was blocked and no actual sign-in was attempted. These checks run on Linux; the Windows CMD/browser-launch path itself still requires verification on the user's Windows machine. The package has public Web config, never a password/admin key, and does not deploy Hosting.
+
 The old four Functions/Storage integration tests and their server/Sharp schema tests are historical and no longer the active test commands. Their prior results are not evidence for this Spark implementation. Existing site/legacy-editor browser checks remain recorded in earlier commits.
 
 Rules enforce ownership, approved record/field shapes, image reference paths, immutable versions, byte size/mime and release consistency. Text semantics and image decoding/reencoding are client checks. Firestore image documents use Spark quotas; old or abandoned versions/images are retained until privileged cleanup. Define retention/backups before launch and verify actual Usage and project plan. No unlimited-free-capacity claim is made.

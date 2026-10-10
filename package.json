@@ -9,6 +9,8 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build && npm run build:html",
     "build:html": "node scripts/build-standalone.mjs",
+    "build:windows": "npm run build && python3 scripts/build-windows-package.py",
+    "test:windows": "node --test tests/windows-package.test.js",
     "preview": "vite preview --host 0.0.0.0",
     "firebase:sync": "node scripts/build-firestore-rules.mjs",
     "firebase:emulators": "npm run firebase:sync && firebase emulators:start --project demo-nexori --only auth,firestore",

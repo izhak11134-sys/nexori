@@ -27,6 +27,14 @@
 
 ## פיתוח מקומי
 
+### חבילת Windows מוכנה
+
+[הורד NEXORI-Windows.zip](https://github.com/izhak11134-sys/nexori/raw/refs/heads/main/downloads/NEXORI-Windows.zip). התקן [Node.js LTS](https://nodejs.org/en/download) בגרסה 22 או חדשה יותר, חלץ את החבילה כולה ופתח `START-NEXORI.cmd`. החבילה כוללת את היישום הראשי הבנוי ואת הגדרות ה־Web הציבוריות שסיפקת; אינה כוללת סיסמה או מפתח מנהל. אין צורך בפקודות npm או בהתקנת Firebase CLI במחשב המשתמש.
+
+הדפדפן ייפתח ב־`http://localhost:5173/admin` על המחשב שלך. הוסף `localhost` ל־Authorized domains אם הוא חסר, והמשך לאימות הדוא״ל ולכניסה כפי שמתואר לעיל. השאר את חלון ההפעלה פתוח בזמן העריכה. הפעלת החבילה אינה מפרסמת Hosting; פעולות כניסה ושמירה מתחברות לפרויקט Firebase האמיתי, בכפוף להרשאות ולמכסות. בדיקות השרת נערכו בסביבת Linux; הפעלת קובץ CMD בפועל על מחשב Windows וכניסה אמיתית עדיין צריכות בדיקה עם המשתמש.
+
+### הפעלה מקוד המקור
+
 העתק `.env.example` ל־`.env.local` ומלא את הגדרות אפליקציית ה־Web הציבוריות שסיפקת. אין צורך ב־Storage bucket או Functions region למערכת הנוכחית. לקישור האמיתי השאר `VITE_FIREBASE_USE_EMULATORS=false`. אחרי שינוי הגדרות הפעל מחדש Vite:
 
 ```sh
