@@ -52,5 +52,6 @@ test('HTML download contains the identical configured inline app without executa
     assert.doesNotMatch(html,/<script[^>]+src=/i);
     assert.doesNotMatch(html,/<link[^>]+rel="stylesheet"/i);
     assert.match(html,/Owner sign-in/);
+    assert.match(html,/<a href="#\/admin" data-link>כניסה לניהול האתר<\/a>/);
   } finally {await rm(directory,{recursive:true,force:true});}
 });

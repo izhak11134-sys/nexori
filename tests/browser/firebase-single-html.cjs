@@ -22,6 +22,21 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
     await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
     const base=`http://127.0.0.1:${server.address().port}`;
     const url=process.argv.includes('--file')?pathToFileURL(filename).href:`${base}/NEXORI.html`;
+    const entryBrowser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+    try {
+      const p=await entryBrowser.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));
+      for(const width of [320,390,1440]) {
+        await p.setViewportSize({width,height:900});await p.goto(url);
+        const entry=p.getByRole('link',{name:'כניסה לניהול האתר',exact:true});await entry.waitFor();
+        const box=await entry.boundingBox();assert.ok(box&&box.y>=0&&box.y+box.height<=900,'management entry visible before scrolling');
+        assert.ok(await entry.evaluate(node=>parseFloat(getComputedStyle(node).fontSize)>=18),'readable management button text');
+        assert.equal(await entry.getAttribute('href'),'#/admin');assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+        await entry.click();await p.locator('#admin-login-form').waitFor();assert.ok(p.url().endsWith('#/admin'));
+        assert.equal(await p.getByRole('link',{name:'Owner sign-in',exact:true}).count(),1);
+        assert.ok(await p.getByRole('link',{name:'Owner sign-in',exact:true}).evaluate(node=>parseFloat(getComputedStyle(node).fontSize)>=16),'readable footer management link');
+      }
+      assert.deepEqual(errors,[]);console.log('PASS: visible HTML management entry opens login without scrolling at 320/390/1440px.');
+    } finally {await entryBrowser.close();}
     await new Promise((resolve,reject)=>{
       const child=spawn(process.execPath,['tests/browser/firebase-spark.cjs'],{env:{...process.env,NEXORI_SINGLE_HTML_URL:url},stdio:'inherit'});
       child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error(`Single HTML browser check exited ${code}.`)));

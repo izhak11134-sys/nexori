@@ -57,6 +57,12 @@ PLAYWRIGHT_MODULE=/opt/codex/runtimes/codex-primary-runtime/dependencies/node/no
 
 The script requires the demo Auth/Firestore emulators and temporarily builds/serves only demo configuration. It must not overlap with another suite clearing `demo-nexori`. On a machine permitting local-file browsing, `--file` selects actual file navigation instead of HTTP. **Not verified here:** direct `file://` navigation failed with `ERR_BLOCKED_BY_ADMINISTRATOR` under the managed Chromium URL policy; no policy or browser security was weakened. HTTP/opaque-origin results are not a successful file-opening check. Actual Windows double-click and real-project sign-in from the HTML require the operator's check. Public production HTML and both downloadable ZIPs were rebuilt; deployment/billing was not activated.
 
+## Management-entry visibility — 2026-10-11
+
+The operator confirmed opening the latest HTML archive and then finding the footer login link too small to notice. The single HTML now has a permanent entry strip above the app, with an 18px Hebrew management button and 44px minimum height, plus a visibly outlined 16px footer entry. These styles and the strip apply only to the bundled development HTML. The entry opens `#/admin`; Firebase owner-role checks remain unchanged.
+
+The bundled real-SDK browser check passed again. New assertions verify the top button is within the initial viewport, opens the login form without scrolling, has readable computed font size and causes no horizontal overflow at 320/390/1440px. The footer's computed font size is also checked. Full edit/save/image/recovery and opaque-origin checks passed again. The HTML/archive were regenerated; actual real-project login from the user's local file remains a separate verification.
+
 ## Operator antivirus warning — 2026-10-10
 
 The operator reports the computer deletes the repair download as a virus. The threat name, scanner and affected file are pending; there is no evidence to classify this as a false positive. Source review found the supplied repair launcher runs PowerShell to locate/extract a downloaded ZIP and execute the local Node app. The launcher and repair archive were withdrawn. The replacement removes CMD/BAT launchers, automatic extraction and child-process/browser spawning; users explicitly run the local Node server after extraction. Frontend assets and Firebase permissions are unchanged. Protection must remain enabled; blocked files must not be restored or excluded. Local package/server tests do not constitute an antivirus scan or real Windows verification.
