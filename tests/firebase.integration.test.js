@@ -14,7 +14,7 @@ import { getAuth, connectAuthEmulator, createUserWithEmailAndPassword } from 'fi
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator, ref, uploadBytes, getBytes } from 'firebase/storage';
-import sharp from '../functions/node_modules/sharp/lib/index.js';
+const sharp=require('sharp');
 const projectId='demo-nexori',bucket=`${projectId}.appspot.com`;
 const admin=adminApp({projectId,storageBucket:bucket},'tests'),adb=adminFirestore(admin);
 const env=await initializeTestEnvironment({projectId,firestore:{host:'127.0.0.1',port:8080,rules:await readFile('firestore.rules','utf8')},storage:{host:'127.0.0.1',port:9199,rules:await readFile('storage.rules','utf8')}});
@@ -38,9 +38,9 @@ test('verified owner permissions; visitors cannot read drafts or grant roles',as
   await assertSucceeds(getDoc(doc(owner.db,'cms','draft')));
   for(const session of [outsider,unverified]){
     await assertFails(getDoc(doc(session.db,'cms','draft')));
-    await assertFails(session.call('saveOwnerDraft',{payload:empty,expectedRevision:0}));
-    await assertFails(session.call('publishOwnerDraft',{draftRevision:0,publishedRevision:0}));
-    await assertFails(session.call('restorePublishedRevision',{revisionId:'initial',publishedRevision:0}));
+    await assert.rejects(session.call('saveOwnerDraft',{payload:empty,expectedRevision:0}),{code:'functions/permission-denied'});
+    await assert.rejects(session.call('publishOwnerDraft',{draftRevision:0,publishedRevision:0}),{code:'functions/permission-denied'});
+    await assert.rejects(session.call('restorePublishedRevision',{revisionId:'initial',publishedRevision:0}),{code:'functions/permission-denied'});
   }
   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(),'cms','draft')));
   await assertFails(setDoc(doc(outsider.db,'admins',outsider.user.uid),{active:true}));
@@ -52,20 +52,20 @@ test('private upload rules prevent public access, cross-owner writes and replace
   await assertSucceeds(uploadBytes(ref(owner.storage,path),png,{contentType:'image/png'}));
   await assertSucceeds(getBytes(ref(owner.storage,path)));
   await assertFails(getBytes(ref(outsider.storage,path)));
-  await assertFails(getBytes(ref(env.unauthenticatedContext().storage(),path)));
+  await assertFails(getBytes(ref(env.unauthenticatedContext().storage('gs://'+bucket),path)));
   await assertFails(uploadBytes(ref(owner.storage,path),png,{contentType:'image/png'}));
   await assertFails(uploadBytes(ref(outsider.storage,`drafts/${owner.user.uid}/${randomUUID()}.png`),png,{contentType:'image/png'}));
   await assertFails(uploadBytes(ref(owner.storage,`drafts/${owner.user.uid}/${randomUUID()}.svg`),png,{contentType:'image/svg+xml'}));
   await assertFails(uploadBytes(ref(owner.storage,`published/${randomUUID()}/${randomUUID()}.webp`),png,{contentType:'image/webp'}));
   const unreleased=`published/${randomUUID()}/${randomUUID()}.webp`;
   await adminStorage(admin).bucket().file(unreleased).save(png,{metadata:{contentType:'image/webp'}});
-  await assertFails(getBytes(ref(env.unauthenticatedContext().storage(),unreleased)));
+  await assertFails(getBytes(ref(env.unauthenticatedContext().storage('gs://'+bucket),unreleased)));
 });
 test('draft save, conflict detection, publication, private field stripping and rollback',async()=>{
   const payload={version:1,changes:{worlds:{'dragon-ball':{pageTitle:'Dragon Ball Universe',pageImage:`storage:${globalThis.imagePath}`},'naruto':{cardTitle:'Naruto Collection'}},products:{'midnight-ronin':{editorNotes:'PRIVATE-NOTE',retailerUrl:'https://example.com/preparation'}}}};
   const saved=await owner.call('saveOwnerDraft',{payload,expectedRevision:0});assert.equal(saved.revision,1);
-  await assertFails(owner.call('saveOwnerDraft',{payload,expectedRevision:0}));
-  await assertFails(owner.call('saveOwnerDraft',{payload:{version:1,changes:{worlds:{unknown:{pageTitle:'x'}}}},expectedRevision:1}));
+  await assert.rejects(owner.call('saveOwnerDraft',{payload,expectedRevision:0}),{code:'functions/aborted'});
+  await assert.rejects(owner.call('saveOwnerDraft',{payload:{version:1,changes:{worlds:{unknown:{pageTitle:'x'}}}},expectedRevision:1}),{code:'functions/invalid-argument'});
   const result=await owner.call('publishOwnerDraft',{draftRevision:1,publishedRevision:0});assert.equal(result.revision,1);
   const current=(await getDoc(doc(env.unauthenticatedContext().firestore(),'public','site'))).data();
   assert.equal(current.payload.changes.worlds['dragon-ball'].pageTitle,'Dragon Ball Universe');
@@ -75,7 +75,7 @@ test('draft save, conflict detection, publication, private field stripping and r
   const image=current.payload.changes.worlds['dragon-ball'].pageImage;
   assert.ok(image.includes('published%2F'));
   const response=await fetch(image.replace('https://firebasestorage.googleapis.com','http://127.0.0.1:9199'));assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp');
-  await assertFails(owner.call('publishOwnerDraft',{draftRevision:1,publishedRevision:0}));
+  await assert.rejects(owner.call('publishOwnerDraft',{draftRevision:1,publishedRevision:0}),{code:'functions/aborted'});
   const restored=await owner.call('restorePublishedRevision',{revisionId:'initial',publishedRevision:1});assert.equal(restored.revision,2);
   assert.deepEqual((await getDoc(doc(outsider.db,'public','site'))).data().payload,empty);
   assert.equal((await getDoc(doc(owner.db,'cms','draft'))).data().revision,1);
@@ -84,10 +84,10 @@ test('fake images cannot be published and revoked owners lose server access',asy
   const path=`drafts/${owner.user.uid}/${randomUUID()}.png`;
   await uploadBytes(ref(owner.storage,path),new TextEncoder().encode('not an image'),{contentType:'image/png'});
   await owner.call('saveOwnerDraft',{payload:{version:1,changes:{worlds:{'one-piece':{pageImage:`storage:${path}`}}}},expectedRevision:1});
-  await assertFails(owner.call('publishOwnerDraft',{draftRevision:2,publishedRevision:2}));
+  await assert.rejects(owner.call('publishOwnerDraft',{draftRevision:2,publishedRevision:2}),{code:'functions/invalid-argument'});
   assert.equal((await getDoc(doc(outsider.db,'public','site'))).data().revision,2);
   await adb.doc(`admins/${owner.user.uid}`).update({active:false});
-  await assertFails(owner.call('saveOwnerDraft',{payload:empty,expectedRevision:2}));
+  await assert.rejects(owner.call('saveOwnerDraft',{payload:empty,expectedRevision:2}),{code:'functions/permission-denied'});
   await assertFails(getDoc(doc(owner.db,'cms','draft')));
 });
 test.after(async()=>{await env.cleanup();await Promise.all(apps.map(deleteApp));await adb.terminate();await deleteAdminApp(admin);});

@@ -8,7 +8,7 @@ service firebase.storage {
     }
     match /drafts/{uid}/{filename} {
       allow read: if owner() && request.auth.uid == uid;
-      allow create: if owner() && request.auth.uid == uid
+      allow create: if resource == null && owner() && request.auth.uid == uid
         && filename.matches('[a-f0-9-]{36}[.](png|jpg|webp)')
         && request.resource.size > 0 && request.resource.size <= 2 * 1024 * 1024
         && request.resource.contentType.matches('image/(png|jpeg|webp)');

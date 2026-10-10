@@ -40,7 +40,7 @@ npm run test:firebase-validation
 FIREBASE_EMULATORS_PATH=/tmp/nexori-firebase-emulators npm run test:firebase
 ```
 
-Java 21+ is needed for the local emulators, which use only `demo-nexori`. The schema in `functions/shared` is generated from `src` by `firebase:sync`; the deploy hook synchronizes it too. Emulator integration tests require an official download from `storage.googleapis.com`. See [validation status and limits](docs/firebase-editor-checks.md); do not treat blocked emulator checks as passed.
+Java 21+ is needed for the local emulators, which use only `demo-nexori`. The schema in `functions/shared` is generated from `src` by `firebase:sync`; the deploy hook synchronizes it too. Emulator integration tests require an official download from `storage.googleapis.com`. All four emulator tests passed locally. In this proxy-based cloud environment use the loopback preload and writable cache/config paths documented in [validation status and limits](docs/firebase-editor-checks.md). Real Firebase project permissions remain unverified.
 
 The old **[NEXORI-editor.html](NEXORI-editor.html)** remains available as an optional local backup workflow. Its changes stay in the browser and exported HTML; it does not use Firebase. The standalone visitor HTML is also an offline preview, rather than the new hosted management application. Daily Firebase edits do not need HTML downloads or GitHub commits. Creating additional product records and activating verified affiliate links remain later work.
 
