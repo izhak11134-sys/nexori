@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator, setPersistence, browserSessionPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
+import { initializeAuth, connectAuthEmulator, browserSessionPersistence, inMemoryPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator, doc, getDocFromServer } from 'firebase/firestore';
 import { validateContentDraft, contentImageBlobs } from './content.js';
 import { createSparkStore } from './firebase-spark-store.js';
@@ -7,12 +7,11 @@ import { imageEntries } from './spark-content.js';
 import { compressSparkImage } from './spark-images.js';
 
 export async function createFirebaseService(config) {
-  const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app);
+  const app=initializeApp(config),auth=initializeAuth(app,{persistence:[browserSessionPersistence,inMemoryPersistence]}),db=getFirestore(app);
   if(import.meta.env.VITE_FIREBASE_USE_EMULATORS==='true'||config.useEmulators===true) {
-    if(!['localhost','127.0.0.1','[::1]'].includes(location.hostname))throw new Error('Emulators are only permitted on localhost.');
+    if(!['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&!(location.protocol==='file:'&&config.projectId?.startsWith('demo-')))throw new Error('Emulators are only permitted on localhost or isolated local demo HTML files.');
     connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});connectFirestoreEmulator(db,'127.0.0.1',8080);
   }
-  await setPersistence(auth,browserSessionPersistence);
   const store=createSparkStore(db,()=>auth.currentUser?.uid),bucket='spark-firestore';
   let operation=false,generation=0,publicSequence=0;
   const privatePreviews=new Map(),publicPreviews=new Map(),references=new Map();

@@ -2,6 +2,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs/promises');
 const base='http://127.0.0.1:5173';
+const singleHtml=process.env.NEXORI_SINGLE_HTML_URL;
+const pageUrl=route=>singleHtml?`${singleHtml}#${route}`:`${base}${route}`;
 const config={apiKey:'demo-key',projectId:'demo-nexori',authDomain:'demo-nexori.firebaseapp.com',appId:'demo-app',useEmulators:true};
 async function emulatorAccount(email,verified){
   const response=await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=demo-key',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:'Demo-owner-123!',returnSecureToken:true})});assert.equal(response.status,200);
@@ -21,7 +23,7 @@ async function emulatorAccount(email,verified){
   async function context(){const ctx=await browser.newContext({viewport:{width:1440,height:1000}});await ctx.route('**/src/firebase-config.js*',r=>r.fulfill({contentType:'application/javascript',body:`export function firebaseConfiguration(){return ${JSON.stringify(config)};}`}));ctx.on('page',p=>{p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>network.push(r.url()));p.on('dialog',d=>d.accept());});return ctx;}
   try{
     const ownerContext=await context(),visitorContext=await context(),p=await ownerContext.newPage(),visitor=await visitorContext.newPage();
-    await p.goto(base+'/admin');await p.locator('#admin-login-form').waitFor();
+    await p.goto(pageUrl('/admin'));await p.locator('#admin-login-form').waitFor();
     await p.locator('[name=email]').fill('outsider@nexori.test');await p.locator('[name=password]').fill('Demo-owner-123!');await p.locator('#admin-login-form [type=submit]').click();
     await p.getByRole('heading',{name:'לא ניתן לאשר את הרשאת המנהל',exact:true}).waitFor();assert.match(await p.locator('#firebase-admin-page').textContent(),/nexori\/admin-document-missing/);assert.match(await p.locator('.admin-connection-details').textContent(),new RegExp(`admins/${outsiderUid}`));assert.equal(await p.locator('.owner-toolbar').count(),0);
     await env.withSecurityRulesDisabled(context=>setDoc(doc(context.firestore(),'admins',outsiderUid),{active:'true'}));await p.reload();await p.getByRole('alert').filter({hasText:'מסוג Boolean'}).waitFor();assert.equal(await p.locator('.owner-toolbar').count(),0);
@@ -40,7 +42,7 @@ async function emulatorAccount(email,verified){
     await p.locator('[data-owner-image-preview=pageImage]').waitFor({state:'visible',timeout:10000}).catch(async error=>{throw new Error(error.message+'; upload: '+await p.locator('.owner-dialog-error').textContent());});
     await p.locator('#owner-editor-dialog [type=submit]').click();await p.locator('#owner-editor-dialog').waitFor({state:'hidden'});
     assert.equal(await p.locator('h1').textContent(),'Dragon Ball Spark Universe');assert.match(await p.locator('.franchise-banner').getAttribute('style'),/blob:/);
-    await visitor.goto(base+'/worlds/dragon-ball');assert.equal(await visitor.locator('h1').textContent(),'Dragon Ball');assert.equal(await visitor.locator('.owner-edit-button').count(),0);
+    await visitor.goto(pageUrl('/worlds/dragon-ball'));assert.equal(await visitor.locator('h1').textContent(),'Dragon Ball');assert.equal(await visitor.locator('.owner-edit-button').count(),0);
     await p.reload();await p.locator('.owner-toolbar').waitFor();assert.equal(await p.locator('h1').textContent(),'Dragon Ball Spark Universe');
     let draft;await env.withSecurityRulesDisabled(async context=>{draft=(await getDoc(doc(context.firestore(),'cms','draft'))).data();});
     const ref=draft.payload.changes.worlds['dragon-ball'].pageImage;assert.match(ref,new RegExp(`^spark:drafts/${uid}/`));
@@ -56,6 +58,6 @@ async function emulatorAccount(email,verified){
     await p.locator('[data-cloud-load-public]').click();await p.locator('.owner-status').filter({hasText:'כטיוטה חדשה'}).waitFor();await p.getByRole('link',{name:'Anime worlds',exact:true}).first().click();await p.locator('[data-content-id="dragon-ball"]').click();assert.equal(await p.locator('h1').textContent(),'Dragon Ball');
     assert.equal(network.filter(url=>/cloudfunctions\.net|firebasestorage\.googleapis\.com|127\.0\.0\.1:(5001|9199)/.test(url)).length,0);
     assert.deepEqual(errors,[]);await p.screenshot({path:'/tmp/nexori-spark-admin.png'});
-    console.log('PASS: real Auth/Firestore emulator missing/wrong-type/inactive role diagnostics, verified owner sign-in, all six world edit dialogs, private compressed-image save/reload, visitor isolation, image publication, title independence, logout, recovery, four widths and zero Functions/Storage requests.');
+    console.log(`PASS (${singleHtml?'bundled single HTML':'Vite app'}): real Auth/Firestore emulator missing/wrong-type/inactive role diagnostics, verified owner sign-in, all six world edit dialogs, private compressed-image save/reload, visitor isolation, image publication, title independence, logout, recovery, four widths and zero Functions/Storage requests.`);
   }finally{await browser.close();await env.cleanup();}
 })().catch(error=>{console.error(error);process.exit(1)});

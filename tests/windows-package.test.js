@@ -41,3 +41,16 @@ test('Windows download contains the configured main app and serves only built fi
     await rm(directory,{recursive:true,force:true});
   }
 });
+
+test('HTML download contains the identical configured inline app without executable launchers',async()=>{
+  const directory=await mkdtemp(join(tmpdir(),'nexori HTML בדיקה '));
+  try {
+    execFileSync('python3',['-c','import zipfile,sys; a=zipfile.ZipFile(sys.argv[1]); assert a.testzip() is None; assert set(a.namelist()) == {"NEXORI-HTML/NEXORI.html", "NEXORI-HTML/README-he.txt"}; a.extractall(sys.argv[2])',resolve('downloads/NEXORI-HTML.zip'),directory]);
+    const html=await readFile(join(directory,'NEXORI-HTML/NEXORI.html'),'utf8');
+    assert.equal(html,await readFile('NEXORI.html','utf8'));
+    assert.match(html,/nexori-development\.firebaseapp\.com/);
+    assert.doesNotMatch(html,/<script[^>]+src=/i);
+    assert.doesNotMatch(html,/<link[^>]+rel="stylesheet"/i);
+    assert.match(html,/Owner sign-in/);
+  } finally {await rm(directory,{recursive:true,force:true});}
+});
