@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator, setPersistence, browserSessionPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator, doc, getDocFromServer } from 'firebase/firestore';
 import { validateContentDraft, contentImageBlobs } from './content.js';
 import { createSparkStore } from './firebase-spark-store.js';
 import { imageEntries } from './spark-content.js';
@@ -63,7 +63,13 @@ export async function createFirebaseService(config) {
     logout:()=>signOut(auth),
     resetPassword:email=>sendPasswordResetEmail(auth,email),
     verifyEmail:()=>sendEmailVerification(auth.currentUser),
-    async isOwner(user){const role=await getDoc(doc(db,'admins',user.uid));return user.emailVerified&&role.data()?.active===true;},
+    async isOwner(user){
+      if(!user.emailVerified)return false;
+      const role=await getDocFromServer(doc(db,'admins',user.uid));
+      if(!role.exists())throw Object.assign(new Error(`לא נמצא מסמך admins/${user.uid} בפרויקט ${config.projectId}, במסד (default). יש לבדוק שהרשאת המנהל נשמרה במיקום הזה.`),{code:'nexori/admin-document-missing'});
+      if(typeof role.data()?.active!=='boolean')throw Object.assign(new Error('השדה active במסמך המנהל צריך להיות מסוג Boolean. ערך הטקסט "true" אינו הרשאת מנהל.'),{code:'nexori/admin-field-type'});
+      return role.data().active===true;
+    },
     subscribePublic(fn,onError) {return store.subscribePublic(async payload=>{
       const sequence=++publicSequence;
       try{const display=await materialize(payload,generation,true);if(sequence===publicSequence)fn(display);}catch(error){if(sequence===publicSequence)onError?.(error);}

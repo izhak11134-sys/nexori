@@ -14,7 +14,7 @@ async function emulatorAccount(email,verified){
   const {doc,setDoc,getDoc}=await import('firebase/firestore');
   const env=await initializeTestEnvironment({projectId:'demo-nexori',firestore:{host:'127.0.0.1',port:8080,rules:await fs.readFile('firestore.rules','utf8')}});
   await env.clearFirestore();await fetch('http://127.0.0.1:9099/emulator/v1/projects/demo-nexori/accounts',{method:'DELETE'});
-  const uid=await emulatorAccount('owner@nexori.test',true);
+  const uid=await emulatorAccount('owner@nexori.test',true),outsiderUid=await emulatorAccount('outsider@nexori.test',true);
   await env.withSecurityRulesDisabled(context=>setDoc(doc(context.firestore(),'admins',uid),{active:true}));
   const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
   const errors=[],network=[];
@@ -22,6 +22,10 @@ async function emulatorAccount(email,verified){
   try{
     const ownerContext=await context(),visitorContext=await context(),p=await ownerContext.newPage(),visitor=await visitorContext.newPage();
     await p.goto(base+'/admin');await p.locator('#admin-login-form').waitFor();
+    await p.locator('[name=email]').fill('outsider@nexori.test');await p.locator('[name=password]').fill('Demo-owner-123!');await p.locator('#admin-login-form [type=submit]').click();
+    await p.getByRole('heading',{name:'לא ניתן לאשר את הרשאת המנהל',exact:true}).waitFor();assert.match(await p.locator('#firebase-admin-page').textContent(),/nexori\/admin-document-missing/);assert.match(await p.locator('.admin-connection-details').textContent(),new RegExp(`admins/${outsiderUid}`));assert.equal(await p.locator('.owner-toolbar').count(),0);
+    await env.withSecurityRulesDisabled(context=>setDoc(doc(context.firestore(),'admins',outsiderUid),{active:'true'}));await p.reload();await p.getByRole('alert').filter({hasText:'מסוג Boolean'}).waitFor();assert.equal(await p.locator('.owner-toolbar').count(),0);
+    await env.withSecurityRulesDisabled(context=>setDoc(doc(context.firestore(),'admins',outsiderUid),{active:false}));await p.reload();await p.getByRole('heading',{name:'החשבון אינו מורשה לעריכה',exact:true}).waitFor();await p.locator('[data-admin-logout]').click();await p.locator('#admin-login-form').waitFor();
     await p.locator('[name=email]').fill('owner@nexori.test');await p.locator('[name=password]').fill('Demo-owner-123!');await p.locator('#admin-login-form [type=submit]').click();
     await p.getByRole('heading',{name:'מצב עריכה פעיל'}).waitFor({timeout:10000}).catch(async error=>{throw new Error(error.message+'; admin: '+await p.locator('#firebase-admin-page').textContent()+'; errors: '+JSON.stringify(errors)+'; auth requests: '+JSON.stringify(network.filter(url=>url.includes('9099'))) );});console.log('Owner signed in.');
     await p.getByRole('link',{name:'Anime worlds',exact:true}).first().click();
@@ -52,6 +56,6 @@ async function emulatorAccount(email,verified){
     await p.locator('[data-cloud-load-public]').click();await p.locator('.owner-status').filter({hasText:'כטיוטה חדשה'}).waitFor();await p.getByRole('link',{name:'Anime worlds',exact:true}).first().click();await p.locator('[data-content-id="dragon-ball"]').click();assert.equal(await p.locator('h1').textContent(),'Dragon Ball');
     assert.equal(network.filter(url=>/cloudfunctions\.net|firebasestorage\.googleapis\.com|127\.0\.0\.1:(5001|9199)/.test(url)).length,0);
     assert.deepEqual(errors,[]);await p.screenshot({path:'/tmp/nexori-spark-admin.png'});
-    console.log('PASS: real Auth/Firestore emulator sign-in, all six world edit dialogs, private compressed-image save/reload, visitor isolation, image publication, title independence, logout, recovery, four widths and zero Functions/Storage requests.');
+    console.log('PASS: real Auth/Firestore emulator missing/wrong-type/inactive role diagnostics, verified owner sign-in, all six world edit dialogs, private compressed-image save/reload, visitor isolation, image publication, title independence, logout, recovery, four widths and zero Functions/Storage requests.');
   }finally{await browser.close();await env.cleanup();}
 })().catch(error=>{console.error(error);process.exit(1)});

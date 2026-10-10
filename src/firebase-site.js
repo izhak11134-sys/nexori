@@ -1,7 +1,7 @@
 import { firebaseConfiguration } from './firebase-config.js';
 import { applyContentDraft } from './content.js';
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let service=null,user=null,authorized=false,authReady=false,authGeneration=0,editor=null,publicPayload={version:1,changes:{}},busy=false,connectionError='';
+let service=null,user=null,authorized=false,authReady=false,authGeneration=0,editor=null,publicPayload={version:1,changes:{}},busy=false,connectionError='',adminFailure=null;
 function updateSite(payload,preserveLogin=false){
   applyContentDraft(payload,{bucket:service?.bucket});
   // A late public snapshot must not clear credentials while the owner types.
@@ -15,9 +15,11 @@ function panel() {
   else if(connectionError)body=`<h1>לא ניתן להתחבר לניהול</h1><p role="alert">${escape(connectionError)}</p><button type="button" data-admin-retry>ניסיון נוסף</button>`;
   else if(!authReady)body='<h1>ניהול NEXORI</h1><p role="status">בודק התחברות והרשאות…</p>';
   else if(!user)body='<h1>כניסה לניהול NEXORI</h1><p>התחבר לחשבון המנהל שלך כדי לערוך את האתר במקום.</p><form id="admin-login-form"><label>כתובת דוא״ל<input name="email" type="email" required autocomplete="username" maxlength="254"></label><label>סיסמה<input name="password" type="password" required autocomplete="current-password" maxlength="256"></label><button type="submit">כניסה לניהול</button><button type="button" data-admin-reset>איפוס סיסמה</button></form>';
+  else if(adminFailure)body=`<h1>${adminFailure.stage==='role'?'לא ניתן לאשר את הרשאת המנהל':'לא ניתן לטעון את מערכת הניהול'}</h1><p>${escape(user.email)}</p><p role="alert">${escape(adminFailure.detail)}</p>${adminFailure.code?`<p>קוד התקלה: <code dir="ltr">${escape(adminFailure.code)}</code></p>`:''}<button type="button" data-admin-retry>בדיקה מחדש</button><button type="button" data-admin-logout>התנתקות</button>`;
   else if(!authorized)body=`<h1>החשבון אינו מורשה לעריכה</h1><p>${escape(user.email)}${!user.emailVerified?' — יש לאמת את הדוא״ל ולהיכנס שוב.':' — יש להגדיר לחשבון הרשאת מנהל ב־Firebase Console.'}</p>${!user.emailVerified?'<button type="button" data-admin-verify>שליחת הודעת אימות</button>':''}<button type="button" data-admin-logout>התנתקות</button>`;
   else body='<h1>מצב עריכה פעיל</h1><p>אפשר לעבור לכל עמוד באתר וללחוץ על ״עריכה״ ליד הכרטיסייה. שינוי כותרת ותמונה נעשה בשדות נפרדים.</p><p>״שמירת טיוטה״ שומרת ב־Firebase. ״החלת השינויים באתר״ מעדכנת את הגרסה המוצגת למבקרים. אפשר לשחזר גרסה קודמת מסרגל העריכה.</p><a href="/" data-link>מעבר לאתר ולכפתורי העריכה</a><button type="button" data-admin-logout>התנתקות</button>';
-  host.innerHTML=`<section class="admin-panel" lang="he" dir="rtl">${body}<p class="admin-status" role="status"></p></section>`;
+  const details=user&&authReady&&!authorized?`<details class="admin-connection-details" open><summary>פרטי החיבור לבדיקת ההרשאה</summary><dl><dt>פרויקט Firebase</dt><dd><code dir="ltr">${escape(firebaseConfiguration()?.projectId)}</code></dd><dt>מזהה המשתמש (UID)</dt><dd><code dir="ltr">${escape(user.uid)}</code></dd><dt>מסמך ההרשאה במסד (default)</dt><dd><code dir="ltr">admins/${escape(user.uid)}</code></dd></dl></details>`:'';
+  host.innerHTML=`<section class="admin-panel" lang="he" dir="rtl">${body}${details}<p class="admin-status" role="status"></p></section>`;
   host.querySelectorAll('button').forEach(button=>button.disabled=busy);
 }
 function status(message){const target=document.querySelector('.admin-status');if(target)target.textContent=message;}
@@ -49,13 +51,21 @@ async function revisions(){
   target.innerHTML='<option value="">בחר גרסה קודמת…</option>'+records.map(record=>`<option value="${escape(record.id)}">${record.revision===0?'האתר המקורי':`גרסה ${record.revision}`} — ${escape(record.createdAt?.toDate().toLocaleString('he-IL')||'')}</option>`).join('');
 }
 async function authChanged(next) {
-  const generation=++authGeneration;editor?.dispose();editor=null;service.clear();user=next;authorized=false;authReady=false;
+  const generation=++authGeneration;editor?.dispose();editor=null;service.clear();user=next;authorized=false;authReady=false;adminFailure=null;
+  let stage='role';
   updateSite(publicPayload);panel();
   try{
     if(next)authorized=await service.isOwner(next);if(generation!==authGeneration)return;
-    if(authorized)await enterEditor(generation);if(generation!==authGeneration)return;
+    if(authorized){stage='content';await enterEditor(generation);}if(generation!==authGeneration)return;
     authReady=true;panel();
-  }catch(error){if(generation!==authGeneration)return;authorized=false;editor?.dispose();editor=null;authReady=true;updateSite(publicPayload);panel();status(message(error));}
+  }catch(error){
+    if(generation!==authGeneration)return;
+    const detail=error.code?.includes('permission-denied')
+      ?stage==='role'?'Firestore חסם את קריאת מסמך הרשאת המנהל. יש לבדוק את כללי הגישה בפרויקט ובמסד שמופיעים למטה.'
+        :'הרשאת המנהל נמצאה, אך Firestore חסם את טעינת הטיוטה או ההיסטוריה. יש לבדוק את כללי הגישה בפרויקט ובמסד המתאימים.'
+      :message(error);
+    adminFailure={stage,detail,code:error.code||''};authorized=false;editor?.dispose();editor=null;authReady=true;updateSite(publicPayload);panel();
+  }
 }
 document.addEventListener('nexori:render',panel);
 document.addEventListener('submit',async event=>{
