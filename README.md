@@ -24,17 +24,18 @@ GitHub's file page displays source code rather than running HTML. Use the file's
 
 ## Manage content inside the website with Firebase
 
-**Current owner constraint: free services only, Firebase Spark, no payment method or Cloud Billing.** See the [Spark-only plan](docs/firebase-spark-plan-he.md). The existing Functions/Storage editor is locally tested but needs adaptation before it can run on Spark. Do not follow its former Blaze deployment path or activate paid services. Firestore Standard with Production-mode initial rules can be created on Spark within its no-cost quotas; Production mode is not a billing plan.
+**Free services only: Firebase Spark, with no payment method or Cloud Billing.** The active editor now uses **Authentication and Firestore only**. Do not deploy Functions or activate Storage. See the [Spark plan](docs/firebase-spark-plan-he.md) and [Console guide in Hebrew](docs/firebase-console-setup-he.md).
 
-The main Vite application now includes an **Owner sign-in** link in the footer and a Hebrew `/admin` page. Connect your own Firebase project to enable verified owner sign-in, inline editing for the existing cards, cross-device draft storage, image uploads, applying saved changes and revision recovery. All six anime worlds have independent card and inner-page titles/backgrounds. The existing design and marked concepts remain intact.
+The main Vite application includes an **Owner sign-in** footer link and Hebrew `/admin` page. A verified account with `admins/{uid}.active == true` can edit all existing cards inline, save private drafts across devices, upload images, apply changes and recover revisions. Card and inner-page titles/backgrounds are independent for all six worlds. The visitor design remains unchanged. Session-based authentication does not store manager drafts in localStorage.
 
-The repository has no live Firebase project configuration or manager credentials. Without Firebase settings the website works with original content and the admin page explains the missing connection; it does not claim to save remotely. See the [step-by-step Firebase Console guide in Hebrew](docs/firebase-console-setup-he.md). Firebase Web configuration goes in `.env.local` using `.env.example`; never commit a service-account key. This configuration uses Cloud Functions and Cloud Storage and requires reviewing Blaze billing before cloud setup. No hosting or live infrastructure was deployed.
+PNG/JPEG/WebP inputs up to 2MiB are decoded and compressed in the browser to WebP, at most 1600 pixels on the longest side and 192KiB per image. Images use separate Firestore Bytes documents. Draft image access is restricted; staged public copies become readable only after an atomic release. Rules enforce ownership, approved record/field shapes, immutable versions, image references, size and release consistency; semantic text checks and image decoding run in the client. Private product notes/preparation URLs are removed before release. Text payloads are limited to 600KiB.
 
-Drafts and images are private to a verified UID with `admins/{uid}.active == true`. Firestore and Storage rules deny direct content writes and self-granted roles. Callable functions check ownership, validate content, detect stale revisions and strip private product notes/preparation links before publishing. Images are decoded on the server and released publicly only after the content transaction succeeds. The editor uses session-based authentication and does not keep cloud manager drafts in browser localStorage. Cloud rules and IAM/CORS must be verified on the actual development project before launch.
+Version checks reject stale saves. Eight immutable schema documents validate all 81 existing records before a draft/release head is updated, within Firestore rule limits. Regenerate rules when changing the schema. Images, schema versions, revisions and rule-dependent reads consume Spark quotas. Old versions and abandoned staged documents are not automatically deleted; establish retention before launch. This is a bounded free development solution, not unlimited image hosting.
+
+Public Web configuration is local/ignored and can be supplied through `.env.local` using `.env.example`; never commit service-account credentials. Without configuration the original site works and `/admin` shows setup instructions. The operator reports Auth, Iowa Firestore and the manager role are created; actual cloud rules, email verification and sign-in remain unverified. No website or cloud rules were deployed by the agent.
 
 ```sh
 npm ci
-npm ci --prefix functions
 npm run firebase:sync
 npm run test:catalog
 npm run test:content
@@ -42,13 +43,13 @@ npm run test:firebase-validation
 FIREBASE_EMULATORS_PATH=/tmp/nexori-firebase-emulators npm run test:firebase
 ```
 
-Java 21+ is needed for the local emulators, which use only `demo-nexori`. The schema in `functions/shared` is generated from `src` by `firebase:sync`; the deploy hook synchronizes it too. Emulator integration tests require an official download from `storage.googleapis.com`. All four emulator tests passed locally. In this proxy-based cloud environment use the loopback preload and writable cache/config paths documented in [validation status and limits](docs/firebase-editor-checks.md). Real Firebase project permissions remain unverified.
+Java 21+ is needed for Auth/Firestore emulators using only `demo-nexori`. Seven real Spark integration tests and two Spark validation tests passed locally. In the cloud workspace use the loopback preload and writable configuration paths in [validation status](docs/firebase-editor-checks.md). The historical `functions/`, `storage.rules` and older integration tests are inactive; no Functions dependencies are required for the active workflow.
 
 The old **[NEXORI-editor.html](NEXORI-editor.html)** remains available as an optional local backup workflow. Its changes stay in the browser and exported HTML; it does not use Firebase. The standalone visitor HTML is also an offline preview, rather than the new hosted management application. Daily Firebase edits do not need HTML downloads or GitHub commits. Creating additional product records and activating verified affiliate links remain later work.
 
 ## Develop
 
-Requires Node.js 22.12+ for the complete Firebase tooling workflow (validated locally with Node.js 24); Functions deploy on Node.js 22. Vite alone supports Node.js 20.19+ or 22.12+.
+Requires Node.js 22.12+ for the complete Firebase tooling workflow (validated locally with Node.js 24); Vite alone supports Node.js 20.19+ or 22.12+.
 
 ```sh
 cd /workspace/nexori
@@ -88,7 +89,7 @@ Taxonomy lives in `src/data.js`; reusable URL/filter/validation helpers live in 
 
 The collection in `src/data.js` contains clearly marked original design concepts, **not real product listings**. No verified prices, retailer URLs, stock claims, fabricated reviews, or affiliate purchase links are presented. Real products and approved affiliate URLs must be researched and added separately. Anime franchise names are references, not a claim of licensing or affiliation.
 
-The contact page links to the owner-supplied email **nexoriofficialon@gmail.com**. It opens an email application rather than pretending to submit a form. Privacy, terms, affiliate disclosure, accessibility and content/franchise pages describe the actual preview, with update dates and links between them. The privacy page can clear saved finds, and the footer includes a persistent **Reduce visual motion** control. This version has no analytics or newsletter service. Firebase authentication and content storage are implemented but not connected to a live project; it does not reuse Firebase configuration from the old files.
+The contact page links to the owner-supplied email **nexoriofficialon@gmail.com**. It opens an email application rather than pretending to submit a form. Privacy, terms, affiliate disclosure, accessibility and content/franchise pages describe the actual preview, with update dates and links between them. The privacy page can clear saved finds, and the footer includes a persistent **Reduce visual motion** control. This version has no analytics or newsletter service. Firebase authentication and content storage are implemented; real cloud connection and permissions still require verification. Configuration comes from the operator, not the old uploaded files.
 
 Before a public launch, complete the tasks in [launch readiness](docs/launch-readiness.md): real listings, operator identification, actual hosting/privacy details, rights clearance, accessibility assessment and applicable legal review, real domain/SEO metadata, and host route handling. The site is still a pre-launch preview; these pages do not certify legal compliance. Do not introduce claims of authenticity or product testing without evidence. `public/assets/` contains concept illustrations; AI generation does not itself clear third-party rights.
 

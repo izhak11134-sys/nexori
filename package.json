@@ -10,10 +10,10 @@
     "build": "vite build && npm run build:html",
     "build:html": "node scripts/build-standalone.mjs",
     "preview": "vite preview --host 0.0.0.0",
-    "firebase:sync": "node scripts/sync-firebase.mjs",
-    "firebase:emulators": "npm run firebase:sync && firebase emulators:start --project demo-nexori",
-    "test:firebase": "npm run firebase:sync && firebase emulators:exec --project demo-nexori --only auth,firestore,storage,functions \"node --test --test-concurrency=1 tests/firebase.integration.test.js\"",
-    "test:firebase-validation": "npm run firebase:sync && node --test tests/firebase-validation.test.js"
+    "firebase:sync": "node scripts/build-firestore-rules.mjs",
+    "firebase:emulators": "npm run firebase:sync && firebase emulators:start --project demo-nexori --only auth,firestore",
+    "test:firebase": "npm run firebase:sync && firebase emulators:exec --project demo-nexori --only auth,firestore \"node --test --test-concurrency=1 tests/firebase-spark.integration.test.js\"",
+    "test:firebase-validation": "node --test tests/firebase-spark-validation.test.js"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "6.0.0",

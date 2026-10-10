@@ -2,7 +2,12 @@ import { firebaseConfiguration } from './firebase-config.js';
 import { applyContentDraft } from './content.js';
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let service=null,user=null,authorized=false,authReady=false,authGeneration=0,editor=null,publicPayload={version:1,changes:{}},busy=false,connectionError='';
-function updateSite(payload){applyContentDraft(payload,{bucket:service?.bucket});window.dispatchEvent(new Event('nexori:content-update'));}
+function updateSite(payload,preserveLogin=false){
+  applyContentDraft(payload,{bucket:service?.bucket});
+  // A late public snapshot must not clear credentials while the owner types.
+  if(preserveLogin&&document.querySelector('#admin-login-form'))return;
+  window.dispatchEvent(new Event('nexori:content-update'));
+}
 function panel() {
   const host=document.querySelector('#firebase-admin-page');if(!host)return;
   let body;
@@ -28,7 +33,7 @@ async function enterEditor(generation) {
   const draft=await service.loadDraft();if(generation!==authGeneration)return;
   const {mountOwnerEditor}=await import('./owner-editor.js');await import('./owner-editor.css');if(generation!==authGeneration)return;
   updateSite(draft);
-  editor=mountOwnerEditor({bucket:service.bucket,save:input=>service.save(input),backup:input=>service.backup(input),error:message});
+  editor=mountOwnerEditor({bucket:service.bucket,imageNote:service.imageNote,save:input=>service.save(input),backup:input=>service.backup(input),error:message});
   const toolbar=document.querySelector('.owner-toolbar');toolbar.classList.add('owner-cloud-toolbar');
   toolbar.querySelector('[data-owner-export]').hidden=true;
   toolbar.querySelector('[data-owner-import]').hidden=true;
@@ -84,7 +89,7 @@ async function start(){
     const {createFirebaseService}=await import('./firebase-service.js');
     service=await createFirebaseService(config);
     service.subscribePublic(payload=>{
-      try{validatePublic(payload);publicPayload=payload;if(!editor)updateSite(payload);}
+      try{validatePublic(payload);publicPayload=payload;if(!editor)updateSite(payload,true);}
       catch{console.error('Published content failed validation; keeping the last valid website.');}
     },error=>{console.error('Published content is unavailable.',error.code);});
     service.observeAuth(authChanged);

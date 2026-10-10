@@ -29,7 +29,7 @@ export const contentGroups = {
 };
 const baseContent = Object.fromEntries(Object.entries(contentGroups).map(([group,value])=>[group,Object.fromEntries(value.records.map(record=>[record.id,structuredClone(record)]))]));
 export let contentDraft = {version:1,changes:{}};
-const contentFields = {
+export const contentFields = {
   products:['name','description','type','tipsText','image','imageAlt','category','typeId','retailerUrl','editorNotes'],
   categories:['label','short','description','image','imageAlt'],
   types:['name','examples','image','imageAlt'],
@@ -40,6 +40,10 @@ const contentFields = {
 };
 export function isContentImage(value, options = {}) {
   if (options.bucket && contentImageBlobs.has(value)) return true;
+  if (options.spark && typeof value === 'string') {
+    if (/^spark:published\/[a-f0-9-]{36}\/[a-f0-9-]{36}$/.test(value)) return true;
+    if (options.ownerUid && value.startsWith(`spark:drafts/${options.ownerUid}/`) && /^spark:drafts\/[A-Za-z0-9_-]{1,128}\/[a-f0-9-]{36}$/.test(value)) return true;
+  }
   if (value === '' || (typeof value === 'string' && value.length <= 2800000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value))) return true;
   if (options.ownerUid && typeof value === 'string' && value.startsWith(`storage:drafts/${options.ownerUid}/`) && /^storage:drafts\/[A-Za-z0-9_-]{1,128}\/[a-f0-9-]{36}\.(?:png|jpg|webp)$/.test(value)) return true;
   if (!options.bucket || typeof value !== 'string') return false;

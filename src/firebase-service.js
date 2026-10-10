@@ -1,68 +1,80 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator, setPersistence, browserSessionPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator, doc, getDoc, onSnapshot, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
-import { getStorage, connectStorageEmulator, ref, uploadBytes, getBlob } from 'firebase/storage';
-import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
+import { getFirestore, connectFirestoreEmulator, doc, getDoc } from 'firebase/firestore';
 import { validateContentDraft, contentImageBlobs } from './content.js';
+import { createSparkStore } from './firebase-spark-store.js';
+import { imageEntries } from './spark-content.js';
+import { compressSparkImage } from './spark-images.js';
+
 export async function createFirebaseService(config) {
-  const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,import.meta.env.VITE_FIREBASE_FUNCTIONS_REGION||'us-central1');
-  if(import.meta.env.VITE_FIREBASE_USE_EMULATORS==='true') {
+  const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app);
+  if(import.meta.env.VITE_FIREBASE_USE_EMULATORS==='true'||config.useEmulators===true) {
     if(!['localhost','127.0.0.1','[::1]'].includes(location.hostname))throw new Error('Emulators are only permitted on localhost.');
-    connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});connectFirestoreEmulator(db,'127.0.0.1',8080);connectStorageEmulator(storage,'127.0.0.1',9199);connectFunctionsEmulator(functions,'127.0.0.1',5001);
+    connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});connectFirestoreEmulator(db,'127.0.0.1',8080);
   }
   await setPersistence(auth,browserSessionPersistence);
-  let draftRevision=0,publishedRevision=0,operation=false;
-  const images=new Map(),privatePreviews=new Map(),empty=()=>({version:1,changes:{}});
+  const store=createSparkStore(db,()=>auth.currentUser?.uid),bucket='spark-firestore';
+  let operation=false,generation=0,publicSequence=0;
+  const privatePreviews=new Map(),publicPreviews=new Map(),references=new Map();
   const dataUrl=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
-  function preview(path,blob) {
-    if(!privatePreviews.has(path)){const url=URL.createObjectURL(blob);privatePreviews.set(path,url);contentImageBlobs.add(url);images.set(url,path);}
-    return privatePreviews.get(path);
+  async function preview(reference,expectedGeneration) {
+    const isPrivate=reference.startsWith('spark:drafts/'),cache=isPrivate?privatePreviews:publicPreviews;
+    if(cache.has(reference))return cache.get(reference);
+    const data=await store.image(reference);
+    const url=URL.createObjectURL(new Blob([data.bytes.toUint8Array()],{type:data.mime}));
+    try {
+      const image=new Image();image.src=url;await image.decode();
+      if(isPrivate&&generation!==expectedGeneration)throw new Error('התחברות המנהל השתנתה.');
+      // Concurrent loads may have already prepared this immutable image.
+      if(cache.has(reference)){URL.revokeObjectURL(url);return cache.get(reference);}
+      cache.set(reference,url);references.set(url,reference);contentImageBlobs.add(url);return url;
+    }catch(error){URL.revokeObjectURL(url);throw error;}
   }
-  const call=async(name,data)=>(await httpsCallable(functions,name)(data)).data;
+  async function materialize(payload,expectedGeneration=generation,publicOnly=false) {
+    const next=validateContentDraft(payload,{spark:true,ownerUid:publicOnly?undefined:auth.currentUser?.uid});
+    await Promise.all(imageEntries(next).map(async entry=>{entry.patch[entry.field]=await preview(entry.value,expectedGeneration);}));
+    if(!publicOnly&&generation!==expectedGeneration)throw new Error('התחברות המנהל השתנתה.');
+    return next;
+  }
   async function exclusive(fn) {
     if(operation)throw new Error('יש פעולה בתהליך. המתן לסיומה.');operation=true;
     try{return await fn();}finally{operation=false;}
   }
-  async function normalize(payload) {
-    const next=validateContentDraft(payload,{bucket:config.storageBucket});
-    for(const records of Object.values(next.changes))for(const patch of Object.values(records))for(const [field,value] of Object.entries(patch)) {
-      if(!/image$/i.test(field))continue;
-      if(value.startsWith('blob:')){patch[field]=images.get(value);if(!patch[field])throw new Error('התמונה הפרטית אינה זמינה. טען את הטיוטה מחדש.');continue;}
-      if(!value.startsWith('data:'))continue;
-      if(!images.has(value)) {
-        const blob=await(await fetch(value)).blob();if(blob.size>2*1024*1024)throw new Error('תמונה גדולה מ־2MB.');
-        const extension={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[blob.type];if(!extension)throw new Error('פורמט תמונה לא נתמך.');
-        const path=`drafts/${auth.currentUser.uid}/${crypto.randomUUID()}.${extension}`;
-        await uploadBytes(ref(storage,path),blob,{contentType:blob.type});images.set(value,`storage:${path}`);preview(`storage:${path}`,blob);
+  async function normalize(input,expectedGeneration) {
+    const next=validateContentDraft(input,{spark:true,ownerUid:auth.currentUser?.uid,bucket});
+    const uploads=new Map();
+    for(const entry of imageEntries(next)) {
+      if(entry.value.startsWith('blob:')) {
+        const reference=references.get(entry.value);if(!reference)throw new Error('התמונה אינה זמינה. טען את הטיוטה מחדש.');
+        entry.patch[entry.field]=reference;continue;
       }
-      patch[field]=images.get(value);
-    }
-    return next;
-  }
-  async function materialize(payload) {
-    const next=validateContentDraft(payload,{bucket:config.storageBucket,ownerUid:auth.currentUser.uid});
-    for(const records of Object.values(next.changes))for(const patch of Object.values(records))for(const [field,value] of Object.entries(patch)) {
-      if(!/image$/i.test(field)||!value.startsWith('storage:'))continue;
-      patch[field]=privatePreviews.get(value)||preview(value,await getBlob(ref(storage,value.slice(8)),2*1024*1024));
+      if(!entry.value.startsWith('data:'))continue;
+      if(!uploads.has(entry.value))uploads.set(entry.value,await store.uploadImage(await compressSparkImage(entry.value)));
+      if(generation!==expectedGeneration)throw new Error('התחברות המנהל השתנתה.');
+      entry.patch[entry.field]=uploads.get(entry.value);
     }
     return next;
   }
   return {
-    bucket:config.storageBucket,
+    bucket,
+    imageNote:'תמונות חדשות מוקטנות לעד 1600 פיקסלים ומומרות ל־WebP לצורך שמירה במסלול החינמי. תמונות וגרסאות משתמשות במכסת Firestore.',
     observeAuth:fn=>onAuthStateChanged(auth,fn),
     login:(email,password)=>signInWithEmailAndPassword(auth,email,password),
     logout:()=>signOut(auth),
     resetPassword:email=>sendPasswordResetEmail(auth,email),
     verifyEmail:()=>sendEmailVerification(auth.currentUser),
     async isOwner(user){const role=await getDoc(doc(db,'admins',user.uid));return user.emailVerified&&role.data()?.active===true;},
-    subscribePublic(fn,onError){return onSnapshot(doc(db,'public','site'),snapshot=>{publishedRevision=snapshot.data()?.revision??0;fn(snapshot.data()?.payload??empty());},onError);},
-    async loadDraft(){const snapshot=await getDoc(doc(db,'cms','draft'));draftRevision=snapshot.data()?.revision??0;if(snapshot.exists())return materialize(snapshot.data().payload);const current=await getDoc(doc(db,'public','site'));return current.data()?.payload??empty();},
-    save:payload=>exclusive(async()=>{const normalized=await normalize(payload),result=await call('saveOwnerDraft',{payload:normalized,expectedRevision:draftRevision});draftRevision=result.revision;return materialize(normalized);}),
-    async backup(payload){const next=structuredClone(payload);for(const records of Object.values(next.changes))for(const patch of Object.values(records))for(const [field,value] of Object.entries(patch))if(/image$/i.test(field)&&value.startsWith('blob:'))patch[field]=await dataUrl(await(await fetch(value)).blob());return next;},
-    publish:()=>exclusive(()=>call('publishOwnerDraft',{draftRevision,publishedRevision})),
-    restore:revisionId=>exclusive(()=>call('restorePublishedRevision',{revisionId,publishedRevision})),
-    async revisions(){const snapshots=await getDocs(query(collection(db,'revisions'),orderBy('createdAt','desc'),limit(20)));return snapshots.docs.map(snapshot=>({id:snapshot.id,...snapshot.data()}));},
-    async published(){const snapshot=await getDoc(doc(db,'public','site'));return snapshot.data()?.payload??empty();},
-    clear(){for(const url of privatePreviews.values()){URL.revokeObjectURL(url);contentImageBlobs.delete(url);}privatePreviews.clear();images.clear();draftRevision=0;},
+    subscribePublic(fn,onError) {return store.subscribePublic(async payload=>{
+      const sequence=++publicSequence;
+      try{const display=await materialize(payload,generation,true);if(sequence===publicSequence)fn(display);}catch(error){if(sequence===publicSequence)onError?.(error);}
+    },onError);},
+    async loadDraft(){const expectedGeneration=generation;return materialize(await store.loadDraft(),expectedGeneration);},
+    save:input=>exclusive(async()=>{const expectedGeneration=generation;const normalized=await normalize(input,expectedGeneration);const saved=await store.save(normalized);return materialize(saved,expectedGeneration);}),
+    async backup(input){const next=structuredClone(input);for(const entry of imageEntries(next))if(entry.value.startsWith('blob:'))entry.patch[entry.field]=await dataUrl(await(await fetch(entry.value)).blob());return next;},
+    publish:()=>exclusive(()=>store.publish()),
+    restore:revisionId=>exclusive(()=>store.restore(revisionId)),
+    revisions:()=>store.revisions(),
+    async published(){return materialize(await store.published(),generation,true);},
+    clear(){generation++;for(const url of privatePreviews.values()){URL.revokeObjectURL(url);contentImageBlobs.delete(url);references.delete(url);}privatePreviews.clear();store.clear();},
   };
 }
