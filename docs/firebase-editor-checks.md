@@ -1,6 +1,6 @@
 # Firebase editor validation — 2026-10-10
 
-The operator created `nexori-development`, supplied its public Web configuration, enabled Email/Password Authentication and supplied a manager UID. Configuration is local and ignored by Git. No real sign-in or cloud authorization has been verified. No hosting, rules, functions or billing were deployed or activated. The market review now recommends `us-central1` (Iowa); the client and Functions configuration are aligned. Firestore creation remains a user Console step. All integration tests below use only the isolated `demo-nexori` project.
+The operator created `nexori-development`, supplied its public Web configuration, enabled Email/Password Authentication and supplied a manager UID. Configuration is local and ignored by Git. No real sign-in or cloud authorization has been verified. No hosting, rules, functions or billing were deployed or activated by the agent. The operator reported creating Firestore in Iowa. Latest constraint is Spark/free services only; the prior Functions/Storage architecture and its passing local tests are not evidence of Spark compatibility. Adaptation remains required, as recorded in `firebase-spark-plan-he.md`. All integration tests below use only the isolated `demo-nexori` project.
 
 ## Passed
 
