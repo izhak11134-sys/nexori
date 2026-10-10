@@ -1,3 +1,4 @@
 import './owner-editor.css';
 import './main.js';
-import './owner-editor.js';
+import { mountOwnerEditor } from './owner-editor.js';
+mountOwnerEditor();

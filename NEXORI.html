@@ -459,7 +459,8 @@ const policies = {
       ['Who to contact', `NEXORI is an independent editorial website being developed from Israel. For privacy questions or requests, contact ${contactLink}. The operator’s legal identification and production service details will be completed before public launch.`],
       ['Saved finds', 'When you save a concept, its identifier is stored in this browser’s local storage under nexori.saved.v1. The saved list is not sent to a server by this feature and is not shared between devices. It remains until you remove it or clear this site’s data. If browser storage is unavailable, saved finds may last only for the current visit.'],
       ['Your motion preference', 'If you use “Reduce visual motion”, this browser stores that choice under nexori.motion.v1 so it can be applied on your next visit. It is not sent to a server by this feature. Clearing this site’s browser data removes the choice. Your browser’s own reduced-motion preference is also respected.'],
-      ['Search and technical delivery', 'Search and filtering run locally over this collection. Catalog search text and filter choices appear in the page URL and browser history so you can refresh or return to a selection. The standalone file uses URL hashes. On a hosted website, URLs including search parameters may reach the delivery provider when a page is loaded; avoid entering sensitive information in search. The current application has no account registration, checkout, contact form, analytics, advertising pixels or newsletter subscription. Images are included with the site rather than loaded from external image services. If the site is served online, the delivery provider may receive technical information such as IP addresses, requested URLs and browser details. A production hosting provider has not yet been selected for this preview; its actual processing and retention will be described before public launch.'],
+      ['Search and technical delivery', 'Search and filtering run locally over this collection. Catalog search text and filter choices appear in the page URL and browser history so you can refresh or return to a selection. The standalone file uses URL hashes. On a hosted website, URLs including search parameters may reach the delivery provider when a page is loaded; avoid entering sensitive information in search. The visitor-facing application has no public account registration, checkout, contact form, analytics, advertising pixels or newsletter subscription. Original illustrations are included with the site. If Firebase is configured, the website retrieves approved content and images from Google Firebase services; delivery can involve technical information such as IP addresses and request details. If the site is served online, the delivery provider may receive technical information such as IP addresses, requested URLs and browser details. A production hosting provider has not yet been selected for this preview; its actual processing and retention will be described before public launch.'],
+      ['Owner administration', 'An optional owner-only management system uses Firebase Authentication, Cloud Firestore, Cloud Storage and Cloud Functions when connected to the operator’s Firebase project. The owner’s email, authentication records, a browser-session login state, content drafts, uploaded images and revision history are processed for administration. Visitors do not need an account; private drafts and product preparation notes are restricted to the approved manager. Firebase is not yet connected to a live project in this development preview. Before launch, confirm service locations, access controls, retention, international transfers and the applicable Google service terms.'],
       ['When you email us', 'Contacting us by email shares your email address and the information you choose to include so we can respond and address the issue. Messages are handled using Gmail; your email provider and ours may also process them under their own terms and privacy policies. Correspondence should be kept only as needed for the inquiry, any follow-up and applicable legal obligations. Do not send passwords, payment information or identification documents by default. Contacting us does not subscribe you to marketing.'],
       ['Your choices and requests', `You can remove individual saved finds, use “Clear saved finds” below, or clear this site’s data in your browser. For information held through correspondence, contact ${contactLink}. Access, correction, deletion and other requests will be assessed under the law that applies; some information may need to be retained where required. We may ask for proportionate verification where necessary, without requesting sensitive documents by default.`],
       ['External websites and future features', 'Future retailer links will take you to separate websites with their own privacy practices; affiliate networks may process clicks and purchases under the applicable program. Before adding those links, tracking, embedded services, forms or mailing lists, we will update this notice and implement any applicable consent, disclosure and security requirements.'],
@@ -516,6 +517,9 @@ const policies = {
 
 
 const contentStorageKey = 'nexori.owner-draft.v1';
+// Only object URLs created from authorized private image downloads may be rendered.
+// The server never registers any object URLs, so they cannot be saved as cloud content.
+const contentImageBlobs = new Set();
 const contentBlocks = {
   hero: {label:'הבאנר הראשי', lead:'Your Portal to', accent:'Authentic Anime', ending:'Culture & Collectibles', description:'For the stories you live in.\nThe characters you carry with you.\nAnd the pieces that make it all real.', image:''},
   editorial: {label:'כרטיס מדריך האספנים', title:'Your first figure.\nYour next chapter.', description:'From choosing a figure format to checking a seller, our beginner’s guide helps you start a collection with a little more confidence.', image:''},
@@ -549,10 +553,18 @@ const contentFields = {
   blocks:['title','lead','accent','ending','description','image','imageAlt'],
   pages:['title','description','image','imageAlt'],
 };
-function isContentImage(value) {
-  return value === '' || (typeof value === 'string' && value.length <= 2800000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value));
+function isContentImage(value, options = {}) {
+  if (options.bucket && contentImageBlobs.has(value)) return true;
+  if (value === '' || (typeof value === 'string' && value.length <= 2800000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value))) return true;
+  if (options.ownerUid && typeof value === 'string' && value.startsWith(`storage:drafts/${options.ownerUid}/`) && /^storage:drafts\/[A-Za-z0-9_-]{1,128}\/[a-f0-9-]{36}\.(?:png|jpg|webp)$/.test(value)) return true;
+  if (!options.bucket || typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    const prefix = `/v0/b/${options.bucket}/o/`;
+    return url.origin === 'https://firebasestorage.googleapis.com' && !url.username && !url.password && !url.hash && url.pathname.startsWith(prefix) && /^published\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.webp$/.test(decodeURIComponent(url.pathname.slice(prefix.length))) && url.search === '?alt=media';
+  } catch { return false; }
 }
-function validateContentDraft(input) {
+function validateContentDraft(input, options = {}) {
   if (!input || input.version !== 1 || !input.changes || Array.isArray(input.changes) || typeof input.changes !== 'object') throw new Error('קובץ הטיוטה אינו בפורמט נתמך.');
   if (Object.keys(input).some(key=>!['version','changes'].includes(key))) throw new Error('קובץ הטיוטה כולל שדות ראשיים לא מוכרים.');
   if (JSON.stringify(input).length > 22000000) throw new Error('הטיוטה גדולה מדי. השתמש בתמונות קטנות יותר.');
@@ -563,7 +575,7 @@ function validateContentDraft(input) {
       for (const [field,value] of Object.entries(patch)) {
         if (!contentFields[group].includes(field) || typeof value !== 'string') throw new Error('שדה עריכה לא מוכר.');
         if (['name','label','short','title','cardTitle','pageTitle','lead'].includes(field) && !value.trim()) throw new Error('אין להשאיר כותרת ריקה.');
-        if (/image$/i.test(field)) {if (!isContentImage(value)) throw new Error('נדרשת תמונת PNG, JPEG או WebP מוטמעת.');}
+        if (/image$/i.test(field)) {if (!isContentImage(value, options)) throw new Error('נדרשת תמונת PNG, JPEG או WebP תקינה ממקור מורשה.');}
         else if (value.length > (['description','editorNotes','tipsText'].includes(field) ? 5000 : 500)) throw new Error('הטקסט ארוך מדי.');
         if(field === 'tipsText' && value.split('\n').filter(line=>line.trim()).length>12) throw new Error('רשימת הבדיקות מוגבלת ל־12 סעיפים.');
         if (field === 'retailerUrl' && value) { const url=new URL(value);if(url.protocol !== 'https:' || url.username || url.password) throw new Error('קישור החנות חייב להיות כתובת HTTPS תקינה.'); }
@@ -577,8 +589,8 @@ function validateContentDraft(input) {
   }
   return structuredClone(input);
 }
-function applyContentDraft(input) {
-  const validated=validateContentDraft(input);
+function applyContentDraft(input, options = {}) {
+  const validated=validateContentDraft(input, options);
   for(const [group,value] of Object.entries(contentGroups)) for(const record of value.records) {
     const id=record.id;
     for(const field of contentFields[group]) {
@@ -688,7 +700,7 @@ function footer() {
   <div><h3>Discover</h3>${link('/collection', 'The collection')}${link('/worlds', 'Anime worlds')}${link('/guides', 'Buying guides')}${link('/saved', 'Saved finds')}</div>
   <div><h3>Get to know us</h3>${link('/about', 'Our story')}${link('/about#selection', 'How we select')}${link('/disclosure', 'Affiliate disclosure')}${link('/contact', 'Contact')}${link('/rights', 'Content & franchise references')}</div>
   <div class="footer-transparency"><span class="tiny-label">A NOTE ON TRANSPARENCY</span><p>This is a design preview with no active affiliate purchase links. When affiliate links are added, we may earn a commission from qualifying purchases.</p>${link('/disclosure', `Learn more ${icon('arrow')}`, 'text-link')}</div></div>
-  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}${link('/accessibility', 'Accessibility')}</div><button class="motion-toggle" data-motion aria-pressed="${motionPaused}">Reduce visual motion <span aria-hidden="true">${motionPaused ? 'On' : 'Off'}</span></button></div></footer>`;
+  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}${link('/accessibility', 'Accessibility')}${window.NEXORI_CLOUD_SITE ? link('/admin', 'Owner sign-in') : ''}</div><button class="motion-toggle" data-motion aria-pressed="${motionPaused}">Reduce visual motion <span aria-hidden="true">${motionPaused ? 'On' : 'Off'}</span></button></div></footer>`;
 }
 
 function collectionNotice() {
@@ -843,6 +855,7 @@ function route() {
   else if (parts[0] === 'worlds' && parts.length <= 2) { content = worldsPage(parts[1]); title = franchises.find(f => f.id === parts[1])?.pageTitle || franchises.find(f => f.id === parts[1])?.name || 'Anime worlds'; }
   else if (parts[0] === 'guides' && parts.length <= 2) { content = guidesPage(parts[1]); title = guides.find(g => g.id === parts[1])?.title || 'The journal'; }
   else if (parts[0] === 'about' && parts.length === 1) { content = about(); title = 'Our story'; }
+  else if (parts[0] === 'admin' && parts.length === 1 && window.NEXORI_CLOUD_SITE) { content = '<div id="firebase-admin-page"><p class="admin-loading" lang="he">טוען את מסך הניהול…</p></div>'; title = 'Owner sign-in'; }
   else if (info[parts[0]] && parts.length === 1) { content = infoPage(parts[0]); title = info[parts[0]].title.replace(/\.$/, ''); }
   else { content = notFound(); title = 'Page not found'; }
   document.title = `NEXORI — ${title}`;

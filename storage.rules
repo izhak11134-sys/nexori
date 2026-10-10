@@ -1,0 +1,23 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function owner() {
+      return request.auth != null && request.auth.token.email_verified == true
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.active == true;
+    }
+    match /drafts/{uid}/{filename} {
+      allow read: if owner() && request.auth.uid == uid;
+      allow create: if owner() && request.auth.uid == uid
+        && filename.matches('[a-f0-9-]{36}[.](png|jpg|webp)')
+        && request.resource.size > 0 && request.resource.size <= 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp)');
+      allow update, delete: if false;
+    }
+    match /published/{revision}/{filename} {
+      allow read: if firestore.exists(/databases/(default)/documents/mediaReleases/$(revision));
+      allow write: if false;
+    }
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

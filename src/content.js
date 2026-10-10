@@ -2,6 +2,9 @@ import { categories, products, franchises, guides } from './data.js';
 import { policies } from './policies.js';
 
 export const contentStorageKey = 'nexori.owner-draft.v1';
+// Only object URLs created from authorized private image downloads may be rendered.
+// The server never registers any object URLs, so they cannot be saved as cloud content.
+export const contentImageBlobs = new Set();
 export const contentBlocks = {
   hero: {label:'הבאנר הראשי', lead:'Your Portal to', accent:'Authentic Anime', ending:'Culture & Collectibles', description:'For the stories you live in.\nThe characters you carry with you.\nAnd the pieces that make it all real.', image:''},
   editorial: {label:'כרטיס מדריך האספנים', title:'Your first figure.\nYour next chapter.', description:'From choosing a figure format to checking a seller, our beginner’s guide helps you start a collection with a little more confidence.', image:''},
@@ -35,10 +38,18 @@ const contentFields = {
   blocks:['title','lead','accent','ending','description','image','imageAlt'],
   pages:['title','description','image','imageAlt'],
 };
-export function isContentImage(value) {
-  return value === '' || (typeof value === 'string' && value.length <= 2800000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value));
+export function isContentImage(value, options = {}) {
+  if (options.bucket && contentImageBlobs.has(value)) return true;
+  if (value === '' || (typeof value === 'string' && value.length <= 2800000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value))) return true;
+  if (options.ownerUid && typeof value === 'string' && value.startsWith(`storage:drafts/${options.ownerUid}/`) && /^storage:drafts\/[A-Za-z0-9_-]{1,128}\/[a-f0-9-]{36}\.(?:png|jpg|webp)$/.test(value)) return true;
+  if (!options.bucket || typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    const prefix = `/v0/b/${options.bucket}/o/`;
+    return url.origin === 'https://firebasestorage.googleapis.com' && !url.username && !url.password && !url.hash && url.pathname.startsWith(prefix) && /^published\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.webp$/.test(decodeURIComponent(url.pathname.slice(prefix.length))) && url.search === '?alt=media';
+  } catch { return false; }
 }
-export function validateContentDraft(input) {
+export function validateContentDraft(input, options = {}) {
   if (!input || input.version !== 1 || !input.changes || Array.isArray(input.changes) || typeof input.changes !== 'object') throw new Error('קובץ הטיוטה אינו בפורמט נתמך.');
   if (Object.keys(input).some(key=>!['version','changes'].includes(key))) throw new Error('קובץ הטיוטה כולל שדות ראשיים לא מוכרים.');
   if (JSON.stringify(input).length > 22000000) throw new Error('הטיוטה גדולה מדי. השתמש בתמונות קטנות יותר.');
@@ -49,7 +60,7 @@ export function validateContentDraft(input) {
       for (const [field,value] of Object.entries(patch)) {
         if (!contentFields[group].includes(field) || typeof value !== 'string') throw new Error('שדה עריכה לא מוכר.');
         if (['name','label','short','title','cardTitle','pageTitle','lead'].includes(field) && !value.trim()) throw new Error('אין להשאיר כותרת ריקה.');
-        if (/image$/i.test(field)) {if (!isContentImage(value)) throw new Error('נדרשת תמונת PNG, JPEG או WebP מוטמעת.');}
+        if (/image$/i.test(field)) {if (!isContentImage(value, options)) throw new Error('נדרשת תמונת PNG, JPEG או WebP תקינה ממקור מורשה.');}
         else if (value.length > (['description','editorNotes','tipsText'].includes(field) ? 5000 : 500)) throw new Error('הטקסט ארוך מדי.');
         if(field === 'tipsText' && value.split('\n').filter(line=>line.trim()).length>12) throw new Error('רשימת הבדיקות מוגבלת ל־12 סעיפים.');
         if (field === 'retailerUrl' && value) { const url=new URL(value);if(url.protocol !== 'https:' || url.username || url.password) throw new Error('קישור החנות חייב להיות כתובת HTTPS תקינה.'); }
@@ -63,8 +74,8 @@ export function validateContentDraft(input) {
   }
   return structuredClone(input);
 }
-export function applyContentDraft(input) {
-  const validated=validateContentDraft(input);
+export function applyContentDraft(input, options = {}) {
+  const validated=validateContentDraft(input, options);
   for(const [group,value] of Object.entries(contentGroups)) for(const record of value.records) {
     const id=record.id;
     for(const field of contentFields[group]) {

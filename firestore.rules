@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner() {
+      return request.auth != null && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
+    }
+    match /public/site { allow read: if true; allow write: if false; }
+    match /admins/{uid} { allow get: if request.auth != null && request.auth.uid == uid; allow list, write: if false; }
+    match /cms/{id} { allow read: if owner(); allow write: if false; }
+    match /revisions/{id} { allow read: if owner(); allow write: if false; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

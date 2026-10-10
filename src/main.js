@@ -77,7 +77,7 @@ function footer() {
   <div><h3>Discover</h3>${link('/collection', 'The collection')}${link('/worlds', 'Anime worlds')}${link('/guides', 'Buying guides')}${link('/saved', 'Saved finds')}</div>
   <div><h3>Get to know us</h3>${link('/about', 'Our story')}${link('/about#selection', 'How we select')}${link('/disclosure', 'Affiliate disclosure')}${link('/contact', 'Contact')}${link('/rights', 'Content & franchise references')}</div>
   <div class="footer-transparency"><span class="tiny-label">A NOTE ON TRANSPARENCY</span><p>This is a design preview with no active affiliate purchase links. When affiliate links are added, we may earn a commission from qualifying purchases.</p>${link('/disclosure', `Learn more ${icon('arrow')}`, 'text-link')}</div></div>
-  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}${link('/accessibility', 'Accessibility')}</div><button class="motion-toggle" data-motion aria-pressed="${motionPaused}">Reduce visual motion <span aria-hidden="true">${motionPaused ? 'On' : 'Off'}</span></button></div></footer>`;
+  <div class="container footer-bottom"><span>© ${new Date().getFullYear()} NEXORI</span><span>Independent. Fan-inspired. Thoughtfully selected.</span><div>${link('/privacy', 'Privacy')}${link('/terms', 'Terms')}${link('/accessibility', 'Accessibility')}${window.NEXORI_CLOUD_SITE ? link('/admin', 'Owner sign-in') : ''}</div><button class="motion-toggle" data-motion aria-pressed="${motionPaused}">Reduce visual motion <span aria-hidden="true">${motionPaused ? 'On' : 'Off'}</span></button></div></footer>`;
 }
 
 function collectionNotice() {
@@ -232,6 +232,7 @@ function route() {
   else if (parts[0] === 'worlds' && parts.length <= 2) { content = worldsPage(parts[1]); title = franchises.find(f => f.id === parts[1])?.pageTitle || franchises.find(f => f.id === parts[1])?.name || 'Anime worlds'; }
   else if (parts[0] === 'guides' && parts.length <= 2) { content = guidesPage(parts[1]); title = guides.find(g => g.id === parts[1])?.title || 'The journal'; }
   else if (parts[0] === 'about' && parts.length === 1) { content = about(); title = 'Our story'; }
+  else if (parts[0] === 'admin' && parts.length === 1 && window.NEXORI_CLOUD_SITE) { content = '<div id="firebase-admin-page"><p class="admin-loading" lang="he">טוען את מסך הניהול…</p></div>'; title = 'Owner sign-in'; }
   else if (info[parts[0]] && parts.length === 1) { content = infoPage(parts[0]); title = info[parts[0]].title.replace(/\.$/, ''); }
   else { content = notFound(); title = 'Page not found'; }
   document.title = `NEXORI — ${title}`;

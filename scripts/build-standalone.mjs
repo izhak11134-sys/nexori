@@ -27,14 +27,14 @@ const script = `window.NEXORI_ART = ${JSON.stringify(assets)};\n${data}\n${catal
 let html = await read('index.html');
 html = html.replace('href="/assets/mark.svg"', `href="${assets.mark}"`)
   .replace('</head>', `<style>\n${css}\n</style>\n<script id="nexori-content-data" type="application/json">{"version":1,"changes":{}}</script>\n</head>`)
-  .replace('<script type="module" src="/src/main.js"></script>', `<script type="module">\n${script}\n</script>`);
+  .replace('<script type="module" src="/src/site-entry.js"></script>', `<script type="module">\n${script}\n</script>`);
 await writeFile(path.join(root, 'NEXORI.html'), html);
 console.log(`Created standalone NEXORI.html (${Buffer.byteLength(html)} bytes); styles, logic, and ${Object.keys(assets).length} images embedded.`);
 const editorCss = await read('src/owner-editor.css');
 const editorJs = (await read('src/owner-editor.js')).replace(/^import .*;\r?\n/gm, '').replace(/<\/script/gi, '<\\/script');
 const template = JSON.stringify(html).replace(/</g,'\\u003c');
 const ownerHtml = html.replace('</head>',`<meta name="robots" content="noindex,nofollow"><style>${editorCss}</style><script>window.NEXORI_OWNER_MODE = true;</script></head>`)
-  .replace(`<script type="module">\n${script}\n</script>`,`<script type="module">\n${script}\n${editorJs}\n</script>`)
+  .replace(`<script type="module">\n${script}\n</script>`,`<script type="module">\n${script}\n${editorJs}\nmountOwnerEditor();\n</script>`)
   .replace('</body>',`<script id="nexori-export-template" type="application/json">${template}</script></body>`);
 await writeFile(path.join(root,'NEXORI-editor.html'),ownerHtml);
 console.log(`Created separate NEXORI-editor.html (${Buffer.byteLength(ownerHtml)} bytes), with local draft editing and clean visitor export.`);

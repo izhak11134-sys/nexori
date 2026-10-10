@@ -11,6 +11,9 @@ const ownerFields = {
   blocks:[['title','כותרת הכרטיסייה','optional-title'],['lead','שורה ראשונה בכותרת','hero'],['accent','השורה הזוהרת','hero'],['ending','שורה אחרונה בכותרת','hero'],['description','תיאור','textarea'],['image','תמונה או רקע','image'],['imageAlt','תיאור התמונה לנגישות']],
   pages:[['title','כותרת הכרטיסייה','textarea'],['description','תוכן הכרטיסייה','textarea'],['image','רקע הכרטיסייה','image'],['imageAlt','תיאור התמונה']],
 };
+export function mountOwnerEditor(backend = null) {
+const ownerAbort = new AbortController();
+let ownerDisposed = false;
 let ownerPreview=false, ownerSelection=null, ownerWorking={}, ownerInitial={}, ownerSession=0, ownerTrigger=null, ownerUploads=0;
 const ownerToolbar=document.createElement('aside');
 ownerToolbar.className='owner-toolbar';ownerToolbar.dir='rtl';ownerToolbar.lang='he';ownerToolbar.setAttribute('aria-label','כלי עריכה לבעל האתר');
@@ -53,11 +56,13 @@ function ownerOpen(group,id,trigger) {
   ownerSession++;ownerUploads=0;ownerSelection={group,id};ownerTrigger=trigger;
   ownerWorking={...(contentDraft.changes[group]?.[id]||{})};ownerForm(record);ownerDialog.showModal();ownerDialog.querySelector('input:not([type=file]),textarea,select')?.focus();
 }
-function ownerApply(input) {
-  applyContentDraft(input);
-  let stored=true;try{localStorage.setItem(contentStorageKey,JSON.stringify(contentDraft));}catch{stored=false;}
+async function ownerApply(input) {
+  const display=backend?await backend.save(input):input;
+  if(ownerDisposed)return;
+  applyContentDraft(display??input, {bucket:backend?.bucket});
+  let stored=true;if(!backend)try{localStorage.setItem(contentStorageKey,JSON.stringify(contentDraft));}catch{stored=false;}
   window.dispatchEvent(new Event('nexori:content-update'));ownerList();ownerDecorate();
-  ownerStatus(stored?'הטיוטה נשמרה בדפדפן. הורד גיבוי או אתר מעודכן כדי לשמור עותק מחוץ לדפדפן.':'השינוי מוצג אך לא נשמר בדפדפן — ייתכן שהאחסון מלא או חסום. הורד גיבוי עכשיו.');
+  ownerStatus(backend?'הטיוטה נשמרה ב־Firebase. המבקרים יראו אותה רק לאחר החלת השינויים באתר.':stored?'הטיוטה נשמרה בדפדפן. הורד גיבוי או אתר מעודכן כדי לשמור עותק מחוץ לדפדפן.':'השינוי מוצג אך לא נשמר בדפדפן — ייתכן שהאחסון מלא או חסום. הורד גיבוי עכשיו.');
 }
 function ownerDownload(name,type,body) {
   const url=URL.createObjectURL(new Blob([body],{type})),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
@@ -71,26 +76,27 @@ function ownerExport() {
   const html=JSON.parse(template.textContent).replace('<script id="nexori-content-data" type="application/json">{"version":1,"changes":{}}</script>',`<script id="nexori-content-data" type="application/json">${ownerSerialize(payload)}</script>`);
   ownerDownload('NEXORI.html','text/html;charset=utf-8',html);ownerStatus('קובץ האתר המעודכן הורד, ללא כלי עריכה. הוא אינו מחליף אוטומטית קבצים ב־GitHub או אתר חי.');
 }
-document.addEventListener('nexori:render',ownerDecorate);
-document.addEventListener('click',event=>{
+document.addEventListener('nexori:render',ownerDecorate,{signal:ownerAbort.signal});
+document.addEventListener('click',async event=>{
   const edit=event.target.closest('[data-owner-group]');if(edit){event.preventDefault();ownerOpen(edit.dataset.ownerGroup,edit.dataset.ownerId,edit);return;}
   if(event.target.closest('[data-owner-open]')){const selection=ownerToolbar.querySelector('select').value;if(selection){const [group,id]=selection.split(':');ownerOpen(group,id,event.target);}return;}
-  if(event.target.closest('[data-owner-preview]')){ownerPreview=!ownerPreview;document.body.classList.toggle('owner-preview',ownerPreview);event.target.setAttribute('aria-pressed',String(ownerPreview));event.target.textContent=ownerPreview?'חזרה לעריכה':'תצוגה מקדימה';return;}
+  if(event.target.closest('[data-owner-preview]')){ownerPreview=!ownerPreview;document.body.classList.toggle('owner-preview',ownerPreview);event.target.setAttribute('aria-pressed',String(ownerPreview));event.target.textContent=ownerPreview?'חזרה לעריכה':backend?'תצוגת הטיוטה':'תצוגה מקדימה';return;}
   if(event.target.closest('[data-owner-export]')){ownerExport();return;}
-  if(event.target.closest('[data-owner-backup]')){ownerDownload('NEXORI-draft.json','application/json',JSON.stringify(contentDraft,null,2));ownerStatus('גיבוי הטיוטה הורד. שמור אותו כדי להעביר עריכות לדפדפן אחר או לשלוח לנו לשילוב בקוד.');return;}
+  if(event.target.closest('[data-owner-backup]')){try{const snapshot=backend?.backup?await backend.backup(contentDraft):contentDraft;if(ownerDisposed)return;ownerDownload('NEXORI-draft.json','application/json',JSON.stringify(snapshot,null,2));ownerStatus('גיבוי הטיוטה הורד. שמור אותו כדי לשמור עותק של העבודה מחוץ למערכת.');}catch(error){ownerStatus(backend?.error(error)||error.message);}return;}
   if(event.target.closest('[data-owner-import]')){ownerToolbar.querySelector('input').click();return;}
   if(event.target.closest('[data-owner-cancel]')){ownerDialog.close();return;}
   if(event.target.closest('[data-owner-reset]')){ownerSession++;ownerUploads=0;ownerWorking={};ownerForm(originalContentRecord(ownerSelection.group,ownerSelection.id));return;}
   const remove=event.target.closest('[data-owner-remove-image]');if(remove){ownerWorking[remove.dataset.ownerRemoveImage]='';const preview=ownerDialog.querySelector(`[data-owner-image-preview="${remove.dataset.ownerRemoveImage}"]`);preview.removeAttribute('src');preview.hidden=true;}
-});
+},{signal:ownerAbort.signal});
 ownerDialog.addEventListener('close',()=>{ownerSession++;ownerUploads=0;if(ownerTrigger?.isConnected)ownerTrigger.focus();else ownerToolbar.querySelector('[data-owner-open]').focus();});
 ownerDialog.addEventListener('keydown',event=>{
   if(event.key!=='Tab')return;const elements=[...ownerDialog.querySelectorAll('button:not([disabled]),input,textarea,select')].filter(el=>el.getClientRects().length);const first=elements[0],last=elements.at(-1);
   if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
 });
-ownerDialog.addEventListener('submit',event=>{
+ownerDialog.addEventListener('submit',async event=>{
   event.preventDefault();if(ownerUploads)return;
-  try{const patch={...ownerWorking};for(const [key,value] of new FormData(event.target))if(value !== String(ownerInitial[key] || ''))patch[key]=value;const next=structuredClone(contentDraft);next.changes[ownerSelection.group]??={};next.changes[ownerSelection.group][ownerSelection.id]=patch;validateContentDraft(next);ownerApply(next);ownerDialog.close();}catch(error){ownerDialog.querySelector('.owner-dialog-error').textContent=error.message;}
+  const submit=event.target.querySelector('[type=submit]');submit.disabled=true;
+  try{const patch={...ownerWorking};for(const [key,value] of new FormData(event.target))if(value !== String(ownerInitial[key] || ''))patch[key]=value;const next=structuredClone(contentDraft);next.changes[ownerSelection.group]??={};next.changes[ownerSelection.group][ownerSelection.id]=patch;validateContentDraft(next,{bucket:backend?.bucket});await ownerApply(next);if(!ownerDisposed)ownerDialog.close();}catch(error){if(!ownerDisposed)ownerDialog.querySelector('.owner-dialog-error').textContent=backend?.error(error)||error.message;}finally{submit.disabled=false;}
 });
 ownerDialog.addEventListener('change',async event=>{
   if(event.target.name==='category'){
@@ -110,10 +116,24 @@ ownerDialog.addEventListener('change',async event=>{
 ownerToolbar.querySelector('#owner-import-file').addEventListener('change',async event=>{
   const file=event.target.files[0];if(!file)return;
   try{
-    if(file.size>23000000)throw new Error('קובץ הגיבוי גדול מדי.');const input=validateContentDraft(JSON.parse(await file.text()));
+    if(file.size>23000000)throw new Error('קובץ הגיבוי גדול מדי.');const input=validateContentDraft(JSON.parse(await file.text()),{bucket:backend?.bucket});
     const images=new Set(Object.values(input.changes).flatMap(records=>Object.values(records).flatMap(patch=>Object.entries(patch).filter(([key,value])=>/image$/i.test(key)&&value).map(([,value])=>value))));
     for(const data of images){const image=new Image();image.src=data;await image.decode();if(image.width>8000||image.height>8000)throw new Error('ממדי תמונה בגיבוי גדולים מדי.');}
-    ownerApply(input);
+    await ownerApply(input);
   }catch(error){ownerStatus(`הגיבוי לא נטען: ${error.message}`);}finally{event.target.value='';}
 });
 ownerList();ownerDecorate();if(window.NEXORI_DRAFT_ERROR)ownerStatus(window.NEXORI_DRAFT_ERROR);
+
+return {
+  status:ownerStatus,
+  refresh(){ownerList();ownerDecorate();},
+  dispose(){
+    ownerDisposed=true;ownerSession++;ownerAbort.abort();
+    if(ownerDialog.open)ownerDialog.close();ownerDialog.remove();ownerToolbar.remove();
+    document.querySelectorAll('.owner-edit-button').forEach(button=>button.remove());
+    document.querySelectorAll('.owner-card-shell').forEach(shell=>shell.replaceWith(...shell.childNodes));
+    document.querySelectorAll('.owner-edit-target').forEach(element=>element.classList.remove('owner-edit-target'));
+    document.body.classList.remove('owner-workspace','owner-preview');
+  },
+};
+}

@@ -37,3 +37,7 @@ A separate [local owner editor](owner-editor-guide-he.md) now supports editing e
 - Standalone version works with external requests blocked.
 
 Automated accessibility details are recorded separately in `accessibility-checks.md`. These checks are scoped functional validation, not legal certification.
+
+## Firebase owner management before launch
+
+The main app has integrated `/admin` editing; the optional standalone editor is a local backup workflow. No real Firebase project is connected. Complete the project setup in `firebase-console-setup-he.md`, review Blaze billing, deploy rules/functions to the chosen development project, seed the verified manager UID securely, set bucket CORS, and verify real IAM/authentication/permissions. The emulator integration suite remains required; a blocked artifact download is not a pass. Decide image/revision retention and backups, review App Check and billing protections, and update privacy disclosures for actual service regions and processing. Do not launch Hosting as part of setup without separate authorization. Creating real product records and affiliate links remains outstanding.

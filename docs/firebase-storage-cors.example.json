@@ -1,0 +1,8 @@
+[
+  {
+    "origin":["http://localhost:5173","https://REPLACE_WITH_YOUR_DEVELOPMENT_HOST"],
+    "method":["GET","HEAD"],
+    "responseHeader":["Content-Type","Content-Length"],
+    "maxAgeSeconds":3600
+  }
+]

@@ -1,3 +1,5 @@
+> These checks describe the optional legacy local HTML editor. Integrated Firebase management and its pending server verification are documented in [firebase-editor-checks.md](firebase-editor-checks.md).
+
 # Owner editor checks
 
 Date: 10 October 2026.

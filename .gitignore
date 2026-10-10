@@ -3,3 +3,9 @@ dist/
 .env
 .env.local
 *.log
+functions/node_modules/
+.firebase/
+.firebase-emulators/
+.env.*
+!.env.example
+functions/shared/
