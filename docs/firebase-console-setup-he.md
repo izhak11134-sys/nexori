@@ -33,6 +33,8 @@
 
 הדפדפן ייפתח ב־`http://localhost:5173/admin` על המחשב שלך. הוסף `localhost` ל־Authorized domains אם הוא חסר, והמשך לאימות הדוא״ל ולכניסה כפי שמתואר לעיל. השאר את חלון ההפעלה פתוח בזמן העריכה. הפעלת החבילה אינה מפרסמת Hosting; פעולות כניסה ושמירה מתחברות לפרויקט Firebase האמיתי, בכפוף להרשאות ולמכסות. בדיקות השרת נערכו בסביבת Linux; הפעלת קובץ CMD בפועל על מחשב Windows וכניסה אמיתית עדיין צריכות בדיקה עם המשתמש.
 
+אם מופיעה שגיאת `Cannot find module` עם נתיב `AppData\Local\Temp` ו־`.zip` בתוכו, Windows הפעיל קובץ בודד מתוך הארכיון. [הורד את חבילת התיקון הקטנה](https://github.com/izhak11134-sys/nexori/raw/refs/heads/main/downloads/NEXORI-Start-Fix.zip), פתח אותה והפעל את `START-NEXORI-FIX.cmd`. השאר את חבילת `NEXORI-Windows.zip` המלאה בתיקיית ההורדות. המפעיל יחפש את הארכיון החדש ביותר בשם זה, יחלץ אותו באמצעות PowerShell המובנה ל־`%LOCALAPPDATA%\NEXORI\Windows`, יבדוק את מזהה החבילה ויפעיל את השרת מתוכה. אין צורך להתקין Node מחדש או לפרסם Hosting. מסלול החילוץ של Windows עצמו עדיין דורש בדיקה במחשב המשתמש.
+
 ### הפעלה מקוד המקור
 
 העתק `.env.example` ל־`.env.local` ומלא את הגדרות אפליקציית ה־Web הציבוריות שסיפקת. אין צורך ב־Storage bucket או Functions region למערכת הנוכחית. לקישור האמיתי השאר `VITE_FIREBASE_USE_EMULATORS=false`. אחרי שינוי הגדרות הפעל מחדש Vite:

@@ -38,3 +38,11 @@ with ZipFile(destination, 'w', compression=ZIP_DEFLATED, compresslevel=9) as arc
         'requires': 'Node.js 22 or newer', 'builtFrom': 'current dist assets',
     }, indent=2))
 print(f'Created downloads/NEXORI-Windows.zip ({destination.stat().st_size:,} bytes).')
+
+# A tiny repair download can be opened directly from Explorer's ZIP view.
+# Its self-contained launcher finds and extracts the full ZIP already downloaded.
+repair = destination.with_name('NEXORI-Start-Fix.zip')
+launcher = (root / 'scripts' / 'windows' / 'START-NEXORI.cmd').read_text().replace('\n', '\r\n')
+with ZipFile(repair, 'w', compression=ZIP_DEFLATED, compresslevel=9) as archive:
+    archive.writestr('START-NEXORI-FIX.cmd', launcher.encode('utf-8'))
+print(f'Created downloads/NEXORI-Start-Fix.zip ({repair.stat().st_size:,} bytes).')
