@@ -24,6 +24,8 @@ GitHub's file page displays source code rather than running HTML. Use the file's
 
 ## Manage content inside the website with Firebase
 
+**Current owner constraint: free services only, Firebase Spark, no payment method or Cloud Billing.** See the [Spark-only plan](docs/firebase-spark-plan-he.md). The existing Functions/Storage editor is locally tested but needs adaptation before it can run on Spark. Do not follow its former Blaze deployment path or activate paid services. Firestore Standard with Production-mode initial rules can be created on Spark within its no-cost quotas; Production mode is not a billing plan.
+
 The main Vite application now includes an **Owner sign-in** link in the footer and a Hebrew `/admin` page. Connect your own Firebase project to enable verified owner sign-in, inline editing for the existing cards, cross-device draft storage, image uploads, applying saved changes and revision recovery. All six anime worlds have independent card and inner-page titles/backgrounds. The existing design and marked concepts remain intact.
 
 The repository has no live Firebase project configuration or manager credentials. Without Firebase settings the website works with original content and the admin page explains the missing connection; it does not claim to save remotely. See the [step-by-step Firebase Console guide in Hebrew](docs/firebase-console-setup-he.md). Firebase Web configuration goes in `.env.local` using `.env.example`; never commit a service-account key. This configuration uses Cloud Functions and Cloud Storage and requires reviewing Blaze billing before cloud setup. No hosting or live infrastructure was deployed.
