@@ -24,7 +24,7 @@ async function account(email,verified=false){
   const auth=getAuth(app);connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});
   const {user}=await createUserWithEmailAndPassword(auth,email,'Test-password-123!');
   if(verified){await adminAuth(admin).updateUser(user.uid,{emailVerified:true});await user.reload();await user.getIdToken(true);}
-  const functions=getFunctions(app,'europe-west1');connectFunctionsEmulator(functions,'127.0.0.1',5001);
+  const functions=getFunctions(app,'us-central1');connectFunctionsEmulator(functions,'127.0.0.1',5001);
   const db=getFirestore(app);connectFirestoreEmulator(db,'127.0.0.1',8080);
   const storage=getStorage(app);connectStorageEmulator(storage,'127.0.0.1',9199);
   return {user,db,storage,call:async(name,data)=>(await httpsCallable(functions,name)(data)).data};

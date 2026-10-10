@@ -7,7 +7,7 @@ import sharp from 'sharp';
 import { cloudDraft, expectedRevision } from './validation.js';
 initializeApp();
 const db=getFirestore(), bucket=getStorage().bucket();
-const options={region:'europe-west1',maxInstances:3,memory:'512MiB',timeoutSeconds:120};
+const options={region:'us-central1',maxInstances:3,memory:'512MiB',timeoutSeconds:120};
 const empty=()=>({version:1,changes:{}});
 async function owner(request) {
   if(!request.auth)throw new HttpsError('unauthenticated','Sign in to edit.');

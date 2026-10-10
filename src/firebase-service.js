@@ -5,7 +5,7 @@ import { getStorage, connectStorageEmulator, ref, uploadBytes, getBlob } from 'f
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { validateContentDraft, contentImageBlobs } from './content.js';
 export async function createFirebaseService(config) {
-  const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,import.meta.env.VITE_FIREBASE_FUNCTIONS_REGION||'europe-west1');
+  const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,import.meta.env.VITE_FIREBASE_FUNCTIONS_REGION||'us-central1');
   if(import.meta.env.VITE_FIREBASE_USE_EMULATORS==='true') {
     if(!['localhost','127.0.0.1','[::1]'].includes(location.hostname))throw new Error('Emulators are only permitted on localhost.');
     connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});connectFirestoreEmulator(db,'127.0.0.1',8080);connectStorageEmulator(storage,'127.0.0.1',9199);connectFunctionsEmulator(functions,'127.0.0.1',5001);
