@@ -6,6 +6,8 @@ Keep the current site design and banner effects. The owner skipped iPhone previe
 
 ## Current sourcing work — 2026-10-13
 
+**Latest owner instruction: verify usable commission-paying programs before continuing product selection.** Read [the current program audit](affiliate-program-audit-2026-10-13-he.md). The existing product shortlist is retained as research only; program existence, acceptance, Israeli payment support, licensing, image rights and shipping must be resolved before activating products. The broader merchant comparison currently needs the saved additional-domain draft to be applied/published by the owner.
+
 The international English audience and Israeli operator are already established. US shipping is a proposed initial comparison target, not a restriction on site visitors. [The initial shortlist](product-shortlist-2026-10-13-he.md) now contains ten named figure candidates across all six worlds, with manufacturer references for eight and retailer listings for the remaining two. Three retailer pages were observed as in stock; that does not verify licensing, affiliate enrollment, worldwide shipping or image permissions. [The CSV worksheet](product-shortlist-2026-10-13.csv) records pending gates and independent category/type/world placement. None of these candidates is active on the site.
 
 Start with a small verified figure collection. The twelve slots below remain a later expansion plan, rather than a requirement to launch clothing/props before their sizing, image rights and import restrictions are checked. Do not fill empty worlds with unrelated search results or rename existing original concept illustrations as licensed merchandise.
