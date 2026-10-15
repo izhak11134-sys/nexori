@@ -1,0 +1,614 @@
+{
+  "checked_on_israel": "2026-10-16",
+  "captured_at_utc": "2026-10-15T21:26:04.625783+00:00",
+  "scope": "Public pages read with TLS verification. No login, checkout, purchase, affiliate acceptance or licensing-contract verification. Hashes identify source responses, not proof of future availability.",
+  "program_and_policy_sources": [
+    {
+      "source_key": "cdj-program",
+      "url": "https://www.cdjapan.co.jp/aff/affiliate_info.html",
+      "status": 200,
+      "sha256": "1cc2426fc86e145f589aeeb94b0403328b8abf4bed44d56151d7375cd2e524a2"
+    },
+    {
+      "source_key": "cdj-faq1",
+      "url": "https://www.cdjapan.co.jp/aff/FAQ_affiliate_1.html",
+      "status": 200,
+      "sha256": "bca0607e5d5ffb5e7b6a91a30800fab9f1409508b5867d5ee56dcc1c5e2753c0"
+    },
+    {
+      "source_key": "cdj-faq2",
+      "url": "https://www.cdjapan.co.jp/aff/FAQ_affiliate_2.html",
+      "status": 200,
+      "sha256": "9bd69d009884a0c426007e2cfe9a66f429623cf57d14df4fbc927231e1b159b2"
+    },
+    {
+      "source_key": "cdj-faq3",
+      "url": "https://www.cdjapan.co.jp/aff/FAQ_affiliate_3.html",
+      "status": 200,
+      "sha256": "988bb685957191c98e27e7bc0fd0ce67f0b0948414007049db0bf51208feeab2"
+    },
+    {
+      "source_key": "cdj-terms",
+      "url": "https://www.cdjapan.co.jp/aff/terms.html",
+      "status": 200,
+      "sha256": "68c4c209966b74ea98c3e31ac7ae2079162a643fd5e2d997e5a945c23ee5cc51"
+    },
+    {
+      "source_key": "cdj-about",
+      "url": "https://www.cdjapan.co.jp/guide/help/about_cdjapan/about",
+      "status": 200,
+      "sha256": "df4ffff3bac6d6077257fbe65c2948e8d16687994efd71d20d57a9888e6520df"
+    },
+    {
+      "source_key": "cdj-returns",
+      "url": "https://www.cdjapan.co.jp/guide/help/ordering/general_returns",
+      "status": 200,
+      "sha256": "47a480db2b2ca797d43666a0012d3ae099ca6d2f40d686e689d42770bd1ce6de"
+    },
+    {
+      "source_key": "pa-rates",
+      "url": "https://www.play-asia.com/en/info/affiliatesrates",
+      "status": 200,
+      "sha256": "7f111095432387b97caab6da11fffc4fae559c1e46197558ccae7722c35f820a"
+    },
+    {
+      "source_key": "pa-faq",
+      "url": "https://www.play-asia.com/en/info/affiliatesfaq",
+      "status": 200,
+      "sha256": "594afbee58dd3f56bb1a7f91be0aeaecfbda1bea800a5993ef72aa15df09b300"
+    },
+    {
+      "source_key": "pa-terms",
+      "url": "https://www.play-asia.com/en/info/affiliatesterms",
+      "status": 200,
+      "sha256": "4bf5e98a16db0059b00a06b520a46cf649891f106d1077fac3ae3fba0a6854ef"
+    },
+    {
+      "source_key": "ht-program",
+      "url": "https://www.hottopic.com/customer-service/partnerships/affiliates/",
+      "status": 200,
+      "sha256": "51b34458f3d060ae1377c389c19313a0e75b6d92f4fe09e5943da10f65054429"
+    },
+    {
+      "source_key": "ht-creator-page",
+      "url": "https://www.hottopic.com/s/hottopic/creator-application-hottopic.html",
+      "status": 200,
+      "sha256": "4d1e450121e26f7e285b44f73ba423bf3c1d53e7e6b400003f73d0cfe6b7b0eb"
+    },
+    {
+      "source_key": "ht-creator-terms",
+      "url": "https://www.hottopic.com/customer-service/partnerships/ht-partner-program/",
+      "status": 200,
+      "sha256": "d92ad0b45fd7d888a364eabc32de9b0b9a1823a8e8c17ec880085b56fbd5bca3"
+    },
+    {
+      "source_key": "bl-program",
+      "url": "https://www.boxlunch.com/customer-service/partnerships/boxlunch-partner-program/",
+      "status": 200,
+      "sha256": "842f782a7623c0509f9c1c77d9deae3aae286e0cd79ecef1b531db8691346eec"
+    },
+    {
+      "source_key": "bl-creator",
+      "url": "https://www.boxlunch.com/creator-application-boxlunch.html",
+      "status": 200,
+      "sha256": "b110bda60943ccf4ad4e98661b4058c41b2724d8eafb7bdb40f2621268310b8c"
+    },
+    {
+      "source_key": "ht-shipping",
+      "url": "https://www.hottopic.com/customer-service/shipping/",
+      "status": 200,
+      "sha256": "68579850f7ebe9dcddbaa482d95b78d85a5a42624b8e46ea0f332a50d78c6981"
+    },
+    {
+      "source_key": "ht-returns",
+      "url": "https://www.hottopic.com/customer-service/returns-exchanges/",
+      "status": 200,
+      "sha256": "6989ad85669c38826107e92b8b9014b96cd3266d17660bdd964a70540f4b2203"
+    },
+    {
+      "source_key": "bl-shipping",
+      "url": "https://www.boxlunch.com/customer-service/shipping/",
+      "status": 200,
+      "sha256": "f5c88ed9f70523e4f9ecd74b4431050802bcbf868862c2fcd66c7bb309d15f8a"
+    },
+    {
+      "source_key": "bl-returns",
+      "url": "https://www.boxlunch.com/customer-service/returns-exchanges/",
+      "status": 200,
+      "sha256": "175fdbc495c8476e2937e3a172bba533539ff471b1c7be11a2378d1851a39092"
+    },
+    {
+      "source_key": "ht-company",
+      "url": "https://www.hottopic.com/customer-service/hot-topic-policies/company-info/",
+      "status": 200,
+      "sha256": "74dfc5fc404fd2a20a93fc4531fb4a2aaf084924b53ff4f5807421d8469eff87"
+    },
+    {
+      "source_key": "atsuko",
+      "url": "https://atsuko.com/",
+      "status": 200,
+      "sha256": "9d709d2dc008dc9d2ec47e3b370c0182d798a4dd8524ddec258110305e222e4a"
+    },
+    {
+      "source_key": "ee-program",
+      "url": "https://www.entertainmentearth.com/affiliates",
+      "status": 200,
+      "sha256": "94aefc017536a0805e6421d5693ba1c03e4daf63458dcab5ebb02af8a7885052"
+    },
+    {
+      "source_key": "amazon-rates",
+      "url": "https://affiliate-program.amazon.com/help/node/topic/GRXPHT8U84RAYDXZ",
+      "status": 200,
+      "sha256": "25699d33f397e25b6dc99f63117a6a60a77b6a65bfacf194abfefba7edf53ca1"
+    },
+    {
+      "source_key": "ebay-rates",
+      "url": "https://partnernetwork.ebay.com/our-program/rate-card",
+      "status": 200,
+      "sha256": "ce667b85b83ef21c7fa1e11d83f475b943dc9b06b7c03b9303cdffaad17bde37"
+    },
+    {
+      "source_key": "gsc-partners",
+      "url": "https://partner.goodsmile.info/support/eng/partnershops/",
+      "status": 200,
+      "sha256": "d0b45a775edeb4548069364112004498822e21c77c79bc0bd76501bf5c9cc9fa"
+    }
+  ],
+  "products": [
+    {
+      "id": "op-01",
+      "source_key": "ht-luffy-gear5",
+      "url": "https://www.hottopic.com/product/banpresto-one-piece-king-of-artist-monkey-d.-luffy-gear-5-special-ver.-ii-figure/36073801.html",
+      "retailer_product_id": "36073801",
+      "title": "Banpresto One Piece King Of Artist Monkey D. Luffy (Gear 5 Special Ver. II) Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/banpresto-one-piece-king-of-artist-monkey-d.-luffy-gear-5-special-ver.-ii-figure/36073801.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "27.92",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36073801\nBanpresto One Piece King Of Artist Monkey D. Luffy (Gear 5 Special Ver. II) Figure\nFrom the\nOne Piece\nanime comes the King of Artist Monkey D. Luffy (Gear 5 Special Ver. II) figure by Banpresto! This figure is just nearly 6 inches in height and displays the character in their iconic form while in a popular pose. Be sure to add it to your collection!\nApprox. 6''\nPlastic\nNon-articulated\nImported\n",
+      "html_sha256": "8074416b1bde46b841f5e69d358d5ba2201a55c6e4a62da00c562d7d1210d6cc"
+    },
+    {
+      "id": "op-02",
+      "source_key": "ht-chopper",
+      "url": "https://www.hottopic.com/product/banpresto-one-piece-sofvimates-chopper-chopperemon-figure/35536377.html",
+      "retailer_product_id": "35536377",
+      "title": "Banpresto One Piece Sofvimates Chopper Chopperemon Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/banpresto-one-piece-sofvimates-chopper-chopperemon-figure/35536377.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "19.74",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n35536377\nBanpresto One Piece Sofvimates Chopper Chopperemon Figure\nChopperemon has traveled from Wano to rest in your figure shelf! This\nOne Piece\nfigure features Chopper in his Wano arc outfit.\nApprox. 4 1/4\"\nPlastic\nImported\n",
+      "html_sha256": "c0a4fc8e55886e18a14f026ad50b48b4edf90b4c51383be70b42e7035b3ad240"
+    },
+    {
+      "id": "op-03",
+      "source_key": "bl-luffy-articulated",
+      "url": "https://www.boxlunch.com/product/bandai-namco-one-piece-s.h.figuarts-monkey-d.-luffy-the-raid-on-onigashima-figure/36265895.html",
+      "retailer_product_id": "36265895",
+      "title": "Bandai Namco One Piece S.H.Figuarts Monkey D. Luffy (The Raid on Onigashima) Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/bandai-namco-one-piece-s.h.figuarts-monkey-d.-luffy-the-raid-on-onigashima-figure/36265895.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "39.90",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36265895\nBandai Namco One Piece S.H.Figuarts Monkey D. Luffy (The Raid on Onigashima) Figure\nStraight from the high seas adventure in Wano Country, a Straw Hat Pirate makes his triumphant return to the S.H.Figuarts line! With superb articulation and flexible parts, Luffy features dynamic posability. The One Piece Monkey D. Luffy The Raid on Onigashima S.H.Figuarts Action Figure includes three optional expression parts, two pairs of optional hands, and one optional hair set.\nPlastic\nApprox. 5 1/2\"\nImported\n",
+      "html_sha256": "df09aec92c059ba4166d709ce60123ace10f007c0fe1bcc0cc53d4426105e81b"
+    },
+    {
+      "id": "op-04",
+      "source_key": "bl-chopper-articulated",
+      "url": "https://www.boxlunch.com/product/one-piece-s.h.figuarts-tony-tony-chopper-drum-island-action-figure/36130479.html",
+      "retailer_product_id": "36130479",
+      "title": "One Piece S.H.Figuarts Tony Tony Chopper (Drum Island) Action Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/one-piece-s.h.figuarts-tony-tony-chopper-drum-island-action-figure/36130479.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "40.90",
+        "availability": "http://schema.org/InStock"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36130479\nOne Piece S.H.Figuarts Tony Tony Chopper (Drum Island) Action Figure\nExpand your collection!\nPlastic\nApprox. 3\"\nImported\n",
+      "html_sha256": "07e7c9bbd252dbeb0863770464934a5ca9c8dc94f35ab3572fe4a993b6d52449"
+    },
+    {
+      "id": "op-05",
+      "source_key": "bl-kit",
+      "url": "https://www.boxlunch.com/product/bandai-hobby-one-piece-grand-ship-collection-marine-ship-build-kit/34301451.html",
+      "retailer_product_id": "34301451",
+      "title": "Bandai Hobby One Piece Grand Ship Collection Marine Ship Build Kit",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/bandai-hobby-one-piece-grand-ship-collection-marine-ship-build-kit/34301451.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "17.43",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n34301451\nBandai Hobby One Piece Grand Ship Collection Marine Ship Build Kit\nThis\nOne Piece\nship is ready to sail onto your shelf! Aboard a blue ocean, this white-sailed vessel is essential for any anime fan.\nPlastic\nImported\n",
+      "html_sha256": "ea97118a94d68f4d2d08e3c7cdf4f975835f10392ec7efda52b267c9e01dbeb9"
+    },
+    {
+      "id": "op-06",
+      "source_key": "ht-tee",
+      "url": "https://www.hottopic.com/product/one-piece-luffy-wanted-poster-grey-dark-wash-t-shirt/36649561.html",
+      "retailer_product_id": "36649561",
+      "title": "One Piece Luffy Wanted Poster Grey Dark Wash T-Shirt",
+      "retailer_stock_field": "instock",
+      "structured_offer": null,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 28.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "SM",
+          "price": 28.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "MD",
+          "price": 28.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "LG",
+          "price": 28.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "XL",
+          "price": 28.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "2X",
+          "price": 30.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "3X",
+          "price": 32.9,
+          "availability": "http://schema.org/OnlineOnly"
+        }
+      ],
+      "details_excerpt": "Product ID:\n36649561\nOne Piece Luffy Wanted Poster Grey Dark Wash T-Shirt\nWanted: The future King of the Pirates! Rep your favorite captain with this\nOne Piece\ntee, featuring an image of one of Luffy's \"Wanted\" posters on a grey dark wash shirt.\nPlease note: Wash pattern may vary.\n100% cotton\nWash cold; dry low\nImported\nListed in men's/unisex sizes\n",
+      "html_sha256": "6864988ed6673f90a37cfbad2e58d64ce9977894096d635e7f1b07389b9a7920"
+    },
+    {
+      "id": "op-07",
+      "source_key": "ht-hoodie",
+      "url": "https://www.hottopic.com/product/one-piece-chopper-jolly-roger-hoodie/35676036.html",
+      "retailer_product_id": "35676036",
+      "title": "One Piece Chopper Jolly Roger Hoodie",
+      "retailer_stock_field": "instock",
+      "structured_offer": null,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 59.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "SM",
+          "price": 59.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "MD",
+          "price": 59.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "LG",
+          "price": 59.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "XL",
+          "price": 59.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "2X",
+          "price": 61.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "3X",
+          "price": 63.9,
+          "availability": "http://schema.org/OnlineOnly"
+        }
+      ],
+      "details_excerpt": "Product ID:\n35676036\nOne Piece Chopper Jolly Roger Hoodie\nMake sure you stay cozy at Drum Island! This\nOne Piece\nhoodie features Chopper's Jolly Roger on the front and on the sleeves, plus a print of Chopper on the back. Comes with kangaroo pockets and drawstring hood.\n60% cotton; 40% polyester\nWash cold; dry low\nImported\nListed in men's/unisex sizes\nModel wears size Medium\n",
+      "html_sha256": "9d91ebe2f5a4e4cd0484e37066ed24eedba42eb96feda38bcc4b26b44345a67e"
+    },
+    {
+      "id": "op-08",
+      "source_key": "bl-jacket",
+      "url": "https://www.boxlunch.com/product/one-piece-jolly-roger-bomber-jacket-%E2%80%94-boxlunch-exclusive/34867279.html",
+      "retailer_product_id": "34867279",
+      "title": "One Piece Jolly Roger Bomber Jacket — BoxLunch Exclusive",
+      "retailer_stock_field": "instock",
+      "structured_offer": null,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 99.9,
+          "availability": "http://schema.org/OnlineOnly"
+        },
+        {
+          "size": "SM",
+          "price": 99.9,
+          "availability": "http://schema.org/InStock"
+        },
+        {
+          "size": "MD",
+          "price": 99.9,
+          "availability": "http://schema.org/InStock"
+        },
+        {
+          "size": "LG",
+          "price": 99.9,
+          "availability": "http://schema.org/InStoreOnly"
+        },
+        {
+          "size": "XL",
+          "price": 99.9,
+          "availability": "http://schema.org/InStoreOnly"
+        },
+        {
+          "size": "2X",
+          "price": 99.9,
+          "availability": "http://schema.org/InStoreOnly"
+        },
+        {
+          "size": "3X",
+          "price": 99.9,
+          "availability": "http://schema.org/OutOfStock"
+        },
+        {
+          "size": "4X",
+          "price": 99.9,
+          "availability": "http://schema.org/InStoreOnly"
+        }
+      ],
+      "details_excerpt": "Product ID:\n34867279\nOne Piece Jolly Roger Bomber Jacket — BoxLunch Exclusive\nWith embroidered details, this jacket is perfect for\nOne Piece\nfans.\nA BoxLunch Exclusive!\nCotton denim; cotton twill\nListed in unisex sizes\nFollow care instructions on label\nImported\n",
+      "html_sha256": "01cebf25832bca076489ec96c0ca59051601a1bd94292e7943f82c9c8cec679c"
+    },
+    {
+      "id": "op-09",
+      "source_key": "bl-cap",
+      "url": "https://www.boxlunch.com/product/one-piece-straw-hat-crew-logo-cap/20300921.html",
+      "retailer_product_id": "20300921",
+      "title": "One Piece Straw Hat Crew Logo Cap",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/one-piece-straw-hat-crew-logo-cap/20300921.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "22.90",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n20300921\nOne Piece Straw Hat Crew Logo Cap\nJoin the Straw Hat Pirates with this\nOne Piece\n-inspired hat! This two-toned baseball cap features an embroidered decal of the Straw Hat Crew's logo and a snapback closure, making this the perfect hat to wear for a day of pirating on the open seas.\nCotton\nOne size fits most\nImported\n",
+      "html_sha256": "0b3046a16ad1315e4b911b116514fc327727a276a7d8d21d02426e23843cfa8f"
+    },
+    {
+      "id": "op-10",
+      "source_key": "ht-abymat",
+      "url": "https://www.hottopic.com/product/abystyle-one-piece-memories-game-mat/35130452.html",
+      "retailer_product_id": "35130452",
+      "title": "ABYstyle One Piece Memories Game Mat",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/abystyle-one-piece-memories-game-mat/35130452.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "28.72",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n35130452\nABYstyle One Piece Memories Game Mat\nEvery stop has shaped the legend! The Straw Hat crew has etched their memories into history: unbreakable friendships, epic battles, and endless dreams. Relive the greatest moments of their journey with this\nOne Piece\ngame mat.\n35.4'' x 15.7''\nRubber\nAnti-slip rubber base\nAnti-fraying double stitched edges\nCompatible with optical and laser mice\nImported\n",
+      "html_sha256": "872cce61e8a7f023ded941f9e20d315a8aa1681f2aae55d0db93dda84dcf9122"
+    },
+    {
+      "id": "op-11",
+      "source_key": "ht-poster",
+      "url": "https://www.hottopic.com/product/one-piece-luffy-wanted-poster/36562949.html",
+      "retailer_product_id": "36562949",
+      "title": "One Piece Luffy Wanted Poster",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-luffy-wanted-poster/36562949.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "15.92",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36562949\nOne Piece Luffy Wanted Poster\nDead or alive, young Monkey D Luffy, captain of the Straw Hat Crew, is wanted by every officer in the Marine crew.\n18\" x 26\"\nPaper\nImported\n",
+      "html_sha256": "bb17b3b801f9b334ef4da7fab533fd6dfe4949f7075b203b6bb11c9e86e74cb0"
+    },
+    {
+      "id": "op-12",
+      "source_key": "ht-light",
+      "url": "https://www.hottopic.com/product/one-piece-gum-gum-fruit-squishyglo-silicone-light/36270539.html",
+      "retailer_product_id": "36270539",
+      "title": "One Piece Gum-Gum Fruit SquishyGlo Silicone Light",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-gum-gum-fruit-squishyglo-silicone-light/36270539.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "31.92",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36270539\nOne Piece Gum-Gum Fruit SquishyGlo Silicone Light\nLight up the night with a Devil Fruit! This squishy\nOne Piece\nsilicone lamp features a Gum-Gum Fruit design, with adjustable brightness and a light pulsing mode.\nApprox. 6\"\nSilicone\n3 brightness levels\n1 - 3 hour night light mode\nUSB charging cable\nImported\n",
+      "html_sha256": "e930665842ceff5e5850b2d8781ba43212785e193e5ad6df1653c03cd9966b1e"
+    },
+    {
+      "id": "op-13",
+      "source_key": "bl-replica",
+      "url": "https://www.boxlunch.com/product/abystyle-studio-one-piece-super-figure-collection-gum-gum-fruit-replica-figure/32947813.html",
+      "retailer_product_id": "32947813",
+      "title": "ABYStyle Studio One Piece Super Figure Collection Gum-Gum Fruit Replica Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/abystyle-studio-one-piece-super-figure-collection-gum-gum-fruit-replica-figure/32947813.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "49.90",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n32947813\nABYStyle Studio One Piece Super Figure Collection Gum-Gum Fruit Replica Figure\nBring the power of the Devil Fruit to your collection with this\nOne Piece\nfigure! Featuring The Gum-Gum Fruit in its look from the anime, this figure includes a display case.\nResin\nApprox. 5\"\nImported\n",
+      "html_sha256": "0fc3d35de24b5a68aeb799aa8a30cd3189ed15061fd5d6f28b169fdd7fe42646"
+    },
+    {
+      "id": "op-14",
+      "source_key": "ht-cosplay",
+      "url": "https://www.hottopic.com/product/one-piece-luffy-cosplay-straw-hat/19927115.html",
+      "retailer_product_id": "19927115",
+      "title": "One Piece Luffy Cosplay Straw Hat",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-luffy-cosplay-straw-hat/19927115.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "15.92",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n19927115\nOne Piece Luffy Cosplay Straw Hat\nIf you're going to be the future King of the Pirates, you'll need to protect your treasure: this straw hat! Dress up just like Luffy from\nOne Piece\nbefore setting sail in the New World. This cosplay hat is designed just like Luffy's signature straw hat passed down from Shanks.\nPolyester; wheat straw braid\nImported\n",
+      "html_sha256": "f545bdb1f2a0b964f3e51e6efb6b59771eb32a492c1bb3fe5fe5fe96ce72985d"
+    },
+    {
+      "id": "op-15",
+      "source_key": "ht-keychain",
+      "url": "https://www.hottopic.com/product/one-piece-metal-jolly-roger-keychain/36285636.html",
+      "retailer_product_id": "36285636",
+      "title": "One Piece Metal Jolly Roger Keychain",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-metal-jolly-roger-keychain/36285636.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "10.32",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36285636\nOne Piece Metal Jolly Roger Keychain\nMake sure to rep the Straw Hats with pride on your next voyage! This\nOne Piece\nkeychain features the Straw Hat Pirates' Jolly Roger in a metal depiction. Comes with a swiveling hook and keyring.\nApprox. 2 1/2\"\nMetal\nImported\n",
+      "html_sha256": "b7e604efa5d3b9b7a142e2b04b2f376d7f1f409558fcd48ee1285c908b382181"
+    },
+    {
+      "id": "op-16",
+      "source_key": "ht-bag",
+      "url": "https://www.hottopic.com/product/one-piece-luffy-straw-hat-hardware-backpack/35827050.html",
+      "retailer_product_id": "35827050",
+      "title": "One Piece Luffy Straw Hat Hardware Backpack",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-luffy-straw-hat-hardware-backpack/35827050.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "22.40",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n35827050\nOne Piece Luffy Straw Hat Hardware Backpack\nPack your meat snacks, Log Pose, slingshots, swords and more into this backpack before heading out into the Grand Line! This\nOne Piece\nbackpack features a large Straw Hat Jolly Roger, with prints of the Going Merry, Luffy's name and more. Comes with a straw hat rubber zipper pull and D-ring hardware up top. Complete with interior tech sleeve, side pockets and padded shoulder straps.\n12\" x 6\" x 16 1/2\"\nPolyester; nylon\nSide pockets\nFront zipper tab\nInterior pocket\nImported\n",
+      "html_sha256": "0caa6086fca8b390a28a6364b698ea2dc907761f031408e5ccd559eabade921d"
+    },
+    {
+      "id": "op-17",
+      "source_key": "ht-necklace",
+      "url": "https://www.hottopic.com/product/one-piece-luffy-necklace-set/35526038.html",
+      "retailer_product_id": "35526038",
+      "title": "One Piece Luffy Necklace Set",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-luffy-necklace-set/35526038.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "11.83",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n35526038\nOne Piece Luffy Necklace Set\nLevel up your pirate fit with this\nOne Piece\n-inspired necklace set that’s all about Straw Hat energy. The layered chains feature Luffy’s iconic skull, his straw hat and a mini wanted poster charm.\nChains: 19\" - 24 1/2\"; extenders: 3\"\nNickel-free alloy; plastic; epoxy; cotton\nSet of 3 necklaces\nImported\n",
+      "html_sha256": "d1f8c89e4a64ba39350665303a85a7e5fd9c9f48fa851b1201bb301af6a7eb65"
+    },
+    {
+      "id": "op-18",
+      "source_key": "bl-zoro-bag",
+      "url": "https://www.boxlunch.com/product/loungefly-one-piece-roronoa-zoro-debossed-mini-backpack---boxlunch-exclusive/36346493.html",
+      "retailer_product_id": "36346493",
+      "title": "Loungefly One Piece Roronoa Zoro Debossed Mini Backpack - BoxLunch Exclusive",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/loungefly-one-piece-roronoa-zoro-debossed-mini-backpack---boxlunch-exclusive/36346493.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "89.90",
+        "availability": "http://schema.org/InStock"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36346493\nLoungefly One Piece Roronoa Zoro Debossed Mini Backpack - BoxLunch Exclusive\nSet sail in style with this\nOne Piece\nmini backpack! Debossed with an allover design of Zoro's jolly roger, this mini backpack includes his three swords as the figural top handle.\nA BoxLunch Exclusive!\nPolyurethane\nApprox. 9\" W x 10 1/2\" H x 5\" D\nImported\n",
+      "html_sha256": "fbccaaf1a32941dbacaf58c3fa5cd975aa65509d808ba82ac0dc46fcaf27b7fe"
+    },
+    {
+      "id": "op-19",
+      "source_key": "ht-zoro",
+      "url": "https://www.hottopic.com/product/one-piece-theorama-soul-roronoa-zoro-figure/36368248.html",
+      "retailer_product_id": "36368248",
+      "title": "One Piece Theorama Soul Roronoa Zoro Figure",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.hottopic.com/product/one-piece-theorama-soul-roronoa-zoro-figure/36368248.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "36.90",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n36368248\nOne Piece Theorama Soul Roronoa Zoro Figure\nThe soul of the swordsman is burning bright in this new figure by the creative minds at Banpresto!\nBased on the iconic\nOne Piece\nanime, Roronoa Zoro is ready to become the latest entry in the Theorama Soul line of figures! Crouched in a battle stance, Zoro is depicted wielding his three katanas as they burn bright with a purple flame, indicating his resolve and drive to finish off his opponent in one last decisive strike. Unwavering and undeterred, the swordsman of the Straw Hat Pirates stands tall!\nPlastic\nImported\n",
+      "html_sha256": "c2a9abfd72d288fff187f12884f26d93f3f42e1eb8b46f5d8bc914ebc1298e07"
+    },
+    {
+      "id": "op-20",
+      "source_key": "bl-replica-flame",
+      "url": "https://www.boxlunch.com/product/abystyle-studio-one-piece-super-figure-collection-flame-flame-fruit-replica/32947814.html",
+      "retailer_product_id": "32947814",
+      "title": "ABYStyle Studio One Piece Super Figure Collection Flame-Flame Fruit Replica",
+      "retailer_stock_field": "instock",
+      "structured_offer": {
+        "url": "https://www.boxlunch.com/product/abystyle-studio-one-piece-super-figure-collection-flame-flame-fruit-replica/32947814.html",
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "49.90",
+        "availability": "http://schema.org/OnlineOnly"
+      },
+      "variants": [],
+      "details_excerpt": "Product ID:\n32947814\nABYStyle Studio One Piece Super Figure Collection Flame-Flame Fruit Replica\nHarness the power of the Devil Fruit with this\nOne Piece\nreplica! Modeled after the Flame-Flame Fruit, this replica figure comes in a collector's case, perfect for fans of the anime.\nResin\nApprox. 5\"\nImported\n",
+      "html_sha256": "cb33945546e6974943c4d20caeb213a25a19da4b2da166a8b7a35ea9e059741b"
+    }
+  ]
+}

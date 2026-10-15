@@ -4,15 +4,15 @@ Audience: international, English-speaking visitors.
 Affiliate accounts: none yet. This is a selection plan, not a verified shopping catalog.
 Keep the current site design and banner effects. The owner skipped iPhone preview setup for now; do not repeat those steps as a catalog prerequisite.
 
-## Current sourcing work — 2026-10-13
+## Current sourcing work — 2026-10-16
 
-**Latest owner instruction: verify usable commission-paying programs before continuing product selection.** Read [the current program audit](affiliate-program-audit-2026-10-13-he.md). The existing product shortlist is retained as research only; program existence, acceptance, Israeli payment support, licensing, image rights and shipping must be resolved before activating products. The broader merchant comparison currently needs the saved additional-domain draft to be applied/published by the owner.
+**Latest owner instruction: finish One Piece program and product selection across all existing categories before moving to another anime.** Read the [One Piece selection dossier](one-piece-selection-2026-10-16-he.md), [20-product worksheet](one-piece-selection-2026-10-16.csv) and [source evidence](research/one-piece-evidence-2026-10-16.json). These cover five categories and 15 types; pins remain unselected because the candidates were random blind boxes. Thirteen primary choices, five alternatives and two later-stage choices have exact retailer links and English copy. The owner is open to a future social channel, but does not yet have an active one. Hot Topic and BoxLunch creator-program terms are relevant on that conditional basis; their published 10% base is not an approved NEXORI offer, and the full-price FAQ must be reconciled before assuming discounted orders qualify. The separate Hot Topic website/CJ rate is unknown. Program acceptance, Israeli payouts, product-specific licensing/variant details, image rights and shipping must be resolved before activation. The sources used for this new dossier were accessible without further environment changes; do not repeat historical network-publication instructions as a prerequisite.
 
 The international English audience and Israeli operator are already established. US shipping is a proposed initial comparison target, not a restriction on site visitors. [The initial shortlist](product-shortlist-2026-10-13-he.md) now contains ten named figure candidates across all six worlds, with manufacturer references for eight and retailer listings for the remaining two. Three retailer pages were observed as in stock; that does not verify licensing, affiliate enrollment, worldwide shipping or image permissions. [The CSV worksheet](product-shortlist-2026-10-13.csv) records pending gates and independent category/type/world placement. None of these candidates is active on the site.
 
-Start with a small verified figure collection. The twelve slots below remain a later expansion plan, rather than a requirement to launch clothing/props before their sizing, image rights and import restrictions are checked. Do not fill empty worlds with unrelated search results or rename existing original concept illustrations as licensed merchandise.
+Prepare the eight-product One Piece opening selection in the new dossier, subject to its remaining checks. The older twelve cross-world slots below are retained only as a later expansion idea; they do not override the One Piece-first instruction. Do not fill empty worlds with unrelated search results or rename existing original concept illustrations as licensed merchandise.
 
-## Initial collection: 12 product slots
+## Historical expansion idea: 12 product slots across worlds
 
 | Slots | Product direction | Visitor intent |
 | --- | --- | --- |
