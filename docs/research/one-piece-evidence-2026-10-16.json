@@ -609,6 +609,109 @@
       "variants": [],
       "details_excerpt": "Product ID:\n32947814\nABYStyle Studio One Piece Super Figure Collection Flame-Flame Fruit Replica\nHarness the power of the Devil Fruit with this\nOne Piece\nreplica! Modeled after the Flame-Flame Fruit, this replica figure comes in a collector's case, perfect for fans of the anime.\nResin\nApprox. 5\"\nImported\n",
       "html_sha256": "cb33945546e6974943c4d20caeb213a25a19da4b2da166a8b7a35ea9e059741b"
+    },
+    {
+      "id": "op-21",
+      "source_key": "zoro-proplica",
+      "url": "https://www.bigbadtoystore.com/product/one-piece-proplica-roronoa-zoro-three-sword-style-set-151482?variation=301802",
+      "retailer_product_id": "151482; variation 301802",
+      "title": "One Piece Proplica Roronoa Zoro Three Sword Style Set",
+      "retailer_stock_field": "Visible IN STOCK; structured LimitedAvailability",
+      "structured_offer": {
+        "@type": "Offer",
+        "name": "BBTS Mint Packaging: One Piece Proplica Roronoa Zoro Three Sword Style Set",
+        "sku": "301802",
+        "url": "https://www.bigbadtoystore.com/product/one-piece-proplica-roronoa-zoro-three-sword-style-set-151482?variation=301802",
+        "priceCurrency": "USD",
+        "price": 556.99,
+        "priceValidUntil": "2027-10-15",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/LimitedAvailability",
+        "seller": {
+          "@type": "Organization",
+          "name": "BigBadToyStore",
+          "url": "https://www.bigbadtoystore.com"
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 30,
+          "returnMethod": "https://schema.org/ReturnByMail"
+        }
+      },
+      "variants": [],
+      "details_excerpt": "Product Description\nJoining the PROPLICA series from the anime \"ONE PIECE\" comes Roronoa Zoro's \"Wado Ichimonji\", \"Saindai Kitetsu\", and \"Enma\"! In order to truly allow users to experience the source material, the \"Wado Ichimonji\", \"Saindai Kitetsu\", and \"Enma\" have been made on a 1/1 scale using an official 3D model!\nThe \"Wado Ichimonji\" also comes with an exchangeable part to allow users to more easily wield it in one's mouth and re-enact Roronoa Zoro's \"Three Sword Style\"! \"Enma\" also contains an audio gimmick that includes lines from ZORO as well as BGM tracks!\nProduct Features\nApprox. 37.40 inches (95cm)\nMade of ABS and diecast\nBased on the One Piece anime series\nPart of the Proplica series\nCan produce sound effects from the anime\nHighly detailed\nBox Contents\nWado Ichimonji\nSheath for Wado Ichimonji\nOptional parts for Wado Ichimonji\nSandai Kitetsu\nSheath for Sandai Kitetsu\nEnma\nSheath for Enma\nBraiding for Enma\n\"Danger Keep Out\" sheet\nStand\nManual\n",
+      "html_sha256": "d42de6103993a120181f738baf48fc490b932c9d247cf2b992913110e18ed824"
+    }
+  ],
+  "zoro_reference_only_products": [
+    {
+      "source_key": "nerf-wado",
+      "url": "https://www.entertainmentearth.com/product/nerf-netflix-one-piece-zoros-katana-wado-ichimonji-sword-with-foam-blade/hsg3155",
+      "name": "Nerf Netflix One Piece Zoro's Katana (Wado Ichimonji) Sword with Foam Blade",
+      "brand": {
+        "@type": "Brand",
+        "name": "Hasbro"
+      },
+      "description": "Kids can imagine themselves as a Straw Hat Pirate with the One Piece Nerf Katana inspired by Zoro's katana from the Netflix One Piece series! The Zoro's Katana (Wado Ichimonji) captures the look of the katana wielded by Roronoa Zoro in the live-action series based on the popular One Piece manga. This Nerf katana measures 24 inches long (609 millimeters) and has a foam blade with a plastic core and foam hilt. In the series, Zoro is a master swordsman, ex-bounty hunter, and one of the Straw Hat Pirates who go on an epic voyage to find the legendary One Piece treasure. The assortment includes 3 different katanas (each sold separately, subject to availability), and are perfect accessories for role play, cosplay, and every swashbuckling adventure. Ages 6 and up.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": 12.99,
+          "itemCondition": "https://schema.org/NewCondition",
+          "sku": "HSG3155",
+          "availability": "https://schema.org/PreOrder"
+        }
+      ],
+      "reason_not_selected": "Netflix 24-inch foam roleplay toy, not a full-size anime replica; merchant not accepting new affiliates",
+      "html_sha256": "eb8607673539ab74c24128a76a509fa25dbd835265cdf92d9c05a4cb89afa857"
+    },
+    {
+      "source_key": "nerf-sandai",
+      "url": "https://www.entertainmentearth.com/product/nerf-netflix-one-piece-zoros-katana-sandai-kitetsu-sword-with-foam-blade/hsg3303",
+      "name": "Nerf Netflix One Piece Zoro's Katana (Sandai Kitetsu) Sword with Foam Blade",
+      "brand": {
+        "@type": "Brand",
+        "name": "Hasbro"
+      },
+      "description": "Kids can imagine themselves as a Straw Hat Pirate with the One Piece Nerf Katana inspired by Zoro's katana from the Netflix One Piece series! The Zoro's Katana (Sandai Kitetsu) captures the look of the katana wielded by Roronoa Zoro in the live-action series based on the popular One Piece manga. This Nerf katana measures 24 inches long (609 millimeters) and has a foam blade with a plastic core and foam hilt. In the series, Zoro is master swordsman, ex-bounty hunter, and one of the Straw Hat Pirates who go on an epic voyage to find the legendary One Piece treasure. The assortment includes 3 different katanas (each sold separately, subject to availability), and are perfect accessories for role play, cosplay, and every swashbuckling adventure. Ages 6 and up.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": 12.99,
+          "itemCondition": "https://schema.org/NewCondition",
+          "sku": "HSG3303",
+          "availability": "https://schema.org/BackOrder"
+        }
+      ],
+      "reason_not_selected": "Netflix 24-inch foam roleplay toy, not a full-size anime replica; merchant not accepting new affiliates",
+      "html_sha256": "00741f2f0eca94c18e94d00e8c21ba2febac8396a7ab0037471d7e2f0370146d"
+    },
+    {
+      "source_key": "nerf-yubashiri",
+      "url": "https://www.entertainmentearth.com/product/nerf-netflix-one-piece-zoros-katana-yubashiri-sword-with-foam-blade/hsg3156",
+      "name": "Nerf Netflix One Piece Zoro's Katana (Yubashiri) Sword with Foam Blade",
+      "brand": {
+        "@type": "Brand",
+        "name": "Hasbro"
+      },
+      "description": "Kids can imagine themselves as a Straw Hat Pirate with the One Piece Nerf Katana inspired by Zoro's katana from the Netflix One Piece series! The Zoro's Katana (Yubashiri) captures the look of the katana wielded by Roronoa Zoro in the live-action series based on the popular One Piece manga. This Nerf katana measures 24 inches long (609 millimeters) and has a foam blade with a plastic core and foam hilt. In the series, Zoro is master swordsman, ex-bounty hunter, and one of the Straw Hat Pirates who go on an epic voyage to find the legendary One Piece treasure. The assortment includes 3 different katanas (each sold separately, subject to availability), and are perfect accessories for role play, cosplay, and every swashbuckling adventure. Ages 6 and up.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": 12.99,
+          "itemCondition": "https://schema.org/NewCondition",
+          "sku": "HSG3156",
+          "availability": "https://schema.org/InStock"
+        }
+      ],
+      "reason_not_selected": "Netflix 24-inch foam roleplay toy, not a full-size anime replica; merchant not accepting new affiliates",
+      "html_sha256": "c3d899851322ead51becdde210e29c510d9ebd90f6321c9210a21292447484f7"
     }
   ]
 }
