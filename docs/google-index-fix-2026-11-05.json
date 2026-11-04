@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-05",
+  "cause": "Public HTML build inserted robots noindex,nofollow",
+  "live_before": {
+    "status": 200,
+    "x_robots_tag": null,
+    "meta_robots": "noindex,nofollow"
+  },
+  "fix": "Public HTML and build generator use index,follow",
+  "verification_preserved": true,
+  "all_other_upload_files_identical": true,
+  "inline_application_unchanged": true,
+  "live_deployed": false,
+  "artifacts": [
+    {
+      "path": "downloads/NEXORI-Google-index-fix-2026-11-05.zip",
+      "bytes": 92710717,
+      "sha256": "c64f89f5d13094330aeb8f72b8ccb0478359b8cb068c44a6d7731e476e103c4c"
+    },
+    {
+      "path": "downloads/NEXORI-Google-index-fix-source-2026-11-05.zip",
+      "bytes": 89707788,
+      "sha256": "5ebe96212063b4f95d203a9e86eb812f0a1f27667ee5446cddaddd91d3ee4f5e"
+    }
+  ]
+}
