@@ -1,0 +1,11 @@
+{
+  "archive": "NEXORI-Google-verification-2026-11-04.zip",
+  "bytes": 92710664,
+  "sha256": "731a0b90d858e66fb0460ef697194a48711d50e6e02877f453bc4bf01d0fb75e",
+  "changed_site_files": [
+    "NEXORI-upload/index.html"
+  ],
+  "verification_tag_in_head": true,
+  "other_site_files_byte_identical": true,
+  "site_files": 3405
+}
